@@ -43,7 +43,7 @@ def draw_silhouette(display, creature, x, y, scale=5):
         display.fill_rect(x + run_x * scale, y + run_y * scale, width * scale, scale, COLOR_MUTED)
 
 
-class TamaFiUI:
+class HackomonUI:
     def __init__(self, display, catalog):
         self.display = display
         self.catalog = catalog
@@ -60,7 +60,7 @@ class TamaFiUI:
         creature = self.catalog.creature(state.creature_id)
         family = self.catalog.family_by_id[creature["family_id"]]
         display.clear(COLOR_BG)
-        self._header("TAMAFI REBORN", state)
+        self._header("HACKOMON", state)
         _panel(display, 8, 27, 174, 164)
         draw_sprite(display, creature, 35, 46, scale=5, pose=pose, frame_index=frame_index)
         display.draw_text_centered(171, creature["name"][:24], COLOR_TEXT, 1)

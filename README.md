@@ -1,6 +1,6 @@
-# TamaFi Reborn — Pager Edition
+# Hackomon — Pager Edition
 
-TamaFi Reborn is a lightweight virtual-creature game for the Hak5 WiFi
+Hackomon is a lightweight virtual-creature game for the Hak5 WiFi
 Pineapple Pager. It installs as an independent user payload and does **not**
 replace or patch the stock Hak5 firmware.
 
@@ -35,9 +35,9 @@ The short version:
 
 1. Install Python 3 + `python3-ctypes` on MMC and the MIT-licensed PAGERCTL
    utility on the Pager.
-2. Copy `payload/tamafi_reborn` to
-   `/root/payloads/user/games/tamafi_reborn`.
-3. Open **Payloads → User → Games → TamaFi Reborn**.
+2. Copy `payload/hackomon` to
+   `/root/payloads/user/games/hackomon`.
+3. Open **Payloads → User → Games → Hackomon**.
 
 Full commands and uninstall steps are in [docs/INSTALL.md](docs/INSTALL.md).
 
@@ -49,7 +49,7 @@ Full commands and uninstall steps are in [docs/INSTALL.md](docs/INSTALL.md).
 | A / green | Confirm | Return |
 | B / red | Exit | Return |
 
-Progress is stored in `/mmc/root/tamafi-reborn/state.json`. Reinstalling the
+Progress is stored in `/mmc/root/hackomon/state.json`. Reinstalling the
 payload does not erase the save.
 
 ## Development

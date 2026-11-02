@@ -1,8 +1,8 @@
 import unittest
 
 from tests import support  # noqa: F401
-from tamafi.catalog import CreatureCatalog
-from tamafi.sprites import POSE_LENGTHS, iter_color_runs, palette_rgb, sprite_frame
+from hackomon.catalog import CreatureCatalog
+from hackomon.sprites import POSE_LENGTHS, iter_color_runs, palette_rgb, sprite_frame
 
 
 class SpriteTests(unittest.TestCase):

@@ -1,4 +1,4 @@
-"""Evolution gates for the five-stage TamaFi lines."""
+"""Evolution gates for the five-stage Hackomon lines."""
 
 from dataclasses import dataclass
 

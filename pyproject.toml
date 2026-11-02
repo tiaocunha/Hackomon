@@ -1,5 +1,5 @@
 [project]
-name = "tamafi-reborn-pager"
+name = "hackomon-pager"
 version = "0.1.0"
 description = "Virtual creature payload for the Hak5 WiFi Pineapple Pager"
 requires-python = ">=3.9"

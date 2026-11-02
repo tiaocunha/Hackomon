@@ -1,7 +1,7 @@
 import unittest
 
 from tests import support  # noqa: F401
-from tamafi.catalog import CreatureCatalog
+from hackomon.catalog import CreatureCatalog
 
 
 class CatalogTests(unittest.TestCase):

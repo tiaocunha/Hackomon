@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAYLOAD = ROOT / "payload" / "tamafi_reborn"
+PAYLOAD = ROOT / "payload" / "hackomon"
 if str(PAYLOAD) not in sys.path:
     sys.path.insert(0, str(PAYLOAD))
 

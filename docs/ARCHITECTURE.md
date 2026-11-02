@@ -2,7 +2,7 @@
 
 ## Boundaries
 
-TamaFi is an ordinary payload under `/root/payloads/user/games`. Its launcher
+Hackomon is an ordinary payload under `/root/payloads/user/games`. Its launcher
 temporarily stops only the stock `pineapplepager` UI service to obtain the
 framebuffer, then restores that service on every normal, error or signal exit.
 It does not replace firmware files or alter boot configuration.

@@ -3,8 +3,8 @@ import unittest
 from pathlib import Path
 
 from tests import support
-from tamafi.catalog import CreatureCatalog
-from tamafi.storage import StateStore
+from hackomon.catalog import CreatureCatalog
+from hackomon.storage import StateStore
 
 
 class PersistenceTests(unittest.TestCase):

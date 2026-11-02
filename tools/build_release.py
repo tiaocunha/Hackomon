@@ -6,9 +6,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAYLOAD = ROOT / "payload" / "tamafi_reborn"
+PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "tamafi-reborn-pager-0.1.0.zip"
+OUTPUT = DIST / "hackomon-pager-0.1.0.zip"
 
 
 def main():
@@ -17,9 +17,9 @@ def main():
         for path in sorted(PAYLOAD.rglob("*")):
             if path.is_dir() or "__pycache__" in path.parts:
                 continue
-            relative = Path("tamafi_reborn") / path.relative_to(PAYLOAD)
+            relative = Path("hackomon") / path.relative_to(PAYLOAD)
             info = zipfile.ZipInfo.from_file(path, str(relative).replace("\\", "/"))
-            if path.name == "payload.sh" or path.name == "run_tamafi.py":
+            if path.name == "payload.sh" or path.name == "run_hackomon.py":
                 info.external_attr = 0o100755 << 16
             with path.open("rb") as handle:
                 archive.writestr(info, handle.read(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)

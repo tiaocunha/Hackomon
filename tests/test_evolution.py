@@ -1,9 +1,9 @@
 import unittest
 
 from tests import support  # noqa: F401
-from tamafi.catalog import CreatureCatalog
-from tamafi.evolution import GATES, advance_one_if_ready
-from tamafi.model import GameState
+from hackomon.catalog import CreatureCatalog
+from hackomon.evolution import GATES, advance_one_if_ready
+from hackomon.model import GameState
 
 
 class EvolutionTests(unittest.TestCase):

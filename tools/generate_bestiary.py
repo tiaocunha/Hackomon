@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the deterministic TamaFi bestiary used on the Pager."""
+"""Generate the deterministic Hackomon bestiary used on the Pager."""
 
 import argparse
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "payload" / "tamafi_reborn" / "data" / "bestiary.json"
+OUTPUT = ROOT / "payload" / "hackomon" / "data" / "bestiary.json"
 
 STAGES = (
     (0, "Ovo", "common"),

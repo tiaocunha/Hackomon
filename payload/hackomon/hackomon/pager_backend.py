@@ -24,7 +24,7 @@ class _PagerInput(ctypes.Structure):
 def _candidate_libraries(explicit=None):
     values = [
         explicit,
-        os.environ.get("TAMAFI_PAGERCTL_LIB"),
+        os.environ.get("HACKOMON_PAGERCTL_LIB"),
         str(Path(__file__).resolve().parents[1] / "lib" / "libpagerctl.so"),
         "/root/payloads/user/utilities/PAGERCTL/libpagerctl.so",
         "/mmc/root/payloads/user/utilities/PAGERCTL/libpagerctl.so",

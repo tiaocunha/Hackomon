@@ -8,11 +8,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAYLOAD = ROOT / "payload" / "tamafi_reborn"
+PAYLOAD = ROOT / "payload" / "hackomon"
 sys.path.insert(0, str(PAYLOAD))
 
-from tamafi.catalog import CreatureCatalog  # noqa: E402
-from tamafi.sprites import POSE_LENGTHS, palette_rgb, sprite_frame  # noqa: E402
+from hackomon.catalog import CreatureCatalog  # noqa: E402
+from hackomon.sprites import POSE_LENGTHS, palette_rgb, sprite_frame  # noqa: E402
 
 
 BACKGROUND = (7, 12, 28)

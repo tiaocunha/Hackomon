@@ -7,20 +7,20 @@ from .catalog import CreatureCatalog
 from .evolution import advance_one_if_ready
 from .pager_backend import PagerDisplay
 from .storage import StateStore
-from .ui import TamaFiUI
+from .ui import HackomonUI
 
 
 ACTION_KEYS = ("feed", "play", "rest")
 
 
-class TamaFiApp:
+class HackomonApp:
     def __init__(self, display, catalog, store, clock=None):
         self.display = display
         self.catalog = catalog
         self.store = store
         self.clock = clock or time.time
         self.state, self.warning = store.load_or_create(catalog, now=int(self.clock()))
-        self.ui = TamaFiUI(display, catalog)
+        self.ui = HackomonUI(display, catalog)
         self.selected = 0
         self.screen = "home"
         self.bestiary_index = catalog.creature(self.state.creature_id)["index"]
@@ -133,8 +133,8 @@ class TamaFiApp:
 
 def run_on_pager(library_path=None, data_dir=None):
     catalog = CreatureCatalog.load_default()
-    data_dir = data_dir or os.environ.get("TAMAFI_DATA_DIR", "/mmc/root/tamafi-reborn")
+    data_dir = data_dir or os.environ.get("HACKOMON_DATA_DIR", "/mmc/root/hackomon")
     store = StateStore(data_dir)
     with PagerDisplay(library_path) as display:
-        TamaFiApp(display, catalog, store).run()
+        HackomonApp(display, catalog, store).run()
 

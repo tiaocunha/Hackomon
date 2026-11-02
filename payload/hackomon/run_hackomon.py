@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""TamaFi Reborn Pager entry point."""
+"""Hackomon Pager entry point."""
 
 import argparse
 import sys
 import traceback
 
-from tamafi.app import run_on_pager
-from tamafi.pager_backend import PagerDependencyError
+from hackomon.app import run_on_pager
+from hackomon.pager_backend import PagerDependencyError
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="TamaFi Reborn — Pager Edition")
+    parser = argparse.ArgumentParser(description="Hackomon — Pager Edition")
     parser.add_argument("--pagerctl-lib", help="explicit path to libpagerctl.so")
     parser.add_argument("--data-dir", help="override persistent data directory")
     args = parser.parse_args(argv)

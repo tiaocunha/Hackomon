@@ -1,8 +1,8 @@
 import unittest
 
 from tests import support  # noqa: F401
-from tamafi.catalog import CreatureCatalog
-from tamafi.model import GameState
+from hackomon.catalog import CreatureCatalog
+from hackomon.model import GameState
 
 
 class ModelTests(unittest.TestCase):

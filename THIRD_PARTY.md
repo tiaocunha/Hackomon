@@ -1,6 +1,6 @@
 # Third-party components
 
-TamaFi Reborn's source code and generated art are original and released under
+Hackomon's source code and generated art are original and released under
 the MIT License in this repository.
 
 ## PAGERCTL
