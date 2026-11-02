@@ -66,16 +66,22 @@ def parse_gps_report(report, now):
 def wifi_observations(text, now):
     results = []
     current = None
+    rsn_section = False
     for line in text.splitlines():
         line = line.strip()
         if line.startswith("BSS "):
+            rsn_section = False
             address = line[4:21]
             current = None
             if MAC.fullmatch(address):
-                current = dict(type="WIFI", mac=address, name="", auth="[OPEN]",
-                               timestamp=now, channel=0, frequency=0)
+                current = dict(type="WIFI", mac=address.upper(), name="", auth="[UNKNOWN]",
+                               timestamp=now, channel=0, frequency=0,
+                               security=dict(capability_seen=False, privacy=False, wpa=False,
+                                             rsn=False, wps=False, akm=[], ciphers=[], pmf=None))
                 results.append(current)
         elif current is not None:
+            if not line.startswith("*"):
+                rsn_section = line.startswith("RSN:")
             if line.startswith("SSID:"):
                 current["name"] = line[5:].strip()
             elif line.startswith("freq:"):
@@ -85,13 +91,38 @@ def wifi_observations(text, now):
             elif "DS Parameter set: channel " in line:
                 current["channel"] = int(line.rsplit(" ", 1)[1])
             elif line.startswith("RSN:"):
-                current["auth"] = "[WPA2]"
-            elif "Authentication suites:" in line and "SAE" in line:
-                current["auth"] = "[WPA3]"
+                current["security"]["rsn"] = True
+            elif "Authentication suites:" in line:
+                current["security"]["akm"].extend(line.split(":", 1)[1].strip().split())
             elif line.startswith("WPA:"):
-                current["auth"] = "[WPA]"
-            elif line.startswith("capability:") and "Privacy" in line:
-                current["auth"] = "[PRIVACY]"
+                current["security"]["wpa"] = True
+            elif line.startswith("WPS:"):
+                current["security"]["wps"] = True
+            elif "Pairwise ciphers:" in line or "Group cipher:" in line:
+                current["security"]["ciphers"].extend(line.split(":", 1)[1].strip().split())
+            elif line.startswith("capability:"):
+                current["security"]["capability_seen"] = True
+                current["security"]["privacy"] = "Privacy" in line
+            elif line.startswith("* Capabilities:") and rsn_section:
+                flags = re.search(r"\(0x([0-9a-fA-F]{4})\)", line)
+                if flags:
+                    bits = int(flags.group(1), 16)
+                    current["security"]["pmf"] = "required" if bits & 0x40 else "optional" if bits & 0x80 else "not_advertised"
+    for item in results:
+        security = item["security"]
+        akm = security["akm"]
+        if "SAE" in akm:
+            item["auth"] = "[WPA2+WPA3]" if "PSK" in akm else "[WPA3]"
+        elif "OWE" in akm:
+            item["auth"] = "[OWE]"
+        elif security["rsn"]:
+            item["auth"] = "[WPA2]"
+        elif security["wpa"]:
+            item["auth"] = "[WPA]"
+        elif security["privacy"]:
+            item["auth"] = "[LEGACY/UNKNOWN]"
+        elif security["capability_seen"]:
+            item["auth"] = "[OPEN]"
     return [item for item in results if "rssi" in item][:500]
 
 

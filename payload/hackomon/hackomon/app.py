@@ -10,13 +10,14 @@ from .catalog import CreatureCatalog
 from .evolution import advance_one_if_ready
 from .pager_backend import PagerDisplay
 from .storage import StateStore
-from .ui import HackomonUI
+from .ui import HackomonUI, NETWORK_MENU
 from .exploration import export_csv, record_observations
 from .network_config import load_config
-from . import bluetooth_lab, lab, radio, wdgwars
+from . import bluetooth_lab, lab, radio, visit, wdgwars
 
 
 ACTION_KEYS = ("feed", "play", "rest")
+NETWORK_ACTIONS = tuple(action for action, _label in NETWORK_MENU)
 
 
 class HackomonApp:
@@ -38,11 +39,17 @@ class HackomonApp:
         self.network_message = "GPS externo via gpsd necessario"
         self.worker = None
         self.results = queue.Queue()
+        self.visit_networks = []
+        self.visit_selected = 0
+        self.visit_message = "Escolha a rede do cliente para este atendimento"
+        self.visit_report = None
 
     def _network_job(self, action):
         if self.worker is not None:
             return
         snapshot = list(self.state.network_queue)
+        visit_target = (dict(self.visit_networks[self.visit_selected])
+                        if action == "visit_assess" and self.visit_networks else None)
         def work():
             try:
                 config = load_config(self.store.data_dir)
@@ -62,6 +69,10 @@ class HackomonApp:
                     result = bluetooth_lab.audit(config, self.store.data_dir)
                 elif action == "test":
                     result = lab.test_dictionary(config, self.store.data_dir)
+                elif action == "visit_scan":
+                    result = visit.find_networks(config)
+                elif action == "visit_assess" and visit_target is not None:
+                    result = visit.assess(config, visit_target, self.store.data_dir)
                 else:
                     raise RuntimeError("Acao de rede desconhecida")
                 self.results.put((action, result, None))
@@ -69,7 +80,9 @@ class HackomonApp:
                 # Never put credentials, tool output or server response bodies on screen/log.
                 safe = str(error) if isinstance(error, RuntimeError) else "Falha local; confira configuracao"
                 self.results.put((action, None, safe))
-        self.network_message = "Trabalhando... aguarde (max. 35s)"
+        self.network_message = "Trabalhando... aguarde (max. 90s)"
+        if action.startswith("visit_"):
+            self.visit_message = "Buscando redes..." if action == "visit_scan" else "Avaliando o alvo selecionado..."
         self.worker = threading.Thread(target=work, daemon=False)
         self.worker.start()
 
@@ -82,7 +95,18 @@ class HackomonApp:
         self.worker = None
         if error:
             self.network_message = error
+            if action.startswith("visit_"):
+                self.visit_message = error
             return
+        if action == "visit_scan":
+            self.visit_networks = result
+            self.visit_selected = 0
+            self.visit_message = "%d redes; escolha apenas a rede do cliente" % len(result)
+            return
+        if action == "visit_assess":
+            self.visit_report = result["report"]
+            self.visit_message = result["message"]
+            self.screen = "visit_report"
         if action in ("WIFI", "BLE"):
             summary = record_observations(self.state, result, int(self.clock()))
             self.network_message = "%d registros, +%d XP%s" % (
@@ -105,6 +129,11 @@ class HackomonApp:
                 self.state.xp += 5
                 self.state.level = min(99, 1 + self.state.xp // 30)
                 self.network_message += " +5 XP"
+            elif (action == "visit_assess" and result.get("completed")
+                  and reward not in self.state.lab_rewards):
+                self.state.lab_rewards.append(reward)
+                self.state.xp += 5
+                self.state.level = min(99, 1 + self.state.xp // 30)
         evolution = advance_one_if_ready(self.state, self.catalog)
         if evolution.evolved:
             self.network_message = "EVOLUCAO! " + self.network_message
@@ -123,15 +152,46 @@ class HackomonApp:
                 self._network_job("upload")
             return True
         if pressed & self.display.BTN_UP:
-            self.network_selected = (self.network_selected - 1) % 7
+            self.network_selected = (self.network_selected - 1) % len(NETWORK_ACTIONS)
         if pressed & self.display.BTN_DOWN:
-            self.network_selected = (self.network_selected + 1) % 7
+            self.network_selected = (self.network_selected + 1) % len(NETWORK_ACTIONS)
         if pressed & self.display.BTN_A:
-            action = ("WIFI", "BLE", "export", "upload", "capture", "test", "bluetooth_audit")[self.network_selected]
+            action = NETWORK_ACTIONS[self.network_selected]
             if action == "upload":
                 self.screen = "upload_confirm"
+            elif action == "visit_scan":
+                self.screen = "visit"
+                self.visit_networks = []
+                self.visit_report = None
+                self._network_job(action)
             else:
                 self._network_job(action)
+        return True
+
+    def _handle_visit(self, pressed):
+        if self.worker is not None:
+            return True
+        if pressed & (self.display.BTN_B | self.display.BTN_POWER):
+            if self.screen == "visit_report":
+                self.screen = "visit"
+            else:
+                self.screen = "network"
+                self.visit_networks = []
+                self.visit_report = None
+            return True
+        if self.screen == "visit_report":
+            return True
+        if pressed & self.display.BTN_LEFT:
+            self.visit_networks = []
+            self._network_job("visit_scan")
+            return True
+        if self.visit_networks:
+            if pressed & self.display.BTN_UP:
+                self.visit_selected = (self.visit_selected - 1) % len(self.visit_networks)
+            if pressed & self.display.BTN_DOWN:
+                self.visit_selected = (self.visit_selected + 1) % len(self.visit_networks)
+            if pressed & self.display.BTN_A:
+                self._network_job("visit_assess")
         return True
 
     def _set_message(self, message, seconds=2.0):
@@ -216,6 +276,10 @@ class HackomonApp:
         elif self.screen in ("network", "upload_confirm"):
             self.ui.network(self.state, self.network_selected, self.network_message,
                             self.worker is not None, self.screen == "upload_confirm")
+        elif self.screen in ("visit", "visit_report"):
+            self.ui.visit(self.state, self.visit_networks, self.visit_selected,
+                          self.visit_message, self.worker is not None,
+                          self.visit_report if self.screen == "visit_report" else None)
         else:
             self.ui.help(self.state)
 
@@ -232,6 +296,8 @@ class HackomonApp:
                     running = self._handle_bestiary(pressed)
                 elif self.screen in ("network", "upload_confirm"):
                     running = self._handle_network(pressed)
+                elif self.screen in ("visit", "visit_report"):
+                    running = self._handle_visit(pressed)
                 else:
                     running = self._handle_help(pressed)
                 self.render(frame)

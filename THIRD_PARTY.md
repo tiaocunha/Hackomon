@@ -22,7 +22,7 @@ proprietary assets are included.
 
 ## Optional network tools and service protocols
 
-Hackomon invokes independently installed `iw`, BlueZ `bluetoothctl`/`sdptool`, `tcpdump`
+Hackomon invokes independently installed `iw`, `ip`, BlueZ `bluetoothctl`/`sdptool`, `tcpdump`
 and Aircrack-ng, and reads a local GPSD service. None of their source/binaries
 is included. The original WDGWars client implements the public multipart API
 documented at https://wdgwars.pl/press. CSV export follows WigleWifi-1.6 for

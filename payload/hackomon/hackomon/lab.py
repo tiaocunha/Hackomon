@@ -31,7 +31,7 @@ def capture(config, data_dir):
     interface = str(config.get("lab", {}).get("monitor_interface", ""))
     if not re.fullmatch(r"[A-Za-z0-9_.-]{1,32}", interface):
         raise RuntimeError("Defina monitor_interface do laboratorio")
-    info = command(["iw", "dev", interface, "info"])
+    info = command(["iw", "dev", interface, "info"], timeout=3)
     if not re.search(r"\btype monitor\b", info):
         raise RuntimeError("A interface do lab precisa estar em modo monitor")
     root = Path(data_dir) / "lab"

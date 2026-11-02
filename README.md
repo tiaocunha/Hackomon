@@ -17,6 +17,8 @@ This incremental release contains:
 - discovery XP, an offline queue, CSV export and manual WDGWars upload;
 - scoped office-lab EAPOL capture and bounded offline WPA/WPA2-PSK dictionary tests.
 - target-scoped Bluetooth metadata and classic SDP service inventory, with local reports.
+- a client-visit workflow: discover, choose the client's AP on screen, assess and
+  save local JSON/text reports without pre-registering a BSSID or requiring GPS.
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -38,7 +40,7 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters in **0.4.1 are experimental**: desktop tests use fixtures
+Network and lab adapters in **0.5.0 are experimental**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 
@@ -81,9 +83,11 @@ runtime. Generated release archives are written to `dist/`.
 
 ## Scope and safety
 
-Radio operations run only when selected under **Redes / Laboratorio**. Lab
-operations require one exact BSSID, an existing monitor interface and a local
-authorization valid for at most 24 hours. No deauthentication, injection or
+Radio operations run only when selected under **Redes / Laboratorio**. Client
+visits choose the exact AP from a fresh scan; scope is session-only, without
+manual address registration. The visit adapter can prepare/remove a temporary
+monitor on a free radio. The original lab menu still supports static targets.
+No deauthentication, injection or
 automatic association is implemented. Uploads contain discovery metadata and
 GPS, never captures or recovered passwords. Keep account keys in local
 configuration, not in Git or chat.

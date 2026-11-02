@@ -37,6 +37,13 @@ included configuration example to the save directory and supply the actual
 radio interfaces and local account key there. The installed app otherwise
 continues to work as a pet without network dependencies.
 
+Client visits in 0.5.0 do not need a pre-registered BSSID or GPS: choose
+**Redes / Laboratorio → Atendimento** and select the client's AP from the list.
+The app tries to find a free managed radio automatically. A supported driver,
+`iw`, `ip`, and the optional capture/dictionary tools are still device dependencies.
+If radio auto-detection cannot find a free interface, set `wifi_interface` once;
+that is device setup, not registering each customer network.
+
 The default save lives at:
 
 ```text

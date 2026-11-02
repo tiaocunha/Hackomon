@@ -1,4 +1,4 @@
-# Networks and office laboratory — 0.4.1
+# Networks and office laboratory — 0.5.0
 
 ## Status
 
@@ -20,8 +20,9 @@ bundled, printed or needed in chat.
 Optional installed dependencies: `iw`; BlueZ `bluetoothctl` supporting `scan le`
 and `--timeout`; local `gpsd` on port 2947 connected to the external GPS; Python
 SSL support and CA certificates for HTTPS. Lab operations additionally require
-`tcpdump` and `aircrack-ng`. Hackomon installs nothing, changes no radio modes or
-channels, and does not start/stop Bluetooth or GPS services. Unsupported commands
+`tcpdump` and `aircrack-ng`. Hackomon installs nothing and does not start/stop
+Bluetooth or GPS services. Only the client-visit workflow may create a temporary
+monitor and tune a free radio as described below. Unsupported commands
 report failure and award no XP. Existing Internet connectivity is needed to sync.
 
 ## Discovery and XP
@@ -29,6 +30,9 @@ report failure and award no XP. Existing Internet connectivity is needed to sync
 Choose **Redes / Laboratorio** on the home screen. No scan runs at startup.
 Operations run in a worker; the screen keeps rendering, but waits for the
 bounded operation to complete before leaving.
+
+These GPS discovery rules apply to map collection. The client-visit workflow
+below does not require GPS and never queues client evidence for the map.
 
 - Wi-Fi: `iw dev <interface> scan passive`, bounded to 20 seconds.
 - BLE: `bluetoothctl --timeout 8 scan le`, without pairing/connecting. LE
@@ -138,3 +142,61 @@ their existing capped rewards. Audit reports never enter the WDGWars queue;
 only ordinary discovery records can be uploaded. Desktop tests use fixtures;
 physical support on the Pager remains unvalidated. BlueZ command reference:
 [upstream SDP tool](https://github.com/bluez/bluez/blob/master/tools/sdptool.c).
+
+## Client visits without pre-registering networks (0.5.0)
+
+Open **Redes / Laboratorio → Atendimento**. The app discovers nearby Wi-Fi APs
+and shows SSID, BSSID, signal and advertised security. Choose the client's AP
+and press A to assess it. No typing MAC addresses or changing the static lab
+configuration for each customer. Left refreshes; B returns. Names alone cannot
+establish ownership: neighboring APs and other APs sharing an SSID are not
+automatically added to the selected target.
+
+If `wifi_interface` is empty, the app enumerates `iw dev` and chooses a managed
+interface reporting `Not connected.` (at most three candidates). It skips APs
+and does not disconnect associated interfaces. Explicit `wifi_interface` remains
+a one-time device override when automatic selection is unavailable. This does
+not bypass firmware/driver limitations or install missing tools. No GPS is used.
+
+Selection creates an in-memory, one-BSSID scope for one hour, from an observation
+no older than five minutes. It does not rewrite `config.json`. Targets are not
+restored on app restart. Each assessment:
+
+1. Records advertised authentication, WPA legacy support, ciphers, WPS and RSN
+   management-frame protection when present. It distinguishes unknown/partial
+   announcements from open networks and records observations, not confirmed
+   exploits. No observations is not a clean security bill.
+2. For WPA/WPA2-compatible announcements, uses an existing monitor already on the
+   selected frequency. Otherwise it may create `hkm<random>` on a free PHY having
+   exactly one disconnected managed interface. PHYs carrying APs, other monitors
+   or unaccounted interfaces are not auto-tuned. It runs installed `iw` and `ip`,
+   activates/tunes only the temporary interface to the selected frequency, and
+   removes only that interface in normal completion/error cleanup.
+3. Runs the bounded target-only passive EAPOL capture. No forced reconnection;
+   the authorized client may reconnect a device normally during the window.
+   An EAPOL file does not establish a complete handshake.
+4. If PSK is advertised and the local `lab/dictionary.txt` exists, runs the
+   existing bounded offline dictionary test. No dictionary is bundled/fetched.
+   Unknown AKM, enterprise authentication and SAE-only networks do not trigger
+   a PSK dictionary test. A missing tool/radio/dictionary or absent exchange is
+   reported as not run/inconclusive; no successful recovery is invented.
+5. Writes private `visits/visit-*.json` evidence and a readable Portuguese `.txt`
+   report with observations, recommendations and untested categories. Nothing
+   from this workflow enters WDGWars or the map export. A completed local
+   assessment earns 5 XP once per BSSID, including when capture is unavailable;
+   this rewards the assessment, not an invented compromise.
+
+Operations are bounded to roughly 90 seconds in the normal failure paths. Monitor
+cleanup runs after capture, before the offline dictionary step. Cleanup failure
+is shown prominently and names the temporary interface in the report; inspect
+and remove it before continuing. Abrupt power loss/forced process termination
+can bypass cleanup. Normal hardware behavior and cleanup still require physical
+Pager validation. The app does not change firmware, but this workflow does
+temporarily configure a free radio. Its disconnected managed interface's PHY
+can change frequency; it is not an associated management connection.
+
+This is an initial field-assessment workflow, not a complete autonomous pentest:
+router administration, firmware CVEs, LAN service scanning, segmentation,
+client isolation, WPS PIN testing and WPA3 authentication attacks remain untested.
+Bluetooth still uses its separate laboratory target configuration; this visit
+picker currently covers Wi-Fi APs. No unsupported test is reported as complete.

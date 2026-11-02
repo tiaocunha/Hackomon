@@ -17,6 +17,14 @@ same save. Pending network actions complete before leaving; account credentials
 and recovered secrets are never placed in the save or upload data. See
 [NETWORKS.md](NETWORKS.md) for limits and validation boundaries.
 
+`visit` adds a separate client-session workflow: automatic free-interface
+selection, passive AP listing without GPS, on-screen single-AP scope and bounded
+assessment. It may create/tune an ephemeral monitor on an idle dedicated PHY,
+then removes it after capture. Cached scan evidence older than five minutes is
+rejected. The app keeps target choices in RAM only and persists local JSON/text
+reports without putting client data in the map queue. Discovery parsing includes
+advertised security facts but never treats them as proven vulnerabilities.
+
 ## Boundaries
 
 Hackomon is an ordinary payload under `/root/payloads/user/games`. Its launcher

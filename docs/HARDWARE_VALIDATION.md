@@ -24,7 +24,7 @@ checklist above has been completed and the firmware version recorded.
 
 - [ ] Record firmware, iw, BlueZ, gpsd, tcpdump and Aircrack-ng versions.
 - [ ] External GPS supplies fresh TPV reports and horizontal error estimates.
-- [ ] Missing/stale GPS prevents collection; movement over 30m rejects a batch.
+- [ ] Missing/stale GPS prevents map collection; movement over 30m rejects a batch.
 - [ ] Wi-Fi passive scan works on the chosen interface without disrupting management.
 - [ ] LE scan exits within its bound and does not pair/connect.
 - [ ] Discovery XP and pending observations survive restart.
@@ -42,4 +42,11 @@ checklist above has been completed and the firmware version recorded.
 - [ ] Rotating BLE addresses work in discovery and require updated lab target scope.
 - [ ] Audit earns 5 XP once, persists it and never queues the local report for upload.
 - [ ] SDP timeout ends cleanly without changing pairings or HID/audio connections.
+- [ ] Client visit discovers APs without GPS or a pre-registered BSSID.
+- [ ] Auto-scan chooses a free managed interface and skips management/AP connections.
+- [ ] Selecting one AP confines capture/testing to that BSSID even with same-SSID neighbors.
+- [ ] Temporary monitor creation/tuning works only on a free PHY and cleanup removes it.
+- [ ] Capture failure also cleans up; cleanup failure is visible and names the interface.
+- [ ] Client report lists unsupported/unexecuted tests accurately and never enters upload queue.
+- [ ] Restart forgets the prior client target while keeping earned XP and private reports.
 

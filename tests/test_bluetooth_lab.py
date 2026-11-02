@@ -105,7 +105,7 @@ class BluetoothLabTests(unittest.TestCase):
             self.assertIsNone(warning)
             self.assertEqual(["bluetooth:" + ADDRESS], saved.lab_rewards)
             app.screen = "network"
-            app.network_selected = 6
+            app.network_selected = 7
             app.render(0)
 
 

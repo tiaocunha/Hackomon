@@ -20,6 +20,12 @@ from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
 
 ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Ajuda")
+NETWORK_MENU = (("visit_scan", "Atendimento: buscar redes do cliente"),
+                ("WIFI", "Descobrir Wi-Fi com GPS"), ("BLE", "Descobrir Bluetooth LE com GPS"),
+                ("export", "Exportar CSV"), ("upload", "Enviar ao WDGWars"),
+                ("capture", "Lab: capturar EAPOL (20s)"),
+                ("test", "Lab: testar dicionario (30s)"),
+                ("bluetooth_audit", "Lab: auditar Bluetooth"))
 
 
 def _bar(display, x, y, width, value, color, label):
@@ -133,7 +139,7 @@ class HackomonUI:
             display.draw_text(20, 113, "Nivel     %d / %d" % status["level"], COLOR_TEXT, 1)
             display.draw_text(20, 129, "Cuidados  %d / %d" % status["care"], COLOR_TEXT, 1)
             display.draw_text(20, 145, "Bem-estar %d / %d" % status["wellness"], COLOR_TEXT, 1)
-        display.draw_text(20, 171, "Redes: descobertas + XP; lab com alvo cadastrado.", COLOR_MUTED, 1)
+        display.draw_text(20, 171, "Atendimento: descubra e escolha a rede do cliente.", COLOR_MUTED, 1)
         display.draw_text_centered(205, "A ou B volta", COLOR_TEXT, 1)
         display.flip()
 
@@ -150,16 +156,43 @@ class HackomonUI:
             display.draw_text(20, 116, "Capturas e senhas permanecem locais.", COLOR_TEXT, 1)
             display.draw_text(20, 150, "A envia por HTTPS  B cancela", COLOR_CYAN, 1)
         else:
-            labels = ("Descobrir Wi-Fi (passivo)", "Descobrir Bluetooth LE", "Exportar CSV",
-                      "Enviar ao WDGWars", "Lab: capturar EAPOL (20s)", "Lab: testar dicionario (30s)",
-                      "Lab: auditar Bluetooth")
-            for index, label in enumerate(labels):
-                y = 57 + index * 17
+            for index, (_action, label) in enumerate(NETWORK_MENU):
+                y = 55 + index * 16
                 if selected == index:
                     display.fill_rect(17, y - 3, 446, 15, COLOR_PANEL_ALT)
                 display.draw_text(22, y, ("> " if selected == index else "  ") + label,
                                   COLOR_CYAN if selected == index else COLOR_TEXT, 1)
         display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
         display.draw_text_centered(212, "Aguarde a operacao" if busy else "A confirma  B volta", COLOR_TEXT, 1)
+        display.flip()
+
+    def visit(self, state, networks, selected, message, busy=False, report=None):
+        display = self.display
+        display.clear(COLOR_BG)
+        self._header("ATENDIMENTO AO CLIENTE", state)
+        _panel(display, 8, 28, 464, 164)
+        if report is not None:
+            target = report["target"]
+            display.draw_text(20, 39, str(target.get("name") or "Rede oculta")[:42], COLOR_CYAN, 1)
+            display.draw_text(20, 56, "%s  %s" % (target["mac"], target["auth"]), COLOR_TEXT, 1)
+            display.draw_text(20, 77, "Observacoes: %d (nao sao exploracoes confirmadas)" % len(report["findings"]), COLOR_YELLOW, 1)
+            display.draw_text(20, 97, "Captura: " + report["capture"]["status"], COLOR_TEXT, 1)
+            display.draw_text(20, 114, "Dicionario: " + report["dictionary"]["status"], COLOR_TEXT, 1)
+            display.draw_text(20, 139, "Relatorio local: hackomon/visits/*.json", COLOR_MUTED, 1)
+            display.draw_text(20, 158, "Nao enviado ao WDGWars", COLOR_MUTED, 1)
+        else:
+            display.draw_text(20, 38, "Escolha o AP autorizado pelo cliente; A avalia", COLOR_YELLOW, 1)
+            start = selected // 5 * 5
+            for row, index in enumerate(range(start, min(start + 5, len(networks)))):
+                target = networks[index]
+                y = 61 + row * 24
+                if index == selected:
+                    display.fill_rect(17, y - 3, 446, 23, COLOR_PANEL_ALT)
+                label = str(target.get("name") or "Rede oculta")[:29]
+                display.draw_text(22, y, "%s %s %ddBm" % (">" if index == selected else " ", label, target["rssi"]), COLOR_CYAN if index == selected else COLOR_TEXT, 1)
+                display.draw_text(34, y + 10, "%s  %s" % (target["mac"], target["auth"]), COLOR_MUTED, 1)
+            display.draw_text(20, 181, "GPS dispensado; vizinhos nao entram no atendimento", COLOR_MUTED, 1)
+        display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
+        display.draw_text_centered(212, "Aguarde a operacao" if busy else "CIMA/BAIXO escolhe  ESQ atualiza  B volta", COLOR_TEXT, 1)
         display.flip()
 

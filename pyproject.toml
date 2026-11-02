@@ -1,6 +1,6 @@
 [project]
 name = "hackomon-pager"
-version = "0.4.1"
+version = "0.5.0"
 description = "Virtual creature payload for the Hak5 WiFi Pineapple Pager"
 requires-python = ">=3.9"
 license = { text = "MIT" }

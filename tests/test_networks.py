@@ -189,7 +189,7 @@ class NetworksTests(unittest.TestCase):
             app = HackomonApp(MemoryDisplay(), self.catalog, StateStore(directory), clock=lambda: 1700000000)
             record_observations(app.state, [observation()], 1700000000)
             app.screen = "network"
-            app.network_selected = 3
+            app.network_selected = 4
             app._handle_network(app.display.BTN_A)
             self.assertEqual("upload_confirm", app.screen)
             self.assertIsNone(app.worker)
