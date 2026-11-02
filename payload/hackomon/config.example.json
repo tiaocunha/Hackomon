@@ -1,0 +1,9 @@
+{
+  "wifi_interface": "",
+  "wdgwars_api_key": "",
+  "lab": {
+    "bssid": "",
+    "monitor_interface": "",
+    "authorized_until": 0
+  }
+}

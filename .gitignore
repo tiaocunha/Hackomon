@@ -8,4 +8,9 @@ build/
 .test-tmp/
 state.json
 state.json.*
+config.json
+*.pcap
+*.key
+dictionary.txt
+discoveries.csv
 

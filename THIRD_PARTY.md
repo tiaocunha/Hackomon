@@ -20,3 +20,13 @@ The `payload.sh` entry point follows the public WiFi Pineapple Pager payload
 layout documented by Hak5. No Hak5 firmware, trademarks, DuckyScript source or
 proprietary assets are included.
 
+## Optional network tools and service protocols
+
+Hackomon invokes independently installed `iw`, BlueZ `bluetoothctl`, `tcpdump`
+and Aircrack-ng, and reads a local GPSD service. None of their source/binaries
+is included. The original WDGWars client implements the public multipart API
+documented at https://wdgwars.pl/press. CSV export follows WigleWifi-1.6 for
+interoperability with Wardrive Go; no Wardrive Go (GPL-3.0) code is copied.
+Service accounts and third-party licenses remain separate from Hackomon's MIT
+source. WDGWars, Wardrive Go and WiGLE are not affiliated with this project.
+

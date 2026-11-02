@@ -1,8 +1,8 @@
 #!/bin/bash
 # Title: Hackomon
-# Description: Virtual creature game with 250 evolutions; no radio scanning or attacks
+# Description: Virtual creatures, GPS discoveries, WDGWars sync and scoped office lab
 # Author: tiaocunha
-# Version: 0.3.0
+# Version: 0.4.0
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 

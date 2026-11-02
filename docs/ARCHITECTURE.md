@@ -1,5 +1,20 @@
 # Architecture
 
+## Optional network and lab adapters (0.4.0)
+
+The `radio` module invokes bounded installed Linux tools and consumes fresh GPSD
+TPV fixes. `exploration` normalizes discovery records, awards capped unique XP
+and creates the small persistent upload queue. `wdgwars` serializes only discovery
+fields and sends authenticated HTTPS multipart requests without redirects.
+`lab` uses an exact, expiring BSSID scope, captures local EAPOL and runs a bounded
+offline dictionary test. `network_config` reads private device configuration.
+
+The app worker does not mutate game state. Results return through a thread-safe
+queue and the main loop updates XP, evolution and persistence atomically in the
+same save. Pending network actions complete before leaving; account credentials
+and recovered secrets are never placed in the save or upload data. See
+[NETWORKS.md](NETWORKS.md) for limits and validation boundaries.
+
 ## Boundaries
 
 Hackomon is an ordinary payload under `/root/payloads/user/games`. Its launcher

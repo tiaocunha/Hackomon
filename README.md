@@ -4,7 +4,7 @@ Hackomon is a lightweight virtual-creature game for the Hak5 WiFi
 Pineapple Pager. It installs as an independent user payload and does **not**
 replace or patch the stock Hak5 firmware.
 
-This first playable release contains:
+This incremental release contains:
 
 - 250 creatures: 10 families, 50 evolutionary lines and 5 stages per line;
 - detailed 32×32 pixel-art sprites with family anatomy, shading and line-specific ornaments;
@@ -13,7 +13,9 @@ This first playable release contains:
 - care actions, experience, levels and gated evolution rules;
 - atomic JSON persistence on the Pager's MMC storage;
 - a 480×222 interface controlled entirely by the D-pad and A/B buttons;
-- no Wi-Fi attacks, association, deauthentication or active network scanning.
+- optional Wi-Fi passive scans and BLE discovery with external GPSD fixes;
+- discovery XP, an offline queue, CSV export and manual WDGWars upload;
+- scoped office-lab EAPOL capture and bounded offline WPA/WPA2-PSK dictionary tests.
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -34,6 +36,10 @@ implemented and tested. The framebuffer/input adapter follows the public
 `libpagerctl` API, but this release has not yet been validated on the author's
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
+
+Network and lab adapters in **0.4.0 are experimental**: desktop tests use fixtures
+and mocked commands, not physical radios, actual password recovery or a live
+WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 
 ## Install
 
@@ -74,10 +80,12 @@ runtime. Generated release archives are written to `dist/`.
 
 ## Scope and safety
 
-This release is a local virtual-pet app. It deliberately does not issue `iw`,
-PineAP, BLE or packet-capture commands. A later passive-exploration adapter can
-consume already-authorized discovery events without coupling the core game to
-radio control.
+Radio operations run only when selected under **Redes / Laboratorio**. Lab
+operations require one exact BSSID, an existing monitor interface and a local
+authorization valid for at most 24 hours. No deauthentication, injection or
+automatic association is implemented. Uploads contain discovery metadata and
+GPS, never captures or recovered passwords. Keep account keys in local
+configuration, not in Git or chat.
 
 Hak5 and WiFi Pineapple are trademarks of Hak5 LLC. This community project is
 not affiliated with or endorsed by Hak5.

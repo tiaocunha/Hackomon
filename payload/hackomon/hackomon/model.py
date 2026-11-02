@@ -1,10 +1,13 @@
 """Serializable game state and care actions."""
 
 import random
+import hashlib
+import re
 import time
 from dataclasses import asdict, dataclass, field
 
 from .constants import STATE_SCHEMA_VERSION
+from .exploration import MAX_KNOWN, MAX_QUEUE, normalize_observation
 
 
 ACTION_RULES = {
@@ -56,6 +59,13 @@ class GameState:
     )
     discovered: list = field(default_factory=list)
     action_counts: dict = field(default_factory=lambda: {"feed": 0, "play": 0, "rest": 0})
+    exploration_known: dict = field(default_factory=dict)
+    exploration_day: str = ""
+    exploration_daily_xp: int = 0
+    exploration_xp: int = 0
+    exploration_counts: dict = field(default_factory=lambda: {"WIFI": 0, "BLE": 0})
+    network_queue: list = field(default_factory=list)
+    lab_rewards: list = field(default_factory=list)
 
     @classmethod
     def new(cls, catalog, line_id=None, now=None, rng=None):
@@ -88,6 +98,25 @@ class GameState:
         known_fields = {field_info.name for field_info in cls.__dataclass_fields__.values()}
         clean = {key: item for key, item in value.items() if key in known_fields}
         state = cls(**clean)
+        if (not isinstance(state.exploration_known, dict)
+                or len(state.exploration_known) > MAX_KNOWN
+                or not isinstance(state.network_queue, list)
+                or len(state.network_queue) > MAX_QUEUE
+                or not isinstance(state.exploration_counts, dict)
+                or not isinstance(state.lab_rewards, list)
+                or len(state.lab_rewards) > MAX_KNOWN):
+            raise ValueError("invalid discovery ledger")
+        for identity, day in state.exploration_known.items():
+            if (not re.fullmatch(r"[0-9a-f]{64}", identity)
+                    or not isinstance(day, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day)):
+                raise ValueError("invalid discovery identity")
+        for item in state.network_queue:
+            observation = normalize_observation(item)
+            identity = hashlib.sha256((observation["type"] + ":" + observation["mac"]).encode()).hexdigest()
+            if item.get("identity") != identity:
+                raise ValueError("invalid queued discovery")
+        state.exploration_daily_xp = max(0, int(state.exploration_daily_xp))
+        state.exploration_xp = max(0, int(state.exploration_xp))
         state._clamp_stats()
         state.discovered = [item for item in state.discovered if item in catalog.creature_by_id]
         if creature_id not in state.discovered:

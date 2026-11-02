@@ -19,7 +19,7 @@ from .backgrounds import draw_background
 from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
 
-ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Ajuda")
+ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Ajuda")
 
 
 def _bar(display, x, y, width, value, color, label):
@@ -75,7 +75,7 @@ class HackomonUI:
         display.draw_text(202, 83, "CUIDADO %02d  BEM-ESTAR %02d" % (state.care_points, state.wellness), COLOR_MUTED, 1)
 
         for index, label in enumerate(ACTIONS):
-            y = 101 + index * 16
+            y = 101 + index * 14
             if index == selected:
                 display.fill_rect(199, y - 3, 262, 14, COLOR_PANEL_ALT)
                 color = COLOR_CYAN
@@ -133,7 +133,32 @@ class HackomonUI:
             display.draw_text(20, 113, "Nivel     %d / %d" % status["level"], COLOR_TEXT, 1)
             display.draw_text(20, 129, "Cuidados  %d / %d" % status["care"], COLOR_TEXT, 1)
             display.draw_text(20, 145, "Bem-estar %d / %d" % status["wellness"], COLOR_TEXT, 1)
-        display.draw_text(20, 171, "Sem varredura ou ataque de rede nesta versao.", COLOR_MUTED, 1)
+        display.draw_text(20, 171, "Redes: descobertas + XP; lab com alvo cadastrado.", COLOR_MUTED, 1)
         display.draw_text_centered(205, "A ou B volta", COLOR_TEXT, 1)
+        display.flip()
+
+    def network(self, state, selected, message, busy=False, confirm=False):
+        display = self.display
+        display.clear(COLOR_BG)
+        self._header("REDES / LABORATORIO", state)
+        _panel(display, 8, 28, 464, 164)
+        display.draw_text(20, 38, "Fila: %d/500  XP exploracao: %d" % (
+            len(state.network_queue), state.exploration_xp), COLOR_CYAN, 1)
+        if confirm:
+            display.draw_text(20, 66, "Enviar registros ao WDGWars?", COLOR_YELLOW, 2)
+            display.draw_text(20, 96, "Inclui nomes, enderecos, sinal e GPS.", COLOR_TEXT, 1)
+            display.draw_text(20, 116, "Capturas e senhas permanecem locais.", COLOR_TEXT, 1)
+            display.draw_text(20, 150, "A envia por HTTPS  B cancela", COLOR_CYAN, 1)
+        else:
+            labels = ("Descobrir Wi-Fi (passivo)", "Descobrir Bluetooth LE", "Exportar CSV",
+                      "Enviar ao WDGWars", "Lab: capturar EAPOL (20s)", "Lab: testar dicionario (30s)")
+            for index, label in enumerate(labels):
+                y = 64 + index * 18
+                if selected == index:
+                    display.fill_rect(17, y - 3, 446, 15, COLOR_PANEL_ALT)
+                display.draw_text(22, y, ("> " if selected == index else "  ") + label,
+                                  COLOR_CYAN if selected == index else COLOR_TEXT, 1)
+        display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
+        display.draw_text_centered(212, "Aguarde a operacao" if busy else "A confirma  B volta", COLOR_TEXT, 1)
         display.flip()
 

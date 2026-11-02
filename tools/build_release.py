@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "hackomon-pager-0.3.0.zip"
+OUTPUT = DIST / "hackomon-pager-0.4.0.zip"
 
 
 def main():
@@ -27,6 +27,7 @@ def main():
             archive.write(ROOT / name, name)
         archive.write(ROOT / "docs" / "INSTALL.md", "INSTALL.md")
         archive.write(ROOT / "docs" / "HARDWARE_VALIDATION.md", "HARDWARE_VALIDATION.md")
+        archive.write(ROOT / "docs" / "NETWORKS.md", "NETWORKS.md")
     print("built %s" % OUTPUT)
 
 

@@ -32,6 +32,11 @@ the system.
 
 ## Save data
 
+Optional network/laboratory setup is in [NETWORKS.md](NETWORKS.md). Copy the
+included configuration example to the save directory and supply the actual
+radio interfaces and local account key there. The installed app otherwise
+continues to work as a pet without network dependencies.
+
 The default save lives at:
 
 ```text

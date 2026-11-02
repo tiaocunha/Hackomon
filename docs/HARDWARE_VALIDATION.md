@@ -20,3 +20,21 @@ Known limitation: this repository cannot validate a physical Pager from the
 desktop environment. No claim of on-device validation should be made until the
 checklist above has been completed and the firmware version recorded.
 
+## Experimental networks and laboratory
+
+- [ ] Record firmware, iw, BlueZ, gpsd, tcpdump and Aircrack-ng versions.
+- [ ] External GPS supplies fresh TPV reports and horizontal error estimates.
+- [ ] Missing/stale GPS prevents collection; movement over 30m rejects a batch.
+- [ ] Wi-Fi passive scan works on the chosen interface without disrupting management.
+- [ ] LE scan exits within its bound and does not pair/connect.
+- [ ] Discovery XP and pending observations survive restart.
+- [ ] CSV round-trips through Wardrive Go import with correct positions and names.
+- [ ] A real WDGWars account accepts the request and its response schema is recorded.
+- [ ] Offline, HTTP failure and unexpected success schemas preserve the queue.
+- [ ] Target-specific monitor capture observes only the lab BSSID's EAPOL.
+- [ ] A known lab password is recovered from a complete exchange and test dictionary.
+- [ ] No-match, incomplete exchange and timeout never report a recovered password.
+- [ ] PCAP/key files have private permissions and no secrets enter logs/uploads.
+- [ ] Expired/changed BSSID rejects capture and old target's dictionary input.
+- [ ] Radio operation completion and TERM restore the stock interface correctly.
+
