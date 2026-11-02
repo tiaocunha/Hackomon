@@ -4,6 +4,12 @@
   "lab": {
     "bssid": "",
     "monitor_interface": "",
-    "authorized_until": 0
+    "authorized_until": 0,
+    "bluetooth": {
+      "address": "",
+      "kind": "phone",
+      "transport": "auto",
+      "authorized_until": 0
+    }
   }
 }

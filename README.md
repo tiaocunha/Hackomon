@@ -16,6 +16,7 @@ This incremental release contains:
 - optional Wi-Fi passive scans and BLE discovery with external GPSD fixes;
 - discovery XP, an offline queue, CSV export and manual WDGWars upload;
 - scoped office-lab EAPOL capture and bounded offline WPA/WPA2-PSK dictionary tests.
+- target-scoped Bluetooth metadata and classic SDP service inventory, with local reports.
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -37,7 +38,7 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters in **0.4.0 are experimental**: desktop tests use fixtures
+Network and lab adapters in **0.4.1 are experimental**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 

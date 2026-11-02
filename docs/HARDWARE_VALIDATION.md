@@ -37,4 +37,9 @@ checklist above has been completed and the firmware version recorded.
 - [ ] PCAP/key files have private permissions and no secrets enter logs/uploads.
 - [ ] Expired/changed BSSID rejects capture and old target's dictionary input.
 - [ ] Radio operation completion and TERM restore the stock interface correctly.
+- [ ] Bluetooth audit receives services from a known classic lab target via sdptool.
+- [ ] BLE-only/cached metadata and unavailable devices are shown as partial/inconclusive.
+- [ ] Rotating BLE addresses work in discovery and require updated lab target scope.
+- [ ] Audit earns 5 XP once, persists it and never queues the local report for upload.
+- [ ] SDP timeout ends cleanly without changing pairings or HID/audio connections.
 

@@ -151,9 +151,10 @@ class HackomonUI:
             display.draw_text(20, 150, "A envia por HTTPS  B cancela", COLOR_CYAN, 1)
         else:
             labels = ("Descobrir Wi-Fi (passivo)", "Descobrir Bluetooth LE", "Exportar CSV",
-                      "Enviar ao WDGWars", "Lab: capturar EAPOL (20s)", "Lab: testar dicionario (30s)")
+                      "Enviar ao WDGWars", "Lab: capturar EAPOL (20s)", "Lab: testar dicionario (30s)",
+                      "Lab: auditar Bluetooth")
             for index, label in enumerate(labels):
-                y = 64 + index * 18
+                y = 57 + index * 17
                 if selected == index:
                     display.fill_rect(17, y - 3, 446, 15, COLOR_PANEL_ALT)
                 display.draw_text(22, y, ("> " if selected == index else "  ") + label,

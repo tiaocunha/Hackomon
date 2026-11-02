@@ -7,7 +7,9 @@ TPV fixes. `exploration` normalizes discovery records, awards capped unique XP
 and creates the small persistent upload queue. `wdgwars` serializes only discovery
 fields and sends authenticated HTTPS multipart requests without redirects.
 `lab` uses an exact, expiring BSSID scope, captures local EAPOL and runs a bounded
-offline dictionary test. `network_config` reads private device configuration.
+offline dictionary test. `bluetooth_lab` uses a separate expiring Bluetooth
+address, labels cached metadata and queries classic SDP service records. Reports
+remain private and separate from uploads. `network_config` reads device configuration.
 
 The app worker does not mutate game state. Results return through a thread-safe
 queue and the main loop updates XP, evolution and persistence atomically in the

@@ -7,6 +7,7 @@ import urllib.request
 import uuid
 
 from .exploration import export_csv
+from . import __version__
 
 
 ENDPOINT = "https://wdgwars.pl/api/upload-csv"
@@ -31,7 +32,7 @@ def upload(observations, api_key, opener=None):
             'filename="hackomon.csv"\r\nContent-Type: text/csv\r\n\r\n' % boundary).encode()
     body += data + ("\r\n--%s--\r\n" % boundary).encode()
     request = urllib.request.Request(ENDPOINT, data=body, method="POST", headers={
-        "X-API-Key": api_key, "User-Agent": "Hackomon/0.4.0",
+        "X-API-Key": api_key, "User-Agent": "Hackomon/" + __version__,
         "Content-Type": "multipart/form-data; boundary=" + boundary,
     })
     client = opener or urllib.request.build_opener(NoRedirect())

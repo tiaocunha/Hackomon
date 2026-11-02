@@ -13,7 +13,7 @@ from .storage import StateStore
 from .ui import HackomonUI
 from .exploration import export_csv, record_observations
 from .network_config import load_config
-from . import lab, radio, wdgwars
+from . import bluetooth_lab, lab, radio, wdgwars
 
 
 ACTION_KEYS = ("feed", "play", "rest")
@@ -58,8 +58,12 @@ class HackomonApp:
                     result = "CSV salvo em discoveries.csv"
                 elif action == "capture":
                     result = lab.capture(config, self.store.data_dir)
-                else:
+                elif action == "bluetooth_audit":
+                    result = bluetooth_lab.audit(config, self.store.data_dir)
+                elif action == "test":
                     result = lab.test_dictionary(config, self.store.data_dir)
+                else:
+                    raise RuntimeError("Acao de rede desconhecida")
                 self.results.put((action, result, None))
             except Exception as error:
                 # Never put credentials, tool output or server response bodies on screen/log.
@@ -95,6 +99,12 @@ class HackomonApp:
                 self.state.lab_rewards.append(reward)
                 self.state.xp += 10
                 self.state.level = min(99, 1 + self.state.xp // 30)
+            elif (action == "bluetooth_audit" and result.get("completed")
+                  and reward not in self.state.lab_rewards):
+                self.state.lab_rewards.append(reward)
+                self.state.xp += 5
+                self.state.level = min(99, 1 + self.state.xp // 30)
+                self.network_message += " +5 XP"
         evolution = advance_one_if_ready(self.state, self.catalog)
         if evolution.evolved:
             self.network_message = "EVOLUCAO! " + self.network_message
@@ -113,11 +123,11 @@ class HackomonApp:
                 self._network_job("upload")
             return True
         if pressed & self.display.BTN_UP:
-            self.network_selected = (self.network_selected - 1) % 6
+            self.network_selected = (self.network_selected - 1) % 7
         if pressed & self.display.BTN_DOWN:
-            self.network_selected = (self.network_selected + 1) % 6
+            self.network_selected = (self.network_selected + 1) % 7
         if pressed & self.display.BTN_A:
-            action = ("WIFI", "BLE", "export", "upload", "capture", "test")[self.network_selected]
+            action = ("WIFI", "BLE", "export", "upload", "capture", "test", "bluetooth_audit")[self.network_selected]
             if action == "upload":
                 self.screen = "upload_confirm"
             else:

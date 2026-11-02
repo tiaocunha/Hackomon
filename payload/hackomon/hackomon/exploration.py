@@ -7,6 +7,8 @@ import io
 import math
 import re
 
+from . import __version__
+
 
 MAC = re.compile(r"(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\Z")
 MAX_QUEUE = 500
@@ -22,7 +24,8 @@ def normalize_observation(value):
     address = str(value["mac"]).upper()
     if kind not in ("WIFI", "BLE") or not MAC.fullmatch(address):
         raise ValueError("invalid discovery type/address")
-    if int(address[:2], 16) & 1 or address == "00:00:00:00:00:00":
+    if (kind == "WIFI" and int(address[:2], 16) & 1
+            or address in ("00:00:00:00:00:00", "FF:FF:FF:FF:FF:FF")):
         raise ValueError("invalid device address")
     lat, lon = float(value["lat"]), float(value["lon"])
     accuracy = float(value["accuracy"])
@@ -93,7 +96,7 @@ def record_observations(state, observations, now):
 def export_csv(observations):
     """Explicit discovery fields only; never includes keys, pcaps or arbitrary input."""
     stream = io.StringIO(newline="")
-    stream.write("WigleWifi-1.6,appRelease=0.4.0,model=Hak5 Pager,device=hackomon,brand=Hackomon\n")
+    stream.write("WigleWifi-1.6,appRelease=%s,model=Hak5 Pager,device=hackomon,brand=Hackomon\n" % __version__)
     writer = csv.writer(stream, lineterminator="\n")
     writer.writerow(COLUMNS)
     for value in observations:

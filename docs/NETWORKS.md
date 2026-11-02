@@ -1,4 +1,4 @@
-# Networks and office laboratory — 0.4.0
+# Networks and office laboratory — 0.4.1
 
 ## Status
 
@@ -96,6 +96,45 @@ No recovery is inconclusive: incomplete exchange, missing candidate, unsupported
 setup or time limit are possible. It does not prove password strength.
 
 WPA3-SAE, enterprise-authentication attacks, Bluetooth pairing/password tests,
-mesh adapters and an autonomous attack loop are NOT implemented. BLE presently
-covers discovery only; further lab tests require equipment/protocol definitions.
+mesh adapters and an autonomous attack loop are NOT implemented. BLE live operations
+cover discovery; known advertised service metadata can also be inventoried locally.
+Further lab tests require equipment/protocol definitions.
 See [Aircrack-ng supported modes](https://www.aircrack-ng.org/doku.php?id=aircrack-ng).
+
+## Bluetooth laboratory inventory (0.4.1)
+
+Device kinds: `phone`, `speaker`, `headset`, `mouse`, `keyboard`. This is the
+user's declared category, not an identification or vulnerability fingerprint.
+Each category can use classic Bluetooth, BLE or both.
+
+Configure the independent `lab.bluetooth` object in the supplied example:
+`address` is the exact current Bluetooth address, `kind` is one category above,
+`transport` is `auto`, `bredr` or `le`, and `authorized_until` is UTC Unix seconds
+at most 24 hours ahead. At least 30 seconds must remain to start. Changing
+equipment or a rotating BLE address requires updating this target. No wildcards.
+This scope is separate from the Wi-Fi BSSID and does not require a GPS fix.
+
+**Lab: auditar Bluetooth** first calls `bluetoothctl --timeout 5 info <address>`.
+The report labels that information as the BlueZ cache: names, advertised UUIDs
+and paired/bonded/trusted/connected flags describe what the Pager knows and its
+own relationship. They do not establish current presence or the target's
+authentication policy. For `auto`/`bredr`, installed BlueZ `sdptool browse
+<address>` queries only that target's classic SDP services with a 10-second
+process limit. No returned records means inconclusive, not evidence that the
+device is secure or has no services. `le` mode skips SDP; it inventories known
+metadata only and remains partial.
+
+Private reports are written to `/mmc/root/hackomon/lab/bluetooth-*.json`, including
+tool failures and explicit untested categories. They list no verified
+vulnerabilities: visible services alone do not prove access. No PIN attempts,
+pairing, GATT value reads/writes, input injection, audio capture or connection to
+HID/audio profiles are performed. SDP itself uses a targeted service connection.
+Missing tools are recorded as inconclusive, without installing packages or
+falling back to broad searches. Nothing changes existing pairings.
+
+A successful SDP service inventory earns **5 XP once per Bluetooth address**.
+Cached data, timeouts and missing tools earn no audit XP. BLE discoveries retain
+their existing capped rewards. Audit reports never enter the WDGWars queue;
+only ordinary discovery records can be uploaded. Desktop tests use fixtures;
+physical support on the Pager remains unvalidated. BlueZ command reference:
+[upstream SDP tool](https://github.com/bluez/bluez/blob/master/tools/sdptool.c).

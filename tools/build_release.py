@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "hackomon-pager-0.4.0.zip"
+OUTPUT = DIST / "hackomon-pager-0.4.1.zip"
 
 
 def main():
