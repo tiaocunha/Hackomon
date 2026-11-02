@@ -12,6 +12,7 @@ PAYLOAD = ROOT / "payload" / "hackomon"
 sys.path.insert(0, str(PAYLOAD))
 
 from hackomon.catalog import CreatureCatalog  # noqa: E402
+from hackomon.constants import SPRITE_SIZE  # noqa: E402
 from hackomon.sprites import POSE_LENGTHS, palette_rgb, sprite_frame  # noqa: E402
 
 
@@ -54,7 +55,7 @@ def blit_sprite(target, creature, left, top, scale, pose="idle", frame_index=0):
 
 def render_bestiary(catalog, output):
     scale = 3
-    cell = 24 * scale
+    cell = SPRITE_SIZE * scale
     pixels = canvas(cell * 5, cell * 10)
     for index, evolution_line in enumerate(catalog.lines):
         creature = catalog.creature(evolution_line["creature_ids"][4])
@@ -65,8 +66,8 @@ def render_bestiary(catalog, output):
 
 
 def render_animations(catalog, output):
-    scale = 4
-    cell = 24 * scale
+    scale = 3
+    cell = SPRITE_SIZE * scale
     poses = tuple(POSE_LENGTHS)
     pixels = canvas(cell * 4, cell * len(poses))
     creature = catalog.creatures[249]

@@ -2,6 +2,7 @@ import unittest
 
 from tests import support  # noqa: F401
 from hackomon.catalog import CreatureCatalog
+from hackomon.constants import SPRITE_SIZE
 from hackomon.sprites import POSE_LENGTHS, iter_color_runs, palette_rgb, sprite_frame
 
 
@@ -10,13 +11,13 @@ class SpriteTests(unittest.TestCase):
     def setUpClass(cls):
         cls.catalog = CreatureCatalog.load_default()
 
-    def test_every_creature_renders_inside_24_pixel_canvas(self):
+    def test_every_creature_renders_inside_declared_canvas(self):
         for creature in self.catalog.creatures:
             frame = sprite_frame(creature)
-            self.assertEqual(24, len(frame))
-            self.assertTrue(all(len(row) == 24 for row in frame))
+            self.assertEqual(SPRITE_SIZE, len(frame))
+            self.assertTrue(all(len(row) == SPRITE_SIZE for row in frame))
             self.assertGreater(sum(1 for row in frame for value in row if value), 10)
-            self.assertTrue(all(0 <= value <= 5 for row in frame for value in row))
+            self.assertTrue(all(0 <= value <= 7 for row in frame for value in row))
 
     def test_all_animation_poses_change(self):
         creature = self.catalog.creatures[-1]
@@ -36,6 +37,13 @@ class SpriteTests(unittest.TestCase):
         pixels = sum(1 for row in frame for value in row if value)
         compacted = sum(width for _x, _y, width, _color in iter_color_runs(frame))
         self.assertEqual(pixels, compacted)
+
+    def test_frame_run_count_stays_bounded_for_pager(self):
+        run_counts = [
+            len(list(iter_color_runs(sprite_frame(creature))))
+            for creature in self.catalog.creatures
+        ]
+        self.assertLessEqual(max(run_counts), 320)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 # Title: Hackomon
 # Description: Virtual creature game with 250 evolutions; no radio scanning or attacks
 # Author: tiaocunha
-# Version: 0.1.0
+# Version: 0.2.0
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 

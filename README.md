@@ -7,7 +7,7 @@ replace or patch the stock Hak5 firmware.
 This first playable release contains:
 
 - 250 creatures: 10 families, 50 evolutionary lines and 5 stages per line;
-- deterministic pixel-art sprites generated from compact creature descriptors;
+- detailed 32×32 pixel-art sprites with family anatomy, shading and line-specific ornaments;
 - `idle`, `happy`, `sad`, `sleep` and `walk` animations;
 - care actions, experience, levels and gated evolution rules;
 - atomic JSON persistence on the Pager's MMC storage;

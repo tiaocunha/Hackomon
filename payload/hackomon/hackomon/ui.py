@@ -37,7 +37,7 @@ def _panel(display, x, y, width, height, color=COLOR_PANEL):
     display.fill_rect(x + width - 1, y, 1, height, COLOR_CYAN)
 
 
-def draw_silhouette(display, creature, x, y, scale=5):
+def draw_silhouette(display, creature, x, y, scale=4):
     frame = sprite_frame(creature, "idle", 0)
     for run_x, run_y, width, _color in iter_color_runs(frame):
         display.fill_rect(x + run_x * scale, y + run_y * scale, width * scale, scale, COLOR_MUTED)
@@ -62,7 +62,7 @@ class HackomonUI:
         display.clear(COLOR_BG)
         self._header("HACKOMON", state)
         _panel(display, 8, 27, 174, 164)
-        draw_sprite(display, creature, 35, 46, scale=5, pose=pose, frame_index=frame_index)
+        draw_sprite(display, creature, 31, 39, scale=4, pose=pose, frame_index=frame_index)
         display.draw_text_centered(171, creature["name"][:24], COLOR_TEXT, 1)
         display.draw_text_centered(181, "%s / %s" % (family["name"], creature["stage_name"]), COLOR_MUTED, 1)
 
@@ -98,9 +98,9 @@ class HackomonUI:
         self._header("BESTIARIO  %03d/250" % (index + 1), state)
         _panel(display, 8, 28, 174, 164)
         if unlocked:
-            draw_sprite(display, creature, 35, 48, scale=5, pose="idle", frame_index=frame_index)
+            draw_sprite(display, creature, 31, 39, scale=4, pose="idle", frame_index=frame_index)
         else:
-            draw_silhouette(display, creature, 35, 48, scale=5)
+            draw_silhouette(display, creature, 31, 39, scale=4)
         display.draw_text_centered(176, "DESCOBERTO" if unlocked else "BLOQUEADO", COLOR_GREEN if unlocked else COLOR_RED, 1)
 
         _panel(display, 190, 28, 282, 164)

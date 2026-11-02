@@ -12,7 +12,7 @@ The app is split into five small layers:
 1. `catalog.py` validates and indexes the generated 250-creature catalog.
 2. `model.py` owns care stats, elapsed-time decay and serializable game state.
 3. `evolution.py` applies the level/care/wellness gates.
-4. `sprites.py` turns compact descriptors into 24×24 pixel frames and merges
+4. `sprites.py` turns compact descriptors into 32×32 pixel frames and merges
    adjacent pixels into framebuffer-friendly runs.
 5. `app.py` and `ui.py` implement the input loop and 480×222 screens.
 
@@ -29,8 +29,11 @@ ornamentation. The generated JSON is checked into the payload so the Pager does
 not spend CPU or storage generating metadata at first launch.
 
 Sprites are rendered directly from descriptors. This avoids 1,000+ small image
-files while still giving every creature a stable, distinct sprite. A 24×24
-frame is expanded to 5× pixels on screen and drawn as horizontal color runs.
+files while still giving every creature a stable, distinct sprite. A 32×32
+frame is expanded to 4× pixels on screen and drawn as horizontal color runs.
+Each family owns a different anatomy, each evolutionary line adds its own
+silhouette details, and a derived seven-tone palette supplies outline, shadow,
+highlight and glow without enlarging the catalog.
 
 ## Persistence
 
