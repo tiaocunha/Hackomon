@@ -108,9 +108,10 @@ def ble_observations(text, now):
         if detail.startswith("RSSI: "):
             raw = detail[6:].split()[0]
             try:
-                number = int(raw, 16) if raw.startswith("0x") else int(raw)
-                if number > 127:
-                    number -= 65536 if number > 255 else 256
+                signed = re.search(r"\((-?\d+)\)", detail)
+                number = int(signed.group(1)) if signed else int(raw, 16) if raw.startswith("0x") else int(raw)
+                if not signed and number > 127:
+                    number -= 256 if number <= 255 else 65536 if number <= 65535 else 4294967296
                 item["rssi"] = number
             except ValueError:
                 continue

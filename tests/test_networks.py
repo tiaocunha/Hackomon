@@ -80,6 +80,8 @@ class NetworksTests(unittest.TestCase):
         found = ble_observations(text, 1700000000)
         self.assertEqual(1, len(found))
         self.assertEqual(-57, found[0]["rssi"])
+        hexadecimal = ble_observations(text.replace("RSSI: -57", "RSSI: 0xffffffc9 (-55)"), 1700000000)
+        self.assertEqual(-55, hexadecimal[0]["rssi"])
 
     def test_gps_requires_fresh_fix_and_accuracy(self):
         stamp = datetime.datetime.fromtimestamp(1700000000, datetime.timezone.utc).isoformat()
