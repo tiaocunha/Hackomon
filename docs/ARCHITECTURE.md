@@ -14,7 +14,9 @@ The app is split into five small layers:
 3. `evolution.py` applies the level/care/wellness gates.
 4. `sprites.py` turns compact descriptors into 32×32 pixel frames and merges
    adjacent pixels into framebuffer-friendly runs.
-5. `app.py` and `ui.py` implement the input loop and 480×222 screens.
+5. `backgrounds.py` composes a personalized low-cost environment for every
+   creature and evolutionary stage.
+6. `app.py` and `ui.py` implement the input loop and 480×222 screens.
 
 `pager_backend.py` is the only hardware-specific module. It uses a minimal
 `ctypes` binding to the external MIT-licensed `libpagerctl.so`. Tests use a
@@ -34,6 +36,12 @@ frame is expanded to 4× pixels on screen and drawn as horizontal color runs.
 Each family owns a different anatomy, each evolutionary line adds its own
 silhouette details, and a derived seven-tone palette supplies outline, shadow,
 highlight and glow without enlarging the catalog.
+
+Backgrounds combine the creature family, line motif, palette, stable seed and
+stage. Eggs receive contained nest scenes; young stages add landmarks; adults
+receive full environments; rare forms add a two-frame ambient effect. They use
+the same horizontal-run compaction as sprites so scenery remains practical on
+the Pager framebuffer.
 
 ## Persistence
 

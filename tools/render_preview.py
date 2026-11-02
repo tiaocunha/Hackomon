@@ -12,6 +12,7 @@ PAYLOAD = ROOT / "payload" / "hackomon"
 sys.path.insert(0, str(PAYLOAD))
 
 from hackomon.catalog import CreatureCatalog  # noqa: E402
+from hackomon.backgrounds import background_frame, background_palette_rgb  # noqa: E402
 from hackomon.constants import SPRITE_SIZE  # noqa: E402
 from hackomon.sprites import POSE_LENGTHS, palette_rgb, sprite_frame  # noqa: E402
 
@@ -53,6 +54,17 @@ def blit_sprite(target, creature, left, top, scale, pose="idle", frame_index=0):
                     target[top + y * scale + sy][left + x * scale + sx] = color
 
 
+def blit_background(target, creature, left, top, scale, frame_index=0):
+    frame = background_frame(creature, SPRITE_SIZE, SPRITE_SIZE, frame_index)
+    palette = background_palette_rgb(creature)
+    for y, row in enumerate(frame):
+        for x, color_index in enumerate(row):
+            color = palette[color_index]
+            for sy in range(scale):
+                for sx in range(scale):
+                    target[top + y * scale + sy][left + x * scale + sx] = color
+
+
 def render_bestiary(catalog, output):
     scale = 3
     cell = SPRITE_SIZE * scale
@@ -61,6 +73,7 @@ def render_bestiary(catalog, output):
         creature = catalog.creature(evolution_line["creature_ids"][4])
         column = index % 5
         row = index // 5
+        blit_background(pixels, creature, column * cell, row * cell, scale)
         blit_sprite(pixels, creature, column * cell, row * cell, scale)
     write_png(output, cell * 5, cell * 10, pixels)
 
@@ -73,8 +86,24 @@ def render_animations(catalog, output):
     creature = catalog.creatures[249]
     for row, pose in enumerate(poses):
         for column in range(4):
+            blit_background(pixels, creature, column * cell, row * cell, scale, column)
             blit_sprite(pixels, creature, column * cell, row * cell, scale, pose, column)
     write_png(output, cell * 4, cell * len(poses), pixels)
+
+
+def render_evolution_scenes(catalog, output):
+    scale = 3
+    cell = SPRITE_SIZE * scale
+    pixels = canvas(cell * 5, cell * 10)
+    for family_index, family in enumerate(catalog.families):
+        evolution_line = catalog.family_lines(family["id"])[0]
+        for stage, creature_id in enumerate(evolution_line["creature_ids"]):
+            creature = catalog.creature(creature_id)
+            left = stage * cell
+            top = family_index * cell
+            blit_background(pixels, creature, left, top, scale, stage)
+            blit_sprite(pixels, creature, left, top, scale, "idle", stage)
+    write_png(output, cell * 5, cell * 10, pixels)
 
 
 def main():
@@ -82,6 +111,7 @@ def main():
     images = ROOT / "docs" / "images"
     render_bestiary(catalog, images / "bestiary-preview.png")
     render_animations(catalog, images / "animation-preview.png")
+    render_evolution_scenes(catalog, images / "evolution-preview.png")
     print("rendered previews in %s" % images)
 
 

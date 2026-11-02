@@ -8,6 +8,7 @@ This first playable release contains:
 
 - 250 creatures: 10 families, 50 evolutionary lines and 5 stages per line;
 - detailed 32×32 pixel-art sprites with family anatomy, shading and line-specific ornaments;
+- 250 personalized environments that change with family, line and evolutionary stage;
 - `idle`, `happy`, `sad`, `sleep` and `walk` animations;
 - care actions, experience, levels and gated evolution rules;
 - atomic JSON persistence on the Pager's MMC storage;
@@ -20,6 +21,11 @@ The second preview shows the same creature in `idle`, `happy`, `sad`, `sleep`
 and `walk` poses (one pose per row):
 
 ![Animation preview](docs/images/animation-preview.png)
+
+The evolution sheet shows one line from every family progressing from egg to
+rare form, including the matching environment growth:
+
+![Evolution environment preview](docs/images/evolution-preview.png)
 
 ## Status
 
