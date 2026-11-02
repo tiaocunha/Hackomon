@@ -1,0 +1,6585 @@
+{
+  "schema_version": 1,
+  "counts": {
+    "families": 10,
+    "lines": 50,
+    "creatures": 250,
+    "stages_per_line": 5
+  },
+  "families": [
+    {
+      "id": "slime",
+      "index": 0,
+      "name": "Geleias",
+      "shape": "blob",
+      "description": "Criaturas elásticas que condensam energia do ambiente."
+    },
+    {
+      "id": "mammal",
+      "index": 1,
+      "name": "Mamíferos",
+      "shape": "mammal",
+      "description": "Companheiros ágeis com orelhas, caudas e forte vínculo afetivo."
+    },
+    {
+      "id": "avian",
+      "index": 2,
+      "name": "Aves",
+      "shape": "avian",
+      "description": "Aves pequenas que acumulam vento, som e luz nas penas."
+    },
+    {
+      "id": "reptile",
+      "index": 3,
+      "name": "Répteis",
+      "shape": "reptile",
+      "description": "Escamas resistentes e evoluções marcadas por chifres e caudas."
+    },
+    {
+      "id": "aquatic",
+      "index": 4,
+      "name": "Aquáticos",
+      "shape": "aquatic",
+      "description": "Habitantes de poças digitais, correntes e mares imaginários."
+    },
+    {
+      "id": "insect",
+      "index": 5,
+      "name": "Insetos",
+      "shape": "insect",
+      "description": "Pequenos construtores com asas, antenas e carapaças vívidas."
+    },
+    {
+      "id": "spectral",
+      "index": 6,
+      "name": "Espectros",
+      "shape": "spectral",
+      "description": "Ecos gentis que habitam ruídos, sonhos e sinais esquecidos."
+    },
+    {
+      "id": "botanical",
+      "index": 7,
+      "name": "Flora e Fungos",
+      "shape": "botanical",
+      "description": "Brotos pacientes que florescem com cuidado regular."
+    },
+    {
+      "id": "robotic",
+      "index": 8,
+      "name": "Robóticos",
+      "shape": "robotic",
+      "description": "Autômatos compactos que aprendem rotinas de cuidado."
+    },
+    {
+      "id": "cosmic",
+      "index": 9,
+      "name": "Cósmicos",
+      "shape": "cosmic",
+      "description": "Anomalias fofas nascidas entre estrelas e pacotes perdidos."
+    }
+  ],
+  "lines": [
+    {
+      "id": "slime-lumen",
+      "family_id": "slime",
+      "family_line_index": 0,
+      "name": "Lúmen",
+      "temperament": "curious",
+      "motif": "spark",
+      "creature_ids": [
+        "slime-lumen-s0",
+        "slime-lumen-s1",
+        "slime-lumen-s2",
+        "slime-lumen-s3",
+        "slime-lumen-s4"
+      ]
+    },
+    {
+      "id": "slime-volt",
+      "family_id": "slime",
+      "family_line_index": 1,
+      "name": "Voltaico",
+      "temperament": "bold",
+      "motif": "bolt",
+      "creature_ids": [
+        "slime-volt-s0",
+        "slime-volt-s1",
+        "slime-volt-s2",
+        "slime-volt-s3",
+        "slime-volt-s4"
+      ]
+    },
+    {
+      "id": "slime-miasma",
+      "family_id": "slime",
+      "family_line_index": 2,
+      "name": "Miasma",
+      "temperament": "calm",
+      "motif": "spots",
+      "creature_ids": [
+        "slime-miasma-s0",
+        "slime-miasma-s1",
+        "slime-miasma-s2",
+        "slime-miasma-s3",
+        "slime-miasma-s4"
+      ]
+    },
+    {
+      "id": "slime-crystal",
+      "family_id": "slime",
+      "family_line_index": 3,
+      "name": "Cristal",
+      "temperament": "proud",
+      "motif": "crystal",
+      "creature_ids": [
+        "slime-crystal-s0",
+        "slime-crystal-s1",
+        "slime-crystal-s2",
+        "slime-crystal-s3",
+        "slime-crystal-s4"
+      ]
+    },
+    {
+      "id": "slime-abyss",
+      "family_id": "slime",
+      "family_line_index": 4,
+      "name": "Abissal",
+      "temperament": "shy",
+      "motif": "tentacle",
+      "creature_ids": [
+        "slime-abyss-s0",
+        "slime-abyss-s1",
+        "slime-abyss-s2",
+        "slime-abyss-s3",
+        "slime-abyss-s4"
+      ]
+    },
+    {
+      "id": "mammal-fox",
+      "family_id": "mammal",
+      "family_line_index": 0,
+      "name": "Raposa Solar",
+      "temperament": "clever",
+      "motif": "flame",
+      "creature_ids": [
+        "mammal-fox-s0",
+        "mammal-fox-s1",
+        "mammal-fox-s2",
+        "mammal-fox-s3",
+        "mammal-fox-s4"
+      ]
+    },
+    {
+      "id": "mammal-cat",
+      "family_id": "mammal",
+      "family_line_index": 1,
+      "name": "Felino Noturno",
+      "temperament": "aloof",
+      "motif": "moon",
+      "creature_ids": [
+        "mammal-cat-s0",
+        "mammal-cat-s1",
+        "mammal-cat-s2",
+        "mammal-cat-s3",
+        "mammal-cat-s4"
+      ]
+    },
+    {
+      "id": "mammal-rabbit",
+      "family_id": "mammal",
+      "family_line_index": 2,
+      "name": "Coelho Nimbo",
+      "temperament": "playful",
+      "motif": "cloud",
+      "creature_ids": [
+        "mammal-rabbit-s0",
+        "mammal-rabbit-s1",
+        "mammal-rabbit-s2",
+        "mammal-rabbit-s3",
+        "mammal-rabbit-s4"
+      ]
+    },
+    {
+      "id": "mammal-bear",
+      "family_id": "mammal",
+      "family_line_index": 3,
+      "name": "Urso Musgo",
+      "temperament": "gentle",
+      "motif": "leaf",
+      "creature_ids": [
+        "mammal-bear-s0",
+        "mammal-bear-s1",
+        "mammal-bear-s2",
+        "mammal-bear-s3",
+        "mammal-bear-s4"
+      ]
+    },
+    {
+      "id": "mammal-wolf",
+      "family_id": "mammal",
+      "family_line_index": 4,
+      "name": "Lobo Boreal",
+      "temperament": "loyal",
+      "motif": "aurora",
+      "creature_ids": [
+        "mammal-wolf-s0",
+        "mammal-wolf-s1",
+        "mammal-wolf-s2",
+        "mammal-wolf-s3",
+        "mammal-wolf-s4"
+      ]
+    },
+    {
+      "id": "avian-crow",
+      "family_id": "avian",
+      "family_line_index": 0,
+      "name": "Corvo Glitch",
+      "temperament": "wary",
+      "motif": "glitch",
+      "creature_ids": [
+        "avian-crow-s0",
+        "avian-crow-s1",
+        "avian-crow-s2",
+        "avian-crow-s3",
+        "avian-crow-s4"
+      ]
+    },
+    {
+      "id": "avian-sunbird",
+      "family_id": "avian",
+      "family_line_index": 1,
+      "name": "Pássaro Solar",
+      "temperament": "bright",
+      "motif": "sun",
+      "creature_ids": [
+        "avian-sunbird-s0",
+        "avian-sunbird-s1",
+        "avian-sunbird-s2",
+        "avian-sunbird-s3",
+        "avian-sunbird-s4"
+      ]
+    },
+    {
+      "id": "avian-storm",
+      "family_id": "avian",
+      "family_line_index": 2,
+      "name": "Falcão Tempestade",
+      "temperament": "bold",
+      "motif": "bolt",
+      "creature_ids": [
+        "avian-storm-s0",
+        "avian-storm-s1",
+        "avian-storm-s2",
+        "avian-storm-s3",
+        "avian-storm-s4"
+      ]
+    },
+    {
+      "id": "avian-owl",
+      "family_id": "avian",
+      "family_line_index": 3,
+      "name": "Coruja Oráculo",
+      "temperament": "wise",
+      "motif": "rune",
+      "creature_ids": [
+        "avian-owl-s0",
+        "avian-owl-s1",
+        "avian-owl-s2",
+        "avian-owl-s3",
+        "avian-owl-s4"
+      ]
+    },
+    {
+      "id": "avian-humming",
+      "family_id": "avian",
+      "family_line_index": 4,
+      "name": "Beija-flor Prisma",
+      "temperament": "energetic",
+      "motif": "prism",
+      "creature_ids": [
+        "avian-humming-s0",
+        "avian-humming-s1",
+        "avian-humming-s2",
+        "avian-humming-s3",
+        "avian-humming-s4"
+      ]
+    },
+    {
+      "id": "reptile-dragon",
+      "family_id": "reptile",
+      "family_line_index": 0,
+      "name": "Dragão Brasa",
+      "temperament": "fierce",
+      "motif": "horn",
+      "creature_ids": [
+        "reptile-dragon-s0",
+        "reptile-dragon-s1",
+        "reptile-dragon-s2",
+        "reptile-dragon-s3",
+        "reptile-dragon-s4"
+      ]
+    },
+    {
+      "id": "reptile-gecko",
+      "family_id": "reptile",
+      "family_line_index": 1,
+      "name": "Lagarto Neon",
+      "temperament": "nimble",
+      "motif": "spots",
+      "creature_ids": [
+        "reptile-gecko-s0",
+        "reptile-gecko-s1",
+        "reptile-gecko-s2",
+        "reptile-gecko-s3",
+        "reptile-gecko-s4"
+      ]
+    },
+    {
+      "id": "reptile-turtle",
+      "family_id": "reptile",
+      "family_line_index": 2,
+      "name": "Tartaruga Runa",
+      "temperament": "patient",
+      "motif": "rune",
+      "creature_ids": [
+        "reptile-turtle-s0",
+        "reptile-turtle-s1",
+        "reptile-turtle-s2",
+        "reptile-turtle-s3",
+        "reptile-turtle-s4"
+      ]
+    },
+    {
+      "id": "reptile-serpent",
+      "family_id": "reptile",
+      "family_line_index": 3,
+      "name": "Serpente Coral",
+      "temperament": "focused",
+      "motif": "bands",
+      "creature_ids": [
+        "reptile-serpent-s0",
+        "reptile-serpent-s1",
+        "reptile-serpent-s2",
+        "reptile-serpent-s3",
+        "reptile-serpent-s4"
+      ]
+    },
+    {
+      "id": "reptile-chameleon",
+      "family_id": "reptile",
+      "family_line_index": 4,
+      "name": "Camaleão Pixel",
+      "temperament": "adaptable",
+      "motif": "pixel",
+      "creature_ids": [
+        "reptile-chameleon-s0",
+        "reptile-chameleon-s1",
+        "reptile-chameleon-s2",
+        "reptile-chameleon-s3",
+        "reptile-chameleon-s4"
+      ]
+    },
+    {
+      "id": "aquatic-axolotl",
+      "family_id": "aquatic",
+      "family_line_index": 0,
+      "name": "Axolote Aurora",
+      "temperament": "friendly",
+      "motif": "gill",
+      "creature_ids": [
+        "aquatic-axolotl-s0",
+        "aquatic-axolotl-s1",
+        "aquatic-axolotl-s2",
+        "aquatic-axolotl-s3",
+        "aquatic-axolotl-s4"
+      ]
+    },
+    {
+      "id": "aquatic-koi",
+      "family_id": "aquatic",
+      "family_line_index": 1,
+      "name": "Koi Celeste",
+      "temperament": "serene",
+      "motif": "wave",
+      "creature_ids": [
+        "aquatic-koi-s0",
+        "aquatic-koi-s1",
+        "aquatic-koi-s2",
+        "aquatic-koi-s3",
+        "aquatic-koi-s4"
+      ]
+    },
+    {
+      "id": "aquatic-shark",
+      "family_id": "aquatic",
+      "family_line_index": 2,
+      "name": "Tubarão Byte",
+      "temperament": "hungry",
+      "motif": "byte",
+      "creature_ids": [
+        "aquatic-shark-s0",
+        "aquatic-shark-s1",
+        "aquatic-shark-s2",
+        "aquatic-shark-s3",
+        "aquatic-shark-s4"
+      ]
+    },
+    {
+      "id": "aquatic-frog",
+      "family_id": "aquatic",
+      "family_line_index": 3,
+      "name": "Sapo Chuva",
+      "temperament": "cheerful",
+      "motif": "drop",
+      "creature_ids": [
+        "aquatic-frog-s0",
+        "aquatic-frog-s1",
+        "aquatic-frog-s2",
+        "aquatic-frog-s3",
+        "aquatic-frog-s4"
+      ]
+    },
+    {
+      "id": "aquatic-manta",
+      "family_id": "aquatic",
+      "family_line_index": 4,
+      "name": "Manta Vazio",
+      "temperament": "quiet",
+      "motif": "star",
+      "creature_ids": [
+        "aquatic-manta-s0",
+        "aquatic-manta-s1",
+        "aquatic-manta-s2",
+        "aquatic-manta-s3",
+        "aquatic-manta-s4"
+      ]
+    },
+    {
+      "id": "insect-bee",
+      "family_id": "insect",
+      "family_line_index": 0,
+      "name": "Abelha Âmbar",
+      "temperament": "busy",
+      "motif": "bands",
+      "creature_ids": [
+        "insect-bee-s0",
+        "insect-bee-s1",
+        "insect-bee-s2",
+        "insect-bee-s3",
+        "insect-bee-s4"
+      ]
+    },
+    {
+      "id": "insect-moth",
+      "family_id": "insect",
+      "family_line_index": 1,
+      "name": "Mariposa Lunar",
+      "temperament": "dreamy",
+      "motif": "moon",
+      "creature_ids": [
+        "insect-moth-s0",
+        "insect-moth-s1",
+        "insect-moth-s2",
+        "insect-moth-s3",
+        "insect-moth-s4"
+      ]
+    },
+    {
+      "id": "insect-beetle",
+      "family_id": "insect",
+      "family_line_index": 2,
+      "name": "Besouro Cromo",
+      "temperament": "steady",
+      "motif": "shell",
+      "creature_ids": [
+        "insect-beetle-s0",
+        "insect-beetle-s1",
+        "insect-beetle-s2",
+        "insect-beetle-s3",
+        "insect-beetle-s4"
+      ]
+    },
+    {
+      "id": "insect-mantis",
+      "family_id": "insect",
+      "family_line_index": 3,
+      "name": "Louva-a-deus Jade",
+      "temperament": "focused",
+      "motif": "blade",
+      "creature_ids": [
+        "insect-mantis-s0",
+        "insect-mantis-s1",
+        "insect-mantis-s2",
+        "insect-mantis-s3",
+        "insect-mantis-s4"
+      ]
+    },
+    {
+      "id": "insect-firefly",
+      "family_id": "insect",
+      "family_line_index": 4,
+      "name": "Vaga-lume Pulso",
+      "temperament": "hopeful",
+      "motif": "spark",
+      "creature_ids": [
+        "insect-firefly-s0",
+        "insect-firefly-s1",
+        "insect-firefly-s2",
+        "insect-firefly-s3",
+        "insect-firefly-s4"
+      ]
+    },
+    {
+      "id": "spectral-wisp",
+      "family_id": "spectral",
+      "family_line_index": 0,
+      "name": "Fogo-fátuo",
+      "temperament": "curious",
+      "motif": "flame",
+      "creature_ids": [
+        "spectral-wisp-s0",
+        "spectral-wisp-s1",
+        "spectral-wisp-s2",
+        "spectral-wisp-s3",
+        "spectral-wisp-s4"
+      ]
+    },
+    {
+      "id": "spectral-polter",
+      "family_id": "spectral",
+      "family_line_index": 1,
+      "name": "Polter Ruído",
+      "temperament": "mischief",
+      "motif": "noise",
+      "creature_ids": [
+        "spectral-polter-s0",
+        "spectral-polter-s1",
+        "spectral-polter-s2",
+        "spectral-polter-s3",
+        "spectral-polter-s4"
+      ]
+    },
+    {
+      "id": "spectral-dream",
+      "family_id": "spectral",
+      "family_line_index": 2,
+      "name": "Sonho Azul",
+      "temperament": "dreamy",
+      "motif": "cloud",
+      "creature_ids": [
+        "spectral-dream-s0",
+        "spectral-dream-s1",
+        "spectral-dream-s2",
+        "spectral-dream-s3",
+        "spectral-dream-s4"
+      ]
+    },
+    {
+      "id": "spectral-shadow",
+      "family_id": "spectral",
+      "family_line_index": 3,
+      "name": "Sombra Eco",
+      "temperament": "shy",
+      "motif": "echo",
+      "creature_ids": [
+        "spectral-shadow-s0",
+        "spectral-shadow-s1",
+        "spectral-shadow-s2",
+        "spectral-shadow-s3",
+        "spectral-shadow-s4"
+      ]
+    },
+    {
+      "id": "spectral-lantern",
+      "family_id": "spectral",
+      "family_line_index": 4,
+      "name": "Lanterna Alma",
+      "temperament": "warm",
+      "motif": "lantern",
+      "creature_ids": [
+        "spectral-lantern-s0",
+        "spectral-lantern-s1",
+        "spectral-lantern-s2",
+        "spectral-lantern-s3",
+        "spectral-lantern-s4"
+      ]
+    },
+    {
+      "id": "botanical-mushroom",
+      "family_id": "botanical",
+      "family_line_index": 0,
+      "name": "Cogumelo Orvalho",
+      "temperament": "gentle",
+      "motif": "spots",
+      "creature_ids": [
+        "botanical-mushroom-s0",
+        "botanical-mushroom-s1",
+        "botanical-mushroom-s2",
+        "botanical-mushroom-s3",
+        "botanical-mushroom-s4"
+      ]
+    },
+    {
+      "id": "botanical-cactus",
+      "family_id": "botanical",
+      "family_line_index": 1,
+      "name": "Cacto Cometa",
+      "temperament": "tough",
+      "motif": "star",
+      "creature_ids": [
+        "botanical-cactus-s0",
+        "botanical-cactus-s1",
+        "botanical-cactus-s2",
+        "botanical-cactus-s3",
+        "botanical-cactus-s4"
+      ]
+    },
+    {
+      "id": "botanical-flower",
+      "family_id": "botanical",
+      "family_line_index": 2,
+      "name": "Flor Prisma",
+      "temperament": "bright",
+      "motif": "prism",
+      "creature_ids": [
+        "botanical-flower-s0",
+        "botanical-flower-s1",
+        "botanical-flower-s2",
+        "botanical-flower-s3",
+        "botanical-flower-s4"
+      ]
+    },
+    {
+      "id": "botanical-vine",
+      "family_id": "botanical",
+      "family_line_index": 3,
+      "name": "Cipó Circuito",
+      "temperament": "clever",
+      "motif": "circuit",
+      "creature_ids": [
+        "botanical-vine-s0",
+        "botanical-vine-s1",
+        "botanical-vine-s2",
+        "botanical-vine-s3",
+        "botanical-vine-s4"
+      ]
+    },
+    {
+      "id": "botanical-moss",
+      "family_id": "botanical",
+      "family_line_index": 4,
+      "name": "Musgo Antigo",
+      "temperament": "wise",
+      "motif": "rune",
+      "creature_ids": [
+        "botanical-moss-s0",
+        "botanical-moss-s1",
+        "botanical-moss-s2",
+        "botanical-moss-s3",
+        "botanical-moss-s4"
+      ]
+    },
+    {
+      "id": "robotic-drone",
+      "family_id": "robotic",
+      "family_line_index": 0,
+      "name": "Drone Íon",
+      "temperament": "alert",
+      "motif": "antenna",
+      "creature_ids": [
+        "robotic-drone-s0",
+        "robotic-drone-s1",
+        "robotic-drone-s2",
+        "robotic-drone-s3",
+        "robotic-drone-s4"
+      ]
+    },
+    {
+      "id": "robotic-gear",
+      "family_id": "robotic",
+      "family_line_index": 1,
+      "name": "Engrenagem Viva",
+      "temperament": "steady",
+      "motif": "gear",
+      "creature_ids": [
+        "robotic-gear-s0",
+        "robotic-gear-s1",
+        "robotic-gear-s2",
+        "robotic-gear-s3",
+        "robotic-gear-s4"
+      ]
+    },
+    {
+      "id": "robotic-radio",
+      "family_id": "robotic",
+      "family_line_index": 2,
+      "name": "Rádio Eco",
+      "temperament": "curious",
+      "motif": "signal",
+      "creature_ids": [
+        "robotic-radio-s0",
+        "robotic-radio-s1",
+        "robotic-radio-s2",
+        "robotic-radio-s3",
+        "robotic-radio-s4"
+      ]
+    },
+    {
+      "id": "robotic-sentinel",
+      "family_id": "robotic",
+      "family_line_index": 3,
+      "name": "Sentinela Rubi",
+      "temperament": "loyal",
+      "motif": "shield",
+      "creature_ids": [
+        "robotic-sentinel-s0",
+        "robotic-sentinel-s1",
+        "robotic-sentinel-s2",
+        "robotic-sentinel-s3",
+        "robotic-sentinel-s4"
+      ]
+    },
+    {
+      "id": "robotic-synth",
+      "family_id": "robotic",
+      "family_line_index": 4,
+      "name": "Sintético Prisma",
+      "temperament": "creative",
+      "motif": "prism",
+      "creature_ids": [
+        "robotic-synth-s0",
+        "robotic-synth-s1",
+        "robotic-synth-s2",
+        "robotic-synth-s3",
+        "robotic-synth-s4"
+      ]
+    },
+    {
+      "id": "cosmic-star",
+      "family_id": "cosmic",
+      "family_line_index": 0,
+      "name": "Estrela Pulso",
+      "temperament": "bright",
+      "motif": "star",
+      "creature_ids": [
+        "cosmic-star-s0",
+        "cosmic-star-s1",
+        "cosmic-star-s2",
+        "cosmic-star-s3",
+        "cosmic-star-s4"
+      ]
+    },
+    {
+      "id": "cosmic-comet",
+      "family_id": "cosmic",
+      "family_line_index": 1,
+      "name": "Cometa Íris",
+      "temperament": "energetic",
+      "motif": "trail",
+      "creature_ids": [
+        "cosmic-comet-s0",
+        "cosmic-comet-s1",
+        "cosmic-comet-s2",
+        "cosmic-comet-s3",
+        "cosmic-comet-s4"
+      ]
+    },
+    {
+      "id": "cosmic-void",
+      "family_id": "cosmic",
+      "family_line_index": 2,
+      "name": "Vazio Gentil",
+      "temperament": "quiet",
+      "motif": "orbit",
+      "creature_ids": [
+        "cosmic-void-s0",
+        "cosmic-void-s1",
+        "cosmic-void-s2",
+        "cosmic-void-s3",
+        "cosmic-void-s4"
+      ]
+    },
+    {
+      "id": "cosmic-moon",
+      "family_id": "cosmic",
+      "family_line_index": 3,
+      "name": "Lua Broto",
+      "temperament": "gentle",
+      "motif": "leaf",
+      "creature_ids": [
+        "cosmic-moon-s0",
+        "cosmic-moon-s1",
+        "cosmic-moon-s2",
+        "cosmic-moon-s3",
+        "cosmic-moon-s4"
+      ]
+    },
+    {
+      "id": "cosmic-nebula",
+      "family_id": "cosmic",
+      "family_line_index": 4,
+      "name": "Nebulosa Doce",
+      "temperament": "dreamy",
+      "motif": "cloud",
+      "creature_ids": [
+        "cosmic-nebula-s0",
+        "cosmic-nebula-s1",
+        "cosmic-nebula-s2",
+        "cosmic-nebula-s3",
+        "cosmic-nebula-s4"
+      ]
+    }
+  ],
+  "creatures": [
+    {
+      "id": "slime-lumen-s0",
+      "index": 0,
+      "family_id": "slime",
+      "line_id": "slime-lumen",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Lúmen",
+      "rarity": "common",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spark",
+        "palette": [
+          "#6DE8D2",
+          "#B8FFF3",
+          "#FFF27A"
+        ],
+        "seed": 3308906562,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "slime-lumen-s1",
+      "index": 1,
+      "family_id": "slime",
+      "line_id": "slime-lumen",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Lúmenin",
+      "rarity": "common",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spark",
+        "palette": [
+          "#6DE8D2",
+          "#B8FFF3",
+          "#FFF27A"
+        ],
+        "seed": 1888886096,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "slime-lumen-s2",
+      "index": 2,
+      "family_id": "slime",
+      "line_id": "slime-lumen",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Lúmenon",
+      "rarity": "uncommon",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spark",
+        "palette": [
+          "#6DE8D2",
+          "#B8FFF3",
+          "#FFF27A"
+        ],
+        "seed": 3604248074,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "slime-lumen-s3",
+      "index": 3,
+      "family_id": "slime",
+      "line_id": "slime-lumen",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Lúmenarca",
+      "rarity": "rare",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spark",
+        "palette": [
+          "#6DE8D2",
+          "#B8FFF3",
+          "#FFF27A"
+        ],
+        "seed": 1055257725,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "slime-lumen-s4",
+      "index": 4,
+      "family_id": "slime",
+      "line_id": "slime-lumen",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Lúmen Ômega",
+      "rarity": "mythic",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spark",
+        "palette": [
+          "#6DE8D2",
+          "#B8FFF3",
+          "#FFF27A"
+        ],
+        "seed": 4217772344,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "slime-volt-s0",
+      "index": 5,
+      "family_id": "slime",
+      "line_id": "slime-volt",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Volt",
+      "rarity": "common",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "blob",
+        "motif": "bolt",
+        "palette": [
+          "#2E5BFF",
+          "#7DE7FF",
+          "#FFF15A"
+        ],
+        "seed": 3414586902,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "slime-volt-s1",
+      "index": 6,
+      "family_id": "slime",
+      "line_id": "slime-volt",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Voltin",
+      "rarity": "common",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "blob",
+        "motif": "bolt",
+        "palette": [
+          "#2E5BFF",
+          "#7DE7FF",
+          "#FFF15A"
+        ],
+        "seed": 2044465309,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "slime-volt-s2",
+      "index": 7,
+      "family_id": "slime",
+      "line_id": "slime-volt",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Volton",
+      "rarity": "uncommon",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "blob",
+        "motif": "bolt",
+        "palette": [
+          "#2E5BFF",
+          "#7DE7FF",
+          "#FFF15A"
+        ],
+        "seed": 1840918774,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "slime-volt-s3",
+      "index": 8,
+      "family_id": "slime",
+      "line_id": "slime-volt",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Voltarca",
+      "rarity": "rare",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "blob",
+        "motif": "bolt",
+        "palette": [
+          "#2E5BFF",
+          "#7DE7FF",
+          "#FFF15A"
+        ],
+        "seed": 69395250,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "slime-volt-s4",
+      "index": 9,
+      "family_id": "slime",
+      "line_id": "slime-volt",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Volt Ômega",
+      "rarity": "mythic",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "blob",
+        "motif": "bolt",
+        "palette": [
+          "#2E5BFF",
+          "#7DE7FF",
+          "#FFF15A"
+        ],
+        "seed": 1789133918,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "slime-miasma-s0",
+      "index": 10,
+      "family_id": "slime",
+      "line_id": "slime-miasma",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Miasma",
+      "rarity": "common",
+      "temperament": "calm",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spots",
+        "palette": [
+          "#78C850",
+          "#C8FF72",
+          "#8A4FFF"
+        ],
+        "seed": 2539613440,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "slime-miasma-s1",
+      "index": 11,
+      "family_id": "slime",
+      "line_id": "slime-miasma",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Miasmain",
+      "rarity": "common",
+      "temperament": "calm",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spots",
+        "palette": [
+          "#78C850",
+          "#C8FF72",
+          "#8A4FFF"
+        ],
+        "seed": 3603466334,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "slime-miasma-s2",
+      "index": 12,
+      "family_id": "slime",
+      "line_id": "slime-miasma",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Miasmaon",
+      "rarity": "uncommon",
+      "temperament": "calm",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spots",
+        "palette": [
+          "#78C850",
+          "#C8FF72",
+          "#8A4FFF"
+        ],
+        "seed": 306062262,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "slime-miasma-s3",
+      "index": 13,
+      "family_id": "slime",
+      "line_id": "slime-miasma",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Miasmaarca",
+      "rarity": "rare",
+      "temperament": "calm",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spots",
+        "palette": [
+          "#78C850",
+          "#C8FF72",
+          "#8A4FFF"
+        ],
+        "seed": 855127337,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "slime-miasma-s4",
+      "index": 14,
+      "family_id": "slime",
+      "line_id": "slime-miasma",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Miasma Ômega",
+      "rarity": "mythic",
+      "temperament": "calm",
+      "sprite": {
+        "shape": "blob",
+        "motif": "spots",
+        "palette": [
+          "#78C850",
+          "#C8FF72",
+          "#8A4FFF"
+        ],
+        "seed": 3764945032,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "slime-crystal-s0",
+      "index": 15,
+      "family_id": "slime",
+      "line_id": "slime-crystal",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Crista",
+      "rarity": "common",
+      "temperament": "proud",
+      "sprite": {
+        "shape": "blob",
+        "motif": "crystal",
+        "palette": [
+          "#73B9FF",
+          "#E5F5FF",
+          "#FF79C6"
+        ],
+        "seed": 3957517517,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "slime-crystal-s1",
+      "index": 16,
+      "family_id": "slime",
+      "line_id": "slime-crystal",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Cristain",
+      "rarity": "common",
+      "temperament": "proud",
+      "sprite": {
+        "shape": "blob",
+        "motif": "crystal",
+        "palette": [
+          "#73B9FF",
+          "#E5F5FF",
+          "#FF79C6"
+        ],
+        "seed": 2040762951,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "slime-crystal-s2",
+      "index": 17,
+      "family_id": "slime",
+      "line_id": "slime-crystal",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Cristaon",
+      "rarity": "uncommon",
+      "temperament": "proud",
+      "sprite": {
+        "shape": "blob",
+        "motif": "crystal",
+        "palette": [
+          "#73B9FF",
+          "#E5F5FF",
+          "#FF79C6"
+        ],
+        "seed": 4213578201,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "slime-crystal-s3",
+      "index": 18,
+      "family_id": "slime",
+      "line_id": "slime-crystal",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Cristaarca",
+      "rarity": "rare",
+      "temperament": "proud",
+      "sprite": {
+        "shape": "blob",
+        "motif": "crystal",
+        "palette": [
+          "#73B9FF",
+          "#E5F5FF",
+          "#FF79C6"
+        ],
+        "seed": 983374758,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "slime-crystal-s4",
+      "index": 19,
+      "family_id": "slime",
+      "line_id": "slime-crystal",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Crista Ômega",
+      "rarity": "mythic",
+      "temperament": "proud",
+      "sprite": {
+        "shape": "blob",
+        "motif": "crystal",
+        "palette": [
+          "#73B9FF",
+          "#E5F5FF",
+          "#FF79C6"
+        ],
+        "seed": 2289152365,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "slime-abyss-s0",
+      "index": 20,
+      "family_id": "slime",
+      "line_id": "slime-abyss",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Abiss",
+      "rarity": "common",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "blob",
+        "motif": "tentacle",
+        "palette": [
+          "#26134D",
+          "#7149A8",
+          "#26F7D4"
+        ],
+        "seed": 2080565170,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "slime-abyss-s1",
+      "index": 21,
+      "family_id": "slime",
+      "line_id": "slime-abyss",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Abissin",
+      "rarity": "common",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "blob",
+        "motif": "tentacle",
+        "palette": [
+          "#26134D",
+          "#7149A8",
+          "#26F7D4"
+        ],
+        "seed": 1511908741,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "slime-abyss-s2",
+      "index": 22,
+      "family_id": "slime",
+      "line_id": "slime-abyss",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Abisson",
+      "rarity": "uncommon",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "blob",
+        "motif": "tentacle",
+        "palette": [
+          "#26134D",
+          "#7149A8",
+          "#26F7D4"
+        ],
+        "seed": 1588079067,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "slime-abyss-s3",
+      "index": 23,
+      "family_id": "slime",
+      "line_id": "slime-abyss",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Abissarca",
+      "rarity": "rare",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "blob",
+        "motif": "tentacle",
+        "palette": [
+          "#26134D",
+          "#7149A8",
+          "#26F7D4"
+        ],
+        "seed": 2785178838,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "slime-abyss-s4",
+      "index": 24,
+      "family_id": "slime",
+      "line_id": "slime-abyss",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Abiss Ômega",
+      "rarity": "mythic",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "blob",
+        "motif": "tentacle",
+        "palette": [
+          "#26134D",
+          "#7149A8",
+          "#26F7D4"
+        ],
+        "seed": 2895651532,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "mammal-fox-s0",
+      "index": 25,
+      "family_id": "mammal",
+      "line_id": "mammal-fox",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Solrap",
+      "rarity": "common",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "flame",
+        "palette": [
+          "#F48B32",
+          "#FFD07A",
+          "#FFF4D2"
+        ],
+        "seed": 4101521123,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "mammal-fox-s1",
+      "index": 26,
+      "family_id": "mammal",
+      "line_id": "mammal-fox",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Solrapin",
+      "rarity": "common",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "flame",
+        "palette": [
+          "#F48B32",
+          "#FFD07A",
+          "#FFF4D2"
+        ],
+        "seed": 3405895112,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "mammal-fox-s2",
+      "index": 27,
+      "family_id": "mammal",
+      "line_id": "mammal-fox",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Solrapon",
+      "rarity": "uncommon",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "flame",
+        "palette": [
+          "#F48B32",
+          "#FFD07A",
+          "#FFF4D2"
+        ],
+        "seed": 45048378,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "mammal-fox-s3",
+      "index": 28,
+      "family_id": "mammal",
+      "line_id": "mammal-fox",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Solraparca",
+      "rarity": "rare",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "flame",
+        "palette": [
+          "#F48B32",
+          "#FFD07A",
+          "#FFF4D2"
+        ],
+        "seed": 3853797263,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "mammal-fox-s4",
+      "index": 29,
+      "family_id": "mammal",
+      "line_id": "mammal-fox",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Solrap Ômega",
+      "rarity": "mythic",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "flame",
+        "palette": [
+          "#F48B32",
+          "#FFD07A",
+          "#FFF4D2"
+        ],
+        "seed": 1829187646,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "mammal-cat-s0",
+      "index": 30,
+      "family_id": "mammal",
+      "line_id": "mammal-cat",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Noxfel",
+      "rarity": "common",
+      "temperament": "aloof",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "moon",
+        "palette": [
+          "#2E294E",
+          "#6D5AA8",
+          "#6EF2FF"
+        ],
+        "seed": 4100617132,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "mammal-cat-s1",
+      "index": 31,
+      "family_id": "mammal",
+      "line_id": "mammal-cat",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Noxfelin",
+      "rarity": "common",
+      "temperament": "aloof",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "moon",
+        "palette": [
+          "#2E294E",
+          "#6D5AA8",
+          "#6EF2FF"
+        ],
+        "seed": 4250550497,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "mammal-cat-s2",
+      "index": 32,
+      "family_id": "mammal",
+      "line_id": "mammal-cat",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Noxfelon",
+      "rarity": "uncommon",
+      "temperament": "aloof",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "moon",
+        "palette": [
+          "#2E294E",
+          "#6D5AA8",
+          "#6EF2FF"
+        ],
+        "seed": 1607874018,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "mammal-cat-s3",
+      "index": 33,
+      "family_id": "mammal",
+      "line_id": "mammal-cat",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Noxfelarca",
+      "rarity": "rare",
+      "temperament": "aloof",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "moon",
+        "palette": [
+          "#2E294E",
+          "#6D5AA8",
+          "#6EF2FF"
+        ],
+        "seed": 1322377271,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "mammal-cat-s4",
+      "index": 34,
+      "family_id": "mammal",
+      "line_id": "mammal-cat",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Noxfel Ômega",
+      "rarity": "mythic",
+      "temperament": "aloof",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "moon",
+        "palette": [
+          "#2E294E",
+          "#6D5AA8",
+          "#6EF2FF"
+        ],
+        "seed": 3822116048,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "mammal-rabbit-s0",
+      "index": 35,
+      "family_id": "mammal",
+      "line_id": "mammal-rabbit",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Nimbol",
+      "rarity": "common",
+      "temperament": "playful",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "cloud",
+        "palette": [
+          "#E8E8F4",
+          "#FFFFFF",
+          "#83D9FF"
+        ],
+        "seed": 3434946998,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "mammal-rabbit-s1",
+      "index": 36,
+      "family_id": "mammal",
+      "line_id": "mammal-rabbit",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Nimbolin",
+      "rarity": "common",
+      "temperament": "playful",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "cloud",
+        "palette": [
+          "#E8E8F4",
+          "#FFFFFF",
+          "#83D9FF"
+        ],
+        "seed": 2428389916,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "mammal-rabbit-s2",
+      "index": 37,
+      "family_id": "mammal",
+      "line_id": "mammal-rabbit",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Nimbolon",
+      "rarity": "uncommon",
+      "temperament": "playful",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "cloud",
+        "palette": [
+          "#E8E8F4",
+          "#FFFFFF",
+          "#83D9FF"
+        ],
+        "seed": 2613968214,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "mammal-rabbit-s3",
+      "index": 38,
+      "family_id": "mammal",
+      "line_id": "mammal-rabbit",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Nimbolarca",
+      "rarity": "rare",
+      "temperament": "playful",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "cloud",
+        "palette": [
+          "#E8E8F4",
+          "#FFFFFF",
+          "#83D9FF"
+        ],
+        "seed": 1000454893,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "mammal-rabbit-s4",
+      "index": 39,
+      "family_id": "mammal",
+      "line_id": "mammal-rabbit",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Nimbol Ômega",
+      "rarity": "mythic",
+      "temperament": "playful",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "cloud",
+        "palette": [
+          "#E8E8F4",
+          "#FFFFFF",
+          "#83D9FF"
+        ],
+        "seed": 3305484410,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "mammal-bear-s0",
+      "index": 40,
+      "family_id": "mammal",
+      "line_id": "mammal-bear",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Musgurso",
+      "rarity": "common",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "leaf",
+        "palette": [
+          "#6B4F32",
+          "#A77B52",
+          "#74C365"
+        ],
+        "seed": 1161319073,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "mammal-bear-s1",
+      "index": 41,
+      "family_id": "mammal",
+      "line_id": "mammal-bear",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Musgursoin",
+      "rarity": "common",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "leaf",
+        "palette": [
+          "#6B4F32",
+          "#A77B52",
+          "#74C365"
+        ],
+        "seed": 2591190476,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "mammal-bear-s2",
+      "index": 42,
+      "family_id": "mammal",
+      "line_id": "mammal-bear",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Musgursoon",
+      "rarity": "uncommon",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "leaf",
+        "palette": [
+          "#6B4F32",
+          "#A77B52",
+          "#74C365"
+        ],
+        "seed": 1954824299,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "mammal-bear-s3",
+      "index": 43,
+      "family_id": "mammal",
+      "line_id": "mammal-bear",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Musgursoarca",
+      "rarity": "rare",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "leaf",
+        "palette": [
+          "#6B4F32",
+          "#A77B52",
+          "#74C365"
+        ],
+        "seed": 2363627951,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "mammal-bear-s4",
+      "index": 44,
+      "family_id": "mammal",
+      "line_id": "mammal-bear",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Musgurso Ômega",
+      "rarity": "mythic",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "leaf",
+        "palette": [
+          "#6B4F32",
+          "#A77B52",
+          "#74C365"
+        ],
+        "seed": 4064564738,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "mammal-wolf-s0",
+      "index": 45,
+      "family_id": "mammal",
+      "line_id": "mammal-wolf",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Borilobo",
+      "rarity": "common",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "aurora",
+        "palette": [
+          "#7896B8",
+          "#DCEBFF",
+          "#55E6C1"
+        ],
+        "seed": 3772858133,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "mammal-wolf-s1",
+      "index": 46,
+      "family_id": "mammal",
+      "line_id": "mammal-wolf",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Boriloboin",
+      "rarity": "common",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "aurora",
+        "palette": [
+          "#7896B8",
+          "#DCEBFF",
+          "#55E6C1"
+        ],
+        "seed": 4241896916,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "mammal-wolf-s2",
+      "index": 47,
+      "family_id": "mammal",
+      "line_id": "mammal-wolf",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Boriloboon",
+      "rarity": "uncommon",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "aurora",
+        "palette": [
+          "#7896B8",
+          "#DCEBFF",
+          "#55E6C1"
+        ],
+        "seed": 1351303239,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "mammal-wolf-s3",
+      "index": 48,
+      "family_id": "mammal",
+      "line_id": "mammal-wolf",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Boriloboarca",
+      "rarity": "rare",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "aurora",
+        "palette": [
+          "#7896B8",
+          "#DCEBFF",
+          "#55E6C1"
+        ],
+        "seed": 2530528065,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "mammal-wolf-s4",
+      "index": 49,
+      "family_id": "mammal",
+      "line_id": "mammal-wolf",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Borilobo Ômega",
+      "rarity": "mythic",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "mammal",
+        "motif": "aurora",
+        "palette": [
+          "#7896B8",
+          "#DCEBFF",
+          "#55E6C1"
+        ],
+        "seed": 785544485,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "avian-crow-s0",
+      "index": 50,
+      "family_id": "avian",
+      "line_id": "avian-crow",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Corvix",
+      "rarity": "common",
+      "temperament": "wary",
+      "sprite": {
+        "shape": "avian",
+        "motif": "glitch",
+        "palette": [
+          "#181825",
+          "#4B4B70",
+          "#FF4FD8"
+        ],
+        "seed": 2889366916,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "avian-crow-s1",
+      "index": 51,
+      "family_id": "avian",
+      "line_id": "avian-crow",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Corvixin",
+      "rarity": "common",
+      "temperament": "wary",
+      "sprite": {
+        "shape": "avian",
+        "motif": "glitch",
+        "palette": [
+          "#181825",
+          "#4B4B70",
+          "#FF4FD8"
+        ],
+        "seed": 2258858835,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "avian-crow-s2",
+      "index": 52,
+      "family_id": "avian",
+      "line_id": "avian-crow",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Corvixon",
+      "rarity": "uncommon",
+      "temperament": "wary",
+      "sprite": {
+        "shape": "avian",
+        "motif": "glitch",
+        "palette": [
+          "#181825",
+          "#4B4B70",
+          "#FF4FD8"
+        ],
+        "seed": 1702881564,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "avian-crow-s3",
+      "index": 53,
+      "family_id": "avian",
+      "line_id": "avian-crow",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Corvixarca",
+      "rarity": "rare",
+      "temperament": "wary",
+      "sprite": {
+        "shape": "avian",
+        "motif": "glitch",
+        "palette": [
+          "#181825",
+          "#4B4B70",
+          "#FF4FD8"
+        ],
+        "seed": 4037690993,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "avian-crow-s4",
+      "index": 54,
+      "family_id": "avian",
+      "line_id": "avian-crow",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Corvix Ômega",
+      "rarity": "mythic",
+      "temperament": "wary",
+      "sprite": {
+        "shape": "avian",
+        "motif": "glitch",
+        "palette": [
+          "#181825",
+          "#4B4B70",
+          "#FF4FD8"
+        ],
+        "seed": 3980291134,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "avian-sunbird-s0",
+      "index": 55,
+      "family_id": "avian",
+      "line_id": "avian-sunbird",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Heliave",
+      "rarity": "common",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "avian",
+        "motif": "sun",
+        "palette": [
+          "#F6B73C",
+          "#FFF06A",
+          "#FF6B35"
+        ],
+        "seed": 1980652769,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "avian-sunbird-s1",
+      "index": 56,
+      "family_id": "avian",
+      "line_id": "avian-sunbird",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Heliavein",
+      "rarity": "common",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "avian",
+        "motif": "sun",
+        "palette": [
+          "#F6B73C",
+          "#FFF06A",
+          "#FF6B35"
+        ],
+        "seed": 970142136,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "avian-sunbird-s2",
+      "index": 57,
+      "family_id": "avian",
+      "line_id": "avian-sunbird",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Heliaveon",
+      "rarity": "uncommon",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "avian",
+        "motif": "sun",
+        "palette": [
+          "#F6B73C",
+          "#FFF06A",
+          "#FF6B35"
+        ],
+        "seed": 36898599,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "avian-sunbird-s3",
+      "index": 58,
+      "family_id": "avian",
+      "line_id": "avian-sunbird",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Heliavearca",
+      "rarity": "rare",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "avian",
+        "motif": "sun",
+        "palette": [
+          "#F6B73C",
+          "#FFF06A",
+          "#FF6B35"
+        ],
+        "seed": 2433565766,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "avian-sunbird-s4",
+      "index": 59,
+      "family_id": "avian",
+      "line_id": "avian-sunbird",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Heliave Ômega",
+      "rarity": "mythic",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "avian",
+        "motif": "sun",
+        "palette": [
+          "#F6B73C",
+          "#FFF06A",
+          "#FF6B35"
+        ],
+        "seed": 953332630,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "avian-storm-s0",
+      "index": 60,
+      "family_id": "avian",
+      "line_id": "avian-storm",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Torval",
+      "rarity": "common",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "avian",
+        "motif": "bolt",
+        "palette": [
+          "#4059AD",
+          "#8EA7E9",
+          "#F7E733"
+        ],
+        "seed": 901501922,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "avian-storm-s1",
+      "index": 61,
+      "family_id": "avian",
+      "line_id": "avian-storm",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Torvalin",
+      "rarity": "common",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "avian",
+        "motif": "bolt",
+        "palette": [
+          "#4059AD",
+          "#8EA7E9",
+          "#F7E733"
+        ],
+        "seed": 2328851484,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "avian-storm-s2",
+      "index": 62,
+      "family_id": "avian",
+      "line_id": "avian-storm",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Torvalon",
+      "rarity": "uncommon",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "avian",
+        "motif": "bolt",
+        "palette": [
+          "#4059AD",
+          "#8EA7E9",
+          "#F7E733"
+        ],
+        "seed": 3286430408,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "avian-storm-s3",
+      "index": 63,
+      "family_id": "avian",
+      "line_id": "avian-storm",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Torvalarca",
+      "rarity": "rare",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "avian",
+        "motif": "bolt",
+        "palette": [
+          "#4059AD",
+          "#8EA7E9",
+          "#F7E733"
+        ],
+        "seed": 102672077,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "avian-storm-s4",
+      "index": 64,
+      "family_id": "avian",
+      "line_id": "avian-storm",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Torval Ômega",
+      "rarity": "mythic",
+      "temperament": "bold",
+      "sprite": {
+        "shape": "avian",
+        "motif": "bolt",
+        "palette": [
+          "#4059AD",
+          "#8EA7E9",
+          "#F7E733"
+        ],
+        "seed": 1414381732,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "avian-owl-s0",
+      "index": 65,
+      "family_id": "avian",
+      "line_id": "avian-owl",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Oracoru",
+      "rarity": "common",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "avian",
+        "motif": "rune",
+        "palette": [
+          "#7C5C45",
+          "#CBAF87",
+          "#71E5FF"
+        ],
+        "seed": 1544028006,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "avian-owl-s1",
+      "index": 66,
+      "family_id": "avian",
+      "line_id": "avian-owl",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Oracoruin",
+      "rarity": "common",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "avian",
+        "motif": "rune",
+        "palette": [
+          "#7C5C45",
+          "#CBAF87",
+          "#71E5FF"
+        ],
+        "seed": 2040585077,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "avian-owl-s2",
+      "index": 67,
+      "family_id": "avian",
+      "line_id": "avian-owl",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Oracoruon",
+      "rarity": "uncommon",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "avian",
+        "motif": "rune",
+        "palette": [
+          "#7C5C45",
+          "#CBAF87",
+          "#71E5FF"
+        ],
+        "seed": 3063445897,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "avian-owl-s3",
+      "index": 68,
+      "family_id": "avian",
+      "line_id": "avian-owl",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Oracoruarca",
+      "rarity": "rare",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "avian",
+        "motif": "rune",
+        "palette": [
+          "#7C5C45",
+          "#CBAF87",
+          "#71E5FF"
+        ],
+        "seed": 4217432916,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "avian-owl-s4",
+      "index": 69,
+      "family_id": "avian",
+      "line_id": "avian-owl",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Oracoru Ômega",
+      "rarity": "mythic",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "avian",
+        "motif": "rune",
+        "palette": [
+          "#7C5C45",
+          "#CBAF87",
+          "#71E5FF"
+        ],
+        "seed": 94555664,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "avian-humming-s0",
+      "index": 70,
+      "family_id": "avian",
+      "line_id": "avian-humming",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Prismel",
+      "rarity": "common",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "avian",
+        "motif": "prism",
+        "palette": [
+          "#15B097",
+          "#8BFFDE",
+          "#FF79C6"
+        ],
+        "seed": 2519012560,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "avian-humming-s1",
+      "index": 71,
+      "family_id": "avian",
+      "line_id": "avian-humming",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Prismelin",
+      "rarity": "common",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "avian",
+        "motif": "prism",
+        "palette": [
+          "#15B097",
+          "#8BFFDE",
+          "#FF79C6"
+        ],
+        "seed": 557928838,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "avian-humming-s2",
+      "index": 72,
+      "family_id": "avian",
+      "line_id": "avian-humming",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Prismelon",
+      "rarity": "uncommon",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "avian",
+        "motif": "prism",
+        "palette": [
+          "#15B097",
+          "#8BFFDE",
+          "#FF79C6"
+        ],
+        "seed": 4221466151,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "avian-humming-s3",
+      "index": 73,
+      "family_id": "avian",
+      "line_id": "avian-humming",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Prismelarca",
+      "rarity": "rare",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "avian",
+        "motif": "prism",
+        "palette": [
+          "#15B097",
+          "#8BFFDE",
+          "#FF79C6"
+        ],
+        "seed": 2355513805,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "avian-humming-s4",
+      "index": 74,
+      "family_id": "avian",
+      "line_id": "avian-humming",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Prismel Ômega",
+      "rarity": "mythic",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "avian",
+        "motif": "prism",
+        "palette": [
+          "#15B097",
+          "#8BFFDE",
+          "#FF79C6"
+        ],
+        "seed": 1634272309,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "reptile-dragon-s0",
+      "index": 75,
+      "family_id": "reptile",
+      "line_id": "reptile-dragon",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Brasagon",
+      "rarity": "common",
+      "temperament": "fierce",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "horn",
+        "palette": [
+          "#A43A2B",
+          "#F06A35",
+          "#FFD166"
+        ],
+        "seed": 177819539,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "reptile-dragon-s1",
+      "index": 76,
+      "family_id": "reptile",
+      "line_id": "reptile-dragon",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Brasagonin",
+      "rarity": "common",
+      "temperament": "fierce",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "horn",
+        "palette": [
+          "#A43A2B",
+          "#F06A35",
+          "#FFD166"
+        ],
+        "seed": 3712332781,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "reptile-dragon-s2",
+      "index": 77,
+      "family_id": "reptile",
+      "line_id": "reptile-dragon",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Brasagonon",
+      "rarity": "uncommon",
+      "temperament": "fierce",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "horn",
+        "palette": [
+          "#A43A2B",
+          "#F06A35",
+          "#FFD166"
+        ],
+        "seed": 1664175284,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "reptile-dragon-s3",
+      "index": 78,
+      "family_id": "reptile",
+      "line_id": "reptile-dragon",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Brasagonarca",
+      "rarity": "rare",
+      "temperament": "fierce",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "horn",
+        "palette": [
+          "#A43A2B",
+          "#F06A35",
+          "#FFD166"
+        ],
+        "seed": 4258526068,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "reptile-dragon-s4",
+      "index": 79,
+      "family_id": "reptile",
+      "line_id": "reptile-dragon",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Brasagon Ômega",
+      "rarity": "mythic",
+      "temperament": "fierce",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "horn",
+        "palette": [
+          "#A43A2B",
+          "#F06A35",
+          "#FFD166"
+        ],
+        "seed": 1667952164,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "reptile-gecko-s0",
+      "index": 80,
+      "family_id": "reptile",
+      "line_id": "reptile-gecko",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Geckon",
+      "rarity": "common",
+      "temperament": "nimble",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "spots",
+        "palette": [
+          "#47D16C",
+          "#9DFF73",
+          "#FF4FD8"
+        ],
+        "seed": 2861381073,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "reptile-gecko-s1",
+      "index": 81,
+      "family_id": "reptile",
+      "line_id": "reptile-gecko",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Geckonin",
+      "rarity": "common",
+      "temperament": "nimble",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "spots",
+        "palette": [
+          "#47D16C",
+          "#9DFF73",
+          "#FF4FD8"
+        ],
+        "seed": 1827355089,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "reptile-gecko-s2",
+      "index": 82,
+      "family_id": "reptile",
+      "line_id": "reptile-gecko",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Geckonon",
+      "rarity": "uncommon",
+      "temperament": "nimble",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "spots",
+        "palette": [
+          "#47D16C",
+          "#9DFF73",
+          "#FF4FD8"
+        ],
+        "seed": 3551961816,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "reptile-gecko-s3",
+      "index": 83,
+      "family_id": "reptile",
+      "line_id": "reptile-gecko",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Geckonarca",
+      "rarity": "rare",
+      "temperament": "nimble",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "spots",
+        "palette": [
+          "#47D16C",
+          "#9DFF73",
+          "#FF4FD8"
+        ],
+        "seed": 2073465553,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "reptile-gecko-s4",
+      "index": 84,
+      "family_id": "reptile",
+      "line_id": "reptile-gecko",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Geckon Ômega",
+      "rarity": "mythic",
+      "temperament": "nimble",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "spots",
+        "palette": [
+          "#47D16C",
+          "#9DFF73",
+          "#FF4FD8"
+        ],
+        "seed": 3053471199,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "reptile-turtle-s0",
+      "index": 85,
+      "family_id": "reptile",
+      "line_id": "reptile-turtle",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Runatur",
+      "rarity": "common",
+      "temperament": "patient",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "rune",
+        "palette": [
+          "#3B7A57",
+          "#82C091",
+          "#F4D35E"
+        ],
+        "seed": 192049990,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "reptile-turtle-s1",
+      "index": 86,
+      "family_id": "reptile",
+      "line_id": "reptile-turtle",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Runaturin",
+      "rarity": "common",
+      "temperament": "patient",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "rune",
+        "palette": [
+          "#3B7A57",
+          "#82C091",
+          "#F4D35E"
+        ],
+        "seed": 3240472535,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "reptile-turtle-s2",
+      "index": 87,
+      "family_id": "reptile",
+      "line_id": "reptile-turtle",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Runaturon",
+      "rarity": "uncommon",
+      "temperament": "patient",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "rune",
+        "palette": [
+          "#3B7A57",
+          "#82C091",
+          "#F4D35E"
+        ],
+        "seed": 3400746164,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "reptile-turtle-s3",
+      "index": 88,
+      "family_id": "reptile",
+      "line_id": "reptile-turtle",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Runaturarca",
+      "rarity": "rare",
+      "temperament": "patient",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "rune",
+        "palette": [
+          "#3B7A57",
+          "#82C091",
+          "#F4D35E"
+        ],
+        "seed": 3962042933,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "reptile-turtle-s4",
+      "index": 89,
+      "family_id": "reptile",
+      "line_id": "reptile-turtle",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Runatur Ômega",
+      "rarity": "mythic",
+      "temperament": "patient",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "rune",
+        "palette": [
+          "#3B7A57",
+          "#82C091",
+          "#F4D35E"
+        ],
+        "seed": 2295863480,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "reptile-serpent-s0",
+      "index": 90,
+      "family_id": "reptile",
+      "line_id": "reptile-serpent",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Coralisk",
+      "rarity": "common",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "bands",
+        "palette": [
+          "#E63946",
+          "#F1FAEE",
+          "#1D3557"
+        ],
+        "seed": 4135557786,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "reptile-serpent-s1",
+      "index": 91,
+      "family_id": "reptile",
+      "line_id": "reptile-serpent",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Coraliskin",
+      "rarity": "common",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "bands",
+        "palette": [
+          "#E63946",
+          "#F1FAEE",
+          "#1D3557"
+        ],
+        "seed": 1295957231,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "reptile-serpent-s2",
+      "index": 92,
+      "family_id": "reptile",
+      "line_id": "reptile-serpent",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Coraliskon",
+      "rarity": "uncommon",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "bands",
+        "palette": [
+          "#E63946",
+          "#F1FAEE",
+          "#1D3557"
+        ],
+        "seed": 550808147,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "reptile-serpent-s3",
+      "index": 93,
+      "family_id": "reptile",
+      "line_id": "reptile-serpent",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Coraliskarca",
+      "rarity": "rare",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "bands",
+        "palette": [
+          "#E63946",
+          "#F1FAEE",
+          "#1D3557"
+        ],
+        "seed": 985731786,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "reptile-serpent-s4",
+      "index": 94,
+      "family_id": "reptile",
+      "line_id": "reptile-serpent",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Coralisk Ômega",
+      "rarity": "mythic",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "bands",
+        "palette": [
+          "#E63946",
+          "#F1FAEE",
+          "#1D3557"
+        ],
+        "seed": 3197384790,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "reptile-chameleon-s0",
+      "index": 95,
+      "family_id": "reptile",
+      "line_id": "reptile-chameleon",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Camapix",
+      "rarity": "common",
+      "temperament": "adaptable",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "pixel",
+        "palette": [
+          "#5BC0BE",
+          "#9BF6A3",
+          "#FF8FAB"
+        ],
+        "seed": 1764303535,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "reptile-chameleon-s1",
+      "index": 96,
+      "family_id": "reptile",
+      "line_id": "reptile-chameleon",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Camapixin",
+      "rarity": "common",
+      "temperament": "adaptable",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "pixel",
+        "palette": [
+          "#5BC0BE",
+          "#9BF6A3",
+          "#FF8FAB"
+        ],
+        "seed": 1658499174,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "reptile-chameleon-s2",
+      "index": 97,
+      "family_id": "reptile",
+      "line_id": "reptile-chameleon",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Camapixon",
+      "rarity": "uncommon",
+      "temperament": "adaptable",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "pixel",
+        "palette": [
+          "#5BC0BE",
+          "#9BF6A3",
+          "#FF8FAB"
+        ],
+        "seed": 4133458285,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "reptile-chameleon-s3",
+      "index": 98,
+      "family_id": "reptile",
+      "line_id": "reptile-chameleon",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Camapixarca",
+      "rarity": "rare",
+      "temperament": "adaptable",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "pixel",
+        "palette": [
+          "#5BC0BE",
+          "#9BF6A3",
+          "#FF8FAB"
+        ],
+        "seed": 3885558621,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "reptile-chameleon-s4",
+      "index": 99,
+      "family_id": "reptile",
+      "line_id": "reptile-chameleon",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Camapix Ômega",
+      "rarity": "mythic",
+      "temperament": "adaptable",
+      "sprite": {
+        "shape": "reptile",
+        "motif": "pixel",
+        "palette": [
+          "#5BC0BE",
+          "#9BF6A3",
+          "#FF8FAB"
+        ],
+        "seed": 778360522,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "aquatic-axolotl-s0",
+      "index": 100,
+      "family_id": "aquatic",
+      "line_id": "aquatic-axolotl",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Axolume",
+      "rarity": "common",
+      "temperament": "friendly",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "gill",
+        "palette": [
+          "#FF9EC4",
+          "#FFD3E4",
+          "#6EE7F2"
+        ],
+        "seed": 4185402900,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "aquatic-axolotl-s1",
+      "index": 101,
+      "family_id": "aquatic",
+      "line_id": "aquatic-axolotl",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Axolumein",
+      "rarity": "common",
+      "temperament": "friendly",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "gill",
+        "palette": [
+          "#FF9EC4",
+          "#FFD3E4",
+          "#6EE7F2"
+        ],
+        "seed": 2357427978,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "aquatic-axolotl-s2",
+      "index": 102,
+      "family_id": "aquatic",
+      "line_id": "aquatic-axolotl",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Axolumeon",
+      "rarity": "uncommon",
+      "temperament": "friendly",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "gill",
+        "palette": [
+          "#FF9EC4",
+          "#FFD3E4",
+          "#6EE7F2"
+        ],
+        "seed": 2837545903,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "aquatic-axolotl-s3",
+      "index": 103,
+      "family_id": "aquatic",
+      "line_id": "aquatic-axolotl",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Axolumearca",
+      "rarity": "rare",
+      "temperament": "friendly",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "gill",
+        "palette": [
+          "#FF9EC4",
+          "#FFD3E4",
+          "#6EE7F2"
+        ],
+        "seed": 2602208395,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "aquatic-axolotl-s4",
+      "index": 104,
+      "family_id": "aquatic",
+      "line_id": "aquatic-axolotl",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Axolume Ômega",
+      "rarity": "mythic",
+      "temperament": "friendly",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "gill",
+        "palette": [
+          "#FF9EC4",
+          "#FFD3E4",
+          "#6EE7F2"
+        ],
+        "seed": 2614251658,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "aquatic-koi-s0",
+      "index": 105,
+      "family_id": "aquatic",
+      "line_id": "aquatic-koi",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Koilum",
+      "rarity": "common",
+      "temperament": "serene",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "wave",
+        "palette": [
+          "#F6F7FF",
+          "#FF754B",
+          "#65C7F7"
+        ],
+        "seed": 227679471,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "aquatic-koi-s1",
+      "index": 106,
+      "family_id": "aquatic",
+      "line_id": "aquatic-koi",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Koilumin",
+      "rarity": "common",
+      "temperament": "serene",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "wave",
+        "palette": [
+          "#F6F7FF",
+          "#FF754B",
+          "#65C7F7"
+        ],
+        "seed": 1989163826,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "aquatic-koi-s2",
+      "index": 107,
+      "family_id": "aquatic",
+      "line_id": "aquatic-koi",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Koilumon",
+      "rarity": "uncommon",
+      "temperament": "serene",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "wave",
+        "palette": [
+          "#F6F7FF",
+          "#FF754B",
+          "#65C7F7"
+        ],
+        "seed": 2573659148,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "aquatic-koi-s3",
+      "index": 108,
+      "family_id": "aquatic",
+      "line_id": "aquatic-koi",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Koilumarca",
+      "rarity": "rare",
+      "temperament": "serene",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "wave",
+        "palette": [
+          "#F6F7FF",
+          "#FF754B",
+          "#65C7F7"
+        ],
+        "seed": 2283585665,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "aquatic-koi-s4",
+      "index": 109,
+      "family_id": "aquatic",
+      "line_id": "aquatic-koi",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Koilum Ômega",
+      "rarity": "mythic",
+      "temperament": "serene",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "wave",
+        "palette": [
+          "#F6F7FF",
+          "#FF754B",
+          "#65C7F7"
+        ],
+        "seed": 1542466186,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "aquatic-shark-s0",
+      "index": 110,
+      "family_id": "aquatic",
+      "line_id": "aquatic-shark",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Bytubar",
+      "rarity": "common",
+      "temperament": "hungry",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "byte",
+        "palette": [
+          "#437F97",
+          "#9CC5D5",
+          "#D8FF3E"
+        ],
+        "seed": 1360249679,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "aquatic-shark-s1",
+      "index": 111,
+      "family_id": "aquatic",
+      "line_id": "aquatic-shark",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Bytubarin",
+      "rarity": "common",
+      "temperament": "hungry",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "byte",
+        "palette": [
+          "#437F97",
+          "#9CC5D5",
+          "#D8FF3E"
+        ],
+        "seed": 2159085859,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "aquatic-shark-s2",
+      "index": 112,
+      "family_id": "aquatic",
+      "line_id": "aquatic-shark",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Bytubaron",
+      "rarity": "uncommon",
+      "temperament": "hungry",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "byte",
+        "palette": [
+          "#437F97",
+          "#9CC5D5",
+          "#D8FF3E"
+        ],
+        "seed": 2913147514,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "aquatic-shark-s3",
+      "index": 113,
+      "family_id": "aquatic",
+      "line_id": "aquatic-shark",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Bytubararca",
+      "rarity": "rare",
+      "temperament": "hungry",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "byte",
+        "palette": [
+          "#437F97",
+          "#9CC5D5",
+          "#D8FF3E"
+        ],
+        "seed": 168153825,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "aquatic-shark-s4",
+      "index": 114,
+      "family_id": "aquatic",
+      "line_id": "aquatic-shark",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Bytubar Ômega",
+      "rarity": "mythic",
+      "temperament": "hungry",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "byte",
+        "palette": [
+          "#437F97",
+          "#9CC5D5",
+          "#D8FF3E"
+        ],
+        "seed": 2480345058,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "aquatic-frog-s0",
+      "index": 115,
+      "family_id": "aquatic",
+      "line_id": "aquatic-frog",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Pluvapo",
+      "rarity": "common",
+      "temperament": "cheerful",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "drop",
+        "palette": [
+          "#5FBF70",
+          "#A8E6A3",
+          "#4EA5D9"
+        ],
+        "seed": 1481434938,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "aquatic-frog-s1",
+      "index": 116,
+      "family_id": "aquatic",
+      "line_id": "aquatic-frog",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Pluvapoin",
+      "rarity": "common",
+      "temperament": "cheerful",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "drop",
+        "palette": [
+          "#5FBF70",
+          "#A8E6A3",
+          "#4EA5D9"
+        ],
+        "seed": 1386019459,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "aquatic-frog-s2",
+      "index": 117,
+      "family_id": "aquatic",
+      "line_id": "aquatic-frog",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Pluvapoon",
+      "rarity": "uncommon",
+      "temperament": "cheerful",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "drop",
+        "palette": [
+          "#5FBF70",
+          "#A8E6A3",
+          "#4EA5D9"
+        ],
+        "seed": 3731865803,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "aquatic-frog-s3",
+      "index": 118,
+      "family_id": "aquatic",
+      "line_id": "aquatic-frog",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Pluvapoarca",
+      "rarity": "rare",
+      "temperament": "cheerful",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "drop",
+        "palette": [
+          "#5FBF70",
+          "#A8E6A3",
+          "#4EA5D9"
+        ],
+        "seed": 4172343225,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "aquatic-frog-s4",
+      "index": 119,
+      "family_id": "aquatic",
+      "line_id": "aquatic-frog",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Pluvapo Ômega",
+      "rarity": "mythic",
+      "temperament": "cheerful",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "drop",
+        "palette": [
+          "#5FBF70",
+          "#A8E6A3",
+          "#4EA5D9"
+        ],
+        "seed": 4149410299,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "aquatic-manta-s0",
+      "index": 120,
+      "family_id": "aquatic",
+      "line_id": "aquatic-manta",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Mantavoid",
+      "rarity": "common",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "star",
+        "palette": [
+          "#312A63",
+          "#6457A6",
+          "#64F4D2"
+        ],
+        "seed": 1320046732,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "aquatic-manta-s1",
+      "index": 121,
+      "family_id": "aquatic",
+      "line_id": "aquatic-manta",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Mantavoidin",
+      "rarity": "common",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "star",
+        "palette": [
+          "#312A63",
+          "#6457A6",
+          "#64F4D2"
+        ],
+        "seed": 1005420884,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "aquatic-manta-s2",
+      "index": 122,
+      "family_id": "aquatic",
+      "line_id": "aquatic-manta",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Mantavoidon",
+      "rarity": "uncommon",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "star",
+        "palette": [
+          "#312A63",
+          "#6457A6",
+          "#64F4D2"
+        ],
+        "seed": 2166059,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "aquatic-manta-s3",
+      "index": 123,
+      "family_id": "aquatic",
+      "line_id": "aquatic-manta",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Mantavoidarca",
+      "rarity": "rare",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "star",
+        "palette": [
+          "#312A63",
+          "#6457A6",
+          "#64F4D2"
+        ],
+        "seed": 4043002473,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "aquatic-manta-s4",
+      "index": 124,
+      "family_id": "aquatic",
+      "line_id": "aquatic-manta",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Mantavoid Ômega",
+      "rarity": "mythic",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "aquatic",
+        "motif": "star",
+        "palette": [
+          "#312A63",
+          "#6457A6",
+          "#64F4D2"
+        ],
+        "seed": 1342202286,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "insect-bee-s0",
+      "index": 125,
+      "family_id": "insect",
+      "line_id": "insect-bee",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Ambeia",
+      "rarity": "common",
+      "temperament": "busy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "bands",
+        "palette": [
+          "#F5B700",
+          "#FFF07C",
+          "#3A2E39"
+        ],
+        "seed": 2186043137,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "insect-bee-s1",
+      "index": 126,
+      "family_id": "insect",
+      "line_id": "insect-bee",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Ambeiain",
+      "rarity": "common",
+      "temperament": "busy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "bands",
+        "palette": [
+          "#F5B700",
+          "#FFF07C",
+          "#3A2E39"
+        ],
+        "seed": 1167909798,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "insect-bee-s2",
+      "index": 127,
+      "family_id": "insect",
+      "line_id": "insect-bee",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Ambeiaon",
+      "rarity": "uncommon",
+      "temperament": "busy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "bands",
+        "palette": [
+          "#F5B700",
+          "#FFF07C",
+          "#3A2E39"
+        ],
+        "seed": 254535997,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "insect-bee-s3",
+      "index": 128,
+      "family_id": "insect",
+      "line_id": "insect-bee",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Ambeiaarca",
+      "rarity": "rare",
+      "temperament": "busy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "bands",
+        "palette": [
+          "#F5B700",
+          "#FFF07C",
+          "#3A2E39"
+        ],
+        "seed": 1633718067,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "insect-bee-s4",
+      "index": 129,
+      "family_id": "insect",
+      "line_id": "insect-bee",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Ambeia Ômega",
+      "rarity": "mythic",
+      "temperament": "busy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "bands",
+        "palette": [
+          "#F5B700",
+          "#FFF07C",
+          "#3A2E39"
+        ],
+        "seed": 1907279371,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "insect-moth-s0",
+      "index": 130,
+      "family_id": "insect",
+      "line_id": "insect-moth",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Luniposa",
+      "rarity": "common",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "moon",
+        "palette": [
+          "#6C5B7B",
+          "#C7B8EA",
+          "#E9FF70"
+        ],
+        "seed": 3127710429,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "insect-moth-s1",
+      "index": 131,
+      "family_id": "insect",
+      "line_id": "insect-moth",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Luniposain",
+      "rarity": "common",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "moon",
+        "palette": [
+          "#6C5B7B",
+          "#C7B8EA",
+          "#E9FF70"
+        ],
+        "seed": 3458789977,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "insect-moth-s2",
+      "index": 132,
+      "family_id": "insect",
+      "line_id": "insect-moth",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Luniposaon",
+      "rarity": "uncommon",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "moon",
+        "palette": [
+          "#6C5B7B",
+          "#C7B8EA",
+          "#E9FF70"
+        ],
+        "seed": 695997394,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "insect-moth-s3",
+      "index": 133,
+      "family_id": "insect",
+      "line_id": "insect-moth",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Luniposaarca",
+      "rarity": "rare",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "moon",
+        "palette": [
+          "#6C5B7B",
+          "#C7B8EA",
+          "#E9FF70"
+        ],
+        "seed": 2232769393,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "insect-moth-s4",
+      "index": 134,
+      "family_id": "insect",
+      "line_id": "insect-moth",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Luniposa Ômega",
+      "rarity": "mythic",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "insect",
+        "motif": "moon",
+        "palette": [
+          "#6C5B7B",
+          "#C7B8EA",
+          "#E9FF70"
+        ],
+        "seed": 2938021,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "insect-beetle-s0",
+      "index": 135,
+      "family_id": "insect",
+      "line_id": "insect-beetle",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Cromouro",
+      "rarity": "common",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "insect",
+        "motif": "shell",
+        "palette": [
+          "#1F6F78",
+          "#68C3A3",
+          "#F7D774"
+        ],
+        "seed": 1819778786,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "insect-beetle-s1",
+      "index": 136,
+      "family_id": "insect",
+      "line_id": "insect-beetle",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Cromouroin",
+      "rarity": "common",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "insect",
+        "motif": "shell",
+        "palette": [
+          "#1F6F78",
+          "#68C3A3",
+          "#F7D774"
+        ],
+        "seed": 4126894810,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "insect-beetle-s2",
+      "index": 137,
+      "family_id": "insect",
+      "line_id": "insect-beetle",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Cromouroon",
+      "rarity": "uncommon",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "insect",
+        "motif": "shell",
+        "palette": [
+          "#1F6F78",
+          "#68C3A3",
+          "#F7D774"
+        ],
+        "seed": 602297384,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "insect-beetle-s3",
+      "index": 138,
+      "family_id": "insect",
+      "line_id": "insect-beetle",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Cromouroarca",
+      "rarity": "rare",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "insect",
+        "motif": "shell",
+        "palette": [
+          "#1F6F78",
+          "#68C3A3",
+          "#F7D774"
+        ],
+        "seed": 1514519551,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "insect-beetle-s4",
+      "index": 139,
+      "family_id": "insect",
+      "line_id": "insect-beetle",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Cromouro Ômega",
+      "rarity": "mythic",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "insect",
+        "motif": "shell",
+        "palette": [
+          "#1F6F78",
+          "#68C3A3",
+          "#F7D774"
+        ],
+        "seed": 520793164,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "insect-mantis-s0",
+      "index": 140,
+      "family_id": "insect",
+      "line_id": "insect-mantis",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Jadantis",
+      "rarity": "common",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "insect",
+        "motif": "blade",
+        "palette": [
+          "#4C956C",
+          "#A3E635",
+          "#F2C14E"
+        ],
+        "seed": 1160533408,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "insect-mantis-s1",
+      "index": 141,
+      "family_id": "insect",
+      "line_id": "insect-mantis",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Jadantisin",
+      "rarity": "common",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "insect",
+        "motif": "blade",
+        "palette": [
+          "#4C956C",
+          "#A3E635",
+          "#F2C14E"
+        ],
+        "seed": 394797870,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "insect-mantis-s2",
+      "index": 142,
+      "family_id": "insect",
+      "line_id": "insect-mantis",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Jadantison",
+      "rarity": "uncommon",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "insect",
+        "motif": "blade",
+        "palette": [
+          "#4C956C",
+          "#A3E635",
+          "#F2C14E"
+        ],
+        "seed": 2645942508,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "insect-mantis-s3",
+      "index": 143,
+      "family_id": "insect",
+      "line_id": "insect-mantis",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Jadantisarca",
+      "rarity": "rare",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "insect",
+        "motif": "blade",
+        "palette": [
+          "#4C956C",
+          "#A3E635",
+          "#F2C14E"
+        ],
+        "seed": 1137466596,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "insect-mantis-s4",
+      "index": 144,
+      "family_id": "insect",
+      "line_id": "insect-mantis",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Jadantis Ômega",
+      "rarity": "mythic",
+      "temperament": "focused",
+      "sprite": {
+        "shape": "insect",
+        "motif": "blade",
+        "palette": [
+          "#4C956C",
+          "#A3E635",
+          "#F2C14E"
+        ],
+        "seed": 3265250172,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "insect-firefly-s0",
+      "index": 145,
+      "family_id": "insect",
+      "line_id": "insect-firefly",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Lumpulso",
+      "rarity": "common",
+      "temperament": "hopeful",
+      "sprite": {
+        "shape": "insect",
+        "motif": "spark",
+        "palette": [
+          "#273043",
+          "#475B63",
+          "#D9FF57"
+        ],
+        "seed": 4145613631,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "insect-firefly-s1",
+      "index": 146,
+      "family_id": "insect",
+      "line_id": "insect-firefly",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Lumpulsoin",
+      "rarity": "common",
+      "temperament": "hopeful",
+      "sprite": {
+        "shape": "insect",
+        "motif": "spark",
+        "palette": [
+          "#273043",
+          "#475B63",
+          "#D9FF57"
+        ],
+        "seed": 2191114129,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "insect-firefly-s2",
+      "index": 147,
+      "family_id": "insect",
+      "line_id": "insect-firefly",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Lumpulsoon",
+      "rarity": "uncommon",
+      "temperament": "hopeful",
+      "sprite": {
+        "shape": "insect",
+        "motif": "spark",
+        "palette": [
+          "#273043",
+          "#475B63",
+          "#D9FF57"
+        ],
+        "seed": 4113643926,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "insect-firefly-s3",
+      "index": 148,
+      "family_id": "insect",
+      "line_id": "insect-firefly",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Lumpulsoarca",
+      "rarity": "rare",
+      "temperament": "hopeful",
+      "sprite": {
+        "shape": "insect",
+        "motif": "spark",
+        "palette": [
+          "#273043",
+          "#475B63",
+          "#D9FF57"
+        ],
+        "seed": 3066816534,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "insect-firefly-s4",
+      "index": 149,
+      "family_id": "insect",
+      "line_id": "insect-firefly",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Lumpulso Ômega",
+      "rarity": "mythic",
+      "temperament": "hopeful",
+      "sprite": {
+        "shape": "insect",
+        "motif": "spark",
+        "palette": [
+          "#273043",
+          "#475B63",
+          "#D9FF57"
+        ],
+        "seed": 2325012973,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "spectral-wisp-s0",
+      "index": 150,
+      "family_id": "spectral",
+      "line_id": "spectral-wisp",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Fatuo",
+      "rarity": "common",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "flame",
+        "palette": [
+          "#7AE7C7",
+          "#C8FFF0",
+          "#7067CF"
+        ],
+        "seed": 1991857304,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "spectral-wisp-s1",
+      "index": 151,
+      "family_id": "spectral",
+      "line_id": "spectral-wisp",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Fatuoin",
+      "rarity": "common",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "flame",
+        "palette": [
+          "#7AE7C7",
+          "#C8FFF0",
+          "#7067CF"
+        ],
+        "seed": 3683482291,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "spectral-wisp-s2",
+      "index": 152,
+      "family_id": "spectral",
+      "line_id": "spectral-wisp",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Fatuoon",
+      "rarity": "uncommon",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "flame",
+        "palette": [
+          "#7AE7C7",
+          "#C8FFF0",
+          "#7067CF"
+        ],
+        "seed": 321017024,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "spectral-wisp-s3",
+      "index": 153,
+      "family_id": "spectral",
+      "line_id": "spectral-wisp",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Fatuoarca",
+      "rarity": "rare",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "flame",
+        "palette": [
+          "#7AE7C7",
+          "#C8FFF0",
+          "#7067CF"
+        ],
+        "seed": 3436036546,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "spectral-wisp-s4",
+      "index": 154,
+      "family_id": "spectral",
+      "line_id": "spectral-wisp",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Fatuo Ômega",
+      "rarity": "mythic",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "flame",
+        "palette": [
+          "#7AE7C7",
+          "#C8FFF0",
+          "#7067CF"
+        ],
+        "seed": 2435003026,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "spectral-polter-s0",
+      "index": 155,
+      "family_id": "spectral",
+      "line_id": "spectral-polter",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Polter",
+      "rarity": "common",
+      "temperament": "mischief",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "noise",
+        "palette": [
+          "#B8B8FF",
+          "#E8E8FF",
+          "#FF4FD8"
+        ],
+        "seed": 564835709,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "spectral-polter-s1",
+      "index": 156,
+      "family_id": "spectral",
+      "line_id": "spectral-polter",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Polterin",
+      "rarity": "common",
+      "temperament": "mischief",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "noise",
+        "palette": [
+          "#B8B8FF",
+          "#E8E8FF",
+          "#FF4FD8"
+        ],
+        "seed": 3296850799,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "spectral-polter-s2",
+      "index": 157,
+      "family_id": "spectral",
+      "line_id": "spectral-polter",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Polteron",
+      "rarity": "uncommon",
+      "temperament": "mischief",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "noise",
+        "palette": [
+          "#B8B8FF",
+          "#E8E8FF",
+          "#FF4FD8"
+        ],
+        "seed": 1113680700,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "spectral-polter-s3",
+      "index": 158,
+      "family_id": "spectral",
+      "line_id": "spectral-polter",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Polterarca",
+      "rarity": "rare",
+      "temperament": "mischief",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "noise",
+        "palette": [
+          "#B8B8FF",
+          "#E8E8FF",
+          "#FF4FD8"
+        ],
+        "seed": 2427474956,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "spectral-polter-s4",
+      "index": 159,
+      "family_id": "spectral",
+      "line_id": "spectral-polter",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Polter Ômega",
+      "rarity": "mythic",
+      "temperament": "mischief",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "noise",
+        "palette": [
+          "#B8B8FF",
+          "#E8E8FF",
+          "#FF4FD8"
+        ],
+        "seed": 4279992669,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "spectral-dream-s0",
+      "index": 160,
+      "family_id": "spectral",
+      "line_id": "spectral-dream",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Onirul",
+      "rarity": "common",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "cloud",
+        "palette": [
+          "#6C63FF",
+          "#A9A5FF",
+          "#FFD6FF"
+        ],
+        "seed": 2602591600,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "spectral-dream-s1",
+      "index": 161,
+      "family_id": "spectral",
+      "line_id": "spectral-dream",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Onirulin",
+      "rarity": "common",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "cloud",
+        "palette": [
+          "#6C63FF",
+          "#A9A5FF",
+          "#FFD6FF"
+        ],
+        "seed": 1175114855,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "spectral-dream-s2",
+      "index": 162,
+      "family_id": "spectral",
+      "line_id": "spectral-dream",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Onirulon",
+      "rarity": "uncommon",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "cloud",
+        "palette": [
+          "#6C63FF",
+          "#A9A5FF",
+          "#FFD6FF"
+        ],
+        "seed": 132614086,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "spectral-dream-s3",
+      "index": 163,
+      "family_id": "spectral",
+      "line_id": "spectral-dream",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Onirularca",
+      "rarity": "rare",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "cloud",
+        "palette": [
+          "#6C63FF",
+          "#A9A5FF",
+          "#FFD6FF"
+        ],
+        "seed": 2652833937,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "spectral-dream-s4",
+      "index": 164,
+      "family_id": "spectral",
+      "line_id": "spectral-dream",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Onirul Ômega",
+      "rarity": "mythic",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "cloud",
+        "palette": [
+          "#6C63FF",
+          "#A9A5FF",
+          "#FFD6FF"
+        ],
+        "seed": 1719573587,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "spectral-shadow-s0",
+      "index": 165,
+      "family_id": "spectral",
+      "line_id": "spectral-shadow",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Umbraco",
+      "rarity": "common",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "echo",
+        "palette": [
+          "#171325",
+          "#433A60",
+          "#49F2C2"
+        ],
+        "seed": 2993895860,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "spectral-shadow-s1",
+      "index": 166,
+      "family_id": "spectral",
+      "line_id": "spectral-shadow",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Umbracoin",
+      "rarity": "common",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "echo",
+        "palette": [
+          "#171325",
+          "#433A60",
+          "#49F2C2"
+        ],
+        "seed": 2125523025,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "spectral-shadow-s2",
+      "index": 167,
+      "family_id": "spectral",
+      "line_id": "spectral-shadow",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Umbracoon",
+      "rarity": "uncommon",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "echo",
+        "palette": [
+          "#171325",
+          "#433A60",
+          "#49F2C2"
+        ],
+        "seed": 2706688372,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "spectral-shadow-s3",
+      "index": 168,
+      "family_id": "spectral",
+      "line_id": "spectral-shadow",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Umbracoarca",
+      "rarity": "rare",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "echo",
+        "palette": [
+          "#171325",
+          "#433A60",
+          "#49F2C2"
+        ],
+        "seed": 3259852393,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "spectral-shadow-s4",
+      "index": 169,
+      "family_id": "spectral",
+      "line_id": "spectral-shadow",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Umbraco Ômega",
+      "rarity": "mythic",
+      "temperament": "shy",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "echo",
+        "palette": [
+          "#171325",
+          "#433A60",
+          "#49F2C2"
+        ],
+        "seed": 252207000,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "spectral-lantern-s0",
+      "index": 170,
+      "family_id": "spectral",
+      "line_id": "spectral-lantern",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Almaluz",
+      "rarity": "common",
+      "temperament": "warm",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "lantern",
+        "palette": [
+          "#E07A2D",
+          "#FFD166",
+          "#F7F7C4"
+        ],
+        "seed": 3499252568,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "spectral-lantern-s1",
+      "index": 171,
+      "family_id": "spectral",
+      "line_id": "spectral-lantern",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Almaluzin",
+      "rarity": "common",
+      "temperament": "warm",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "lantern",
+        "palette": [
+          "#E07A2D",
+          "#FFD166",
+          "#F7F7C4"
+        ],
+        "seed": 2356739704,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "spectral-lantern-s2",
+      "index": 172,
+      "family_id": "spectral",
+      "line_id": "spectral-lantern",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Almaluzon",
+      "rarity": "uncommon",
+      "temperament": "warm",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "lantern",
+        "palette": [
+          "#E07A2D",
+          "#FFD166",
+          "#F7F7C4"
+        ],
+        "seed": 349556345,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "spectral-lantern-s3",
+      "index": 173,
+      "family_id": "spectral",
+      "line_id": "spectral-lantern",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Almaluzarca",
+      "rarity": "rare",
+      "temperament": "warm",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "lantern",
+        "palette": [
+          "#E07A2D",
+          "#FFD166",
+          "#F7F7C4"
+        ],
+        "seed": 936401388,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "spectral-lantern-s4",
+      "index": 174,
+      "family_id": "spectral",
+      "line_id": "spectral-lantern",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Almaluz Ômega",
+      "rarity": "mythic",
+      "temperament": "warm",
+      "sprite": {
+        "shape": "spectral",
+        "motif": "lantern",
+        "palette": [
+          "#E07A2D",
+          "#FFD166",
+          "#F7F7C4"
+        ],
+        "seed": 4068155787,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "botanical-mushroom-s0",
+      "index": 175,
+      "family_id": "botanical",
+      "line_id": "botanical-mushroom",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Orvafungo",
+      "rarity": "common",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "spots",
+        "palette": [
+          "#C65D7B",
+          "#F6B8C9",
+          "#8EC07C"
+        ],
+        "seed": 1678058869,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "botanical-mushroom-s1",
+      "index": 176,
+      "family_id": "botanical",
+      "line_id": "botanical-mushroom",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Orvafungoin",
+      "rarity": "common",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "spots",
+        "palette": [
+          "#C65D7B",
+          "#F6B8C9",
+          "#8EC07C"
+        ],
+        "seed": 3098594632,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "botanical-mushroom-s2",
+      "index": 177,
+      "family_id": "botanical",
+      "line_id": "botanical-mushroom",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Orvafungoon",
+      "rarity": "uncommon",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "spots",
+        "palette": [
+          "#C65D7B",
+          "#F6B8C9",
+          "#8EC07C"
+        ],
+        "seed": 1667961962,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "botanical-mushroom-s3",
+      "index": 178,
+      "family_id": "botanical",
+      "line_id": "botanical-mushroom",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Orvafungoarca",
+      "rarity": "rare",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "spots",
+        "palette": [
+          "#C65D7B",
+          "#F6B8C9",
+          "#8EC07C"
+        ],
+        "seed": 2520397916,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "botanical-mushroom-s4",
+      "index": 179,
+      "family_id": "botanical",
+      "line_id": "botanical-mushroom",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Orvafungo Ômega",
+      "rarity": "mythic",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "spots",
+        "palette": [
+          "#C65D7B",
+          "#F6B8C9",
+          "#8EC07C"
+        ],
+        "seed": 500878818,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "botanical-cactus-s0",
+      "index": 180,
+      "family_id": "botanical",
+      "line_id": "botanical-cactus",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Cacteta",
+      "rarity": "common",
+      "temperament": "tough",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "star",
+        "palette": [
+          "#4F9D69",
+          "#8CD790",
+          "#FFD166"
+        ],
+        "seed": 171950871,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "botanical-cactus-s1",
+      "index": 181,
+      "family_id": "botanical",
+      "line_id": "botanical-cactus",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Cactetain",
+      "rarity": "common",
+      "temperament": "tough",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "star",
+        "palette": [
+          "#4F9D69",
+          "#8CD790",
+          "#FFD166"
+        ],
+        "seed": 4094626374,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "botanical-cactus-s2",
+      "index": 182,
+      "family_id": "botanical",
+      "line_id": "botanical-cactus",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Cactetaon",
+      "rarity": "uncommon",
+      "temperament": "tough",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "star",
+        "palette": [
+          "#4F9D69",
+          "#8CD790",
+          "#FFD166"
+        ],
+        "seed": 2030949807,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "botanical-cactus-s3",
+      "index": 183,
+      "family_id": "botanical",
+      "line_id": "botanical-cactus",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Cactetaarca",
+      "rarity": "rare",
+      "temperament": "tough",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "star",
+        "palette": [
+          "#4F9D69",
+          "#8CD790",
+          "#FFD166"
+        ],
+        "seed": 929274353,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "botanical-cactus-s4",
+      "index": 184,
+      "family_id": "botanical",
+      "line_id": "botanical-cactus",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Cacteta Ômega",
+      "rarity": "mythic",
+      "temperament": "tough",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "star",
+        "palette": [
+          "#4F9D69",
+          "#8CD790",
+          "#FFD166"
+        ],
+        "seed": 4080060083,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "botanical-flower-s0",
+      "index": 185,
+      "family_id": "botanical",
+      "line_id": "botanical-flower",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Priflor",
+      "rarity": "common",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "prism",
+        "palette": [
+          "#FF6FAE",
+          "#FFD1E8",
+          "#62D2A2"
+        ],
+        "seed": 3961612565,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "botanical-flower-s1",
+      "index": 186,
+      "family_id": "botanical",
+      "line_id": "botanical-flower",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Priflorin",
+      "rarity": "common",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "prism",
+        "palette": [
+          "#FF6FAE",
+          "#FFD1E8",
+          "#62D2A2"
+        ],
+        "seed": 4241521207,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "botanical-flower-s2",
+      "index": 187,
+      "family_id": "botanical",
+      "line_id": "botanical-flower",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Prifloron",
+      "rarity": "uncommon",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "prism",
+        "palette": [
+          "#FF6FAE",
+          "#FFD1E8",
+          "#62D2A2"
+        ],
+        "seed": 4072224246,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "botanical-flower-s3",
+      "index": 188,
+      "family_id": "botanical",
+      "line_id": "botanical-flower",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Priflorarca",
+      "rarity": "rare",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "prism",
+        "palette": [
+          "#FF6FAE",
+          "#FFD1E8",
+          "#62D2A2"
+        ],
+        "seed": 2177869264,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "botanical-flower-s4",
+      "index": 189,
+      "family_id": "botanical",
+      "line_id": "botanical-flower",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Priflor Ômega",
+      "rarity": "mythic",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "prism",
+        "palette": [
+          "#FF6FAE",
+          "#FFD1E8",
+          "#62D2A2"
+        ],
+        "seed": 3895398921,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "botanical-vine-s0",
+      "index": 190,
+      "family_id": "botanical",
+      "line_id": "botanical-vine",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Circipó",
+      "rarity": "common",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "circuit",
+        "palette": [
+          "#3E8E5B",
+          "#8FDB78",
+          "#4DD0E1"
+        ],
+        "seed": 2867557492,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "botanical-vine-s1",
+      "index": 191,
+      "family_id": "botanical",
+      "line_id": "botanical-vine",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Circipóin",
+      "rarity": "common",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "circuit",
+        "palette": [
+          "#3E8E5B",
+          "#8FDB78",
+          "#4DD0E1"
+        ],
+        "seed": 1628158521,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "botanical-vine-s2",
+      "index": 192,
+      "family_id": "botanical",
+      "line_id": "botanical-vine",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Circipóon",
+      "rarity": "uncommon",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "circuit",
+        "palette": [
+          "#3E8E5B",
+          "#8FDB78",
+          "#4DD0E1"
+        ],
+        "seed": 2634837838,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "botanical-vine-s3",
+      "index": 193,
+      "family_id": "botanical",
+      "line_id": "botanical-vine",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Circipóarca",
+      "rarity": "rare",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "circuit",
+        "palette": [
+          "#3E8E5B",
+          "#8FDB78",
+          "#4DD0E1"
+        ],
+        "seed": 2920421765,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "botanical-vine-s4",
+      "index": 194,
+      "family_id": "botanical",
+      "line_id": "botanical-vine",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Circipó Ômega",
+      "rarity": "mythic",
+      "temperament": "clever",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "circuit",
+        "palette": [
+          "#3E8E5B",
+          "#8FDB78",
+          "#4DD0E1"
+        ],
+        "seed": 3264940410,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "botanical-moss-s0",
+      "index": 195,
+      "family_id": "botanical",
+      "line_id": "botanical-moss",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Antramus",
+      "rarity": "common",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "rune",
+        "palette": [
+          "#526B2D",
+          "#91A35A",
+          "#D4C685"
+        ],
+        "seed": 1205796127,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "botanical-moss-s1",
+      "index": 196,
+      "family_id": "botanical",
+      "line_id": "botanical-moss",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Antramusin",
+      "rarity": "common",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "rune",
+        "palette": [
+          "#526B2D",
+          "#91A35A",
+          "#D4C685"
+        ],
+        "seed": 45503151,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "botanical-moss-s2",
+      "index": 197,
+      "family_id": "botanical",
+      "line_id": "botanical-moss",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Antramuson",
+      "rarity": "uncommon",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "rune",
+        "palette": [
+          "#526B2D",
+          "#91A35A",
+          "#D4C685"
+        ],
+        "seed": 3819016018,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "botanical-moss-s3",
+      "index": 198,
+      "family_id": "botanical",
+      "line_id": "botanical-moss",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Antramusarca",
+      "rarity": "rare",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "rune",
+        "palette": [
+          "#526B2D",
+          "#91A35A",
+          "#D4C685"
+        ],
+        "seed": 4135629567,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "botanical-moss-s4",
+      "index": 199,
+      "family_id": "botanical",
+      "line_id": "botanical-moss",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Antramus Ômega",
+      "rarity": "mythic",
+      "temperament": "wise",
+      "sprite": {
+        "shape": "botanical",
+        "motif": "rune",
+        "palette": [
+          "#526B2D",
+          "#91A35A",
+          "#D4C685"
+        ],
+        "seed": 3955715080,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "robotic-drone-s0",
+      "index": 200,
+      "family_id": "robotic",
+      "line_id": "robotic-drone",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Ionix",
+      "rarity": "common",
+      "temperament": "alert",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "antenna",
+        "palette": [
+          "#596275",
+          "#A5B1C2",
+          "#26DE81"
+        ],
+        "seed": 1091017517,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "robotic-drone-s1",
+      "index": 201,
+      "family_id": "robotic",
+      "line_id": "robotic-drone",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Ionixin",
+      "rarity": "common",
+      "temperament": "alert",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "antenna",
+        "palette": [
+          "#596275",
+          "#A5B1C2",
+          "#26DE81"
+        ],
+        "seed": 1007102005,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "robotic-drone-s2",
+      "index": 202,
+      "family_id": "robotic",
+      "line_id": "robotic-drone",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Ionixon",
+      "rarity": "uncommon",
+      "temperament": "alert",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "antenna",
+        "palette": [
+          "#596275",
+          "#A5B1C2",
+          "#26DE81"
+        ],
+        "seed": 2066503162,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "robotic-drone-s3",
+      "index": 203,
+      "family_id": "robotic",
+      "line_id": "robotic-drone",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Ionixarca",
+      "rarity": "rare",
+      "temperament": "alert",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "antenna",
+        "palette": [
+          "#596275",
+          "#A5B1C2",
+          "#26DE81"
+        ],
+        "seed": 2374280399,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "robotic-drone-s4",
+      "index": 204,
+      "family_id": "robotic",
+      "line_id": "robotic-drone",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Ionix Ômega",
+      "rarity": "mythic",
+      "temperament": "alert",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "antenna",
+        "palette": [
+          "#596275",
+          "#A5B1C2",
+          "#26DE81"
+        ],
+        "seed": 1614876232,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "robotic-gear-s0",
+      "index": 205,
+      "family_id": "robotic",
+      "line_id": "robotic-gear",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Cogvita",
+      "rarity": "common",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "gear",
+        "palette": [
+          "#6D6875",
+          "#B0A8B9",
+          "#FFB703"
+        ],
+        "seed": 714735865,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "robotic-gear-s1",
+      "index": 206,
+      "family_id": "robotic",
+      "line_id": "robotic-gear",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Cogvitain",
+      "rarity": "common",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "gear",
+        "palette": [
+          "#6D6875",
+          "#B0A8B9",
+          "#FFB703"
+        ],
+        "seed": 4079801568,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "robotic-gear-s2",
+      "index": 207,
+      "family_id": "robotic",
+      "line_id": "robotic-gear",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Cogvitaon",
+      "rarity": "uncommon",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "gear",
+        "palette": [
+          "#6D6875",
+          "#B0A8B9",
+          "#FFB703"
+        ],
+        "seed": 1702297479,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "robotic-gear-s3",
+      "index": 208,
+      "family_id": "robotic",
+      "line_id": "robotic-gear",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Cogvitaarca",
+      "rarity": "rare",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "gear",
+        "palette": [
+          "#6D6875",
+          "#B0A8B9",
+          "#FFB703"
+        ],
+        "seed": 2014476026,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "robotic-gear-s4",
+      "index": 209,
+      "family_id": "robotic",
+      "line_id": "robotic-gear",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Cogvita Ômega",
+      "rarity": "mythic",
+      "temperament": "steady",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "gear",
+        "palette": [
+          "#6D6875",
+          "#B0A8B9",
+          "#FFB703"
+        ],
+        "seed": 506204863,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "robotic-radio-s0",
+      "index": 210,
+      "family_id": "robotic",
+      "line_id": "robotic-radio",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Radioco",
+      "rarity": "common",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "signal",
+        "palette": [
+          "#264653",
+          "#5C8D89",
+          "#E9C46A"
+        ],
+        "seed": 292283385,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "robotic-radio-s1",
+      "index": 211,
+      "family_id": "robotic",
+      "line_id": "robotic-radio",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Radiocoin",
+      "rarity": "common",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "signal",
+        "palette": [
+          "#264653",
+          "#5C8D89",
+          "#E9C46A"
+        ],
+        "seed": 3018140087,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "robotic-radio-s2",
+      "index": 212,
+      "family_id": "robotic",
+      "line_id": "robotic-radio",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Radiocoon",
+      "rarity": "uncommon",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "signal",
+        "palette": [
+          "#264653",
+          "#5C8D89",
+          "#E9C46A"
+        ],
+        "seed": 4257303970,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "robotic-radio-s3",
+      "index": 213,
+      "family_id": "robotic",
+      "line_id": "robotic-radio",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Radiocoarca",
+      "rarity": "rare",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "signal",
+        "palette": [
+          "#264653",
+          "#5C8D89",
+          "#E9C46A"
+        ],
+        "seed": 776315544,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "robotic-radio-s4",
+      "index": 214,
+      "family_id": "robotic",
+      "line_id": "robotic-radio",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Radioco Ômega",
+      "rarity": "mythic",
+      "temperament": "curious",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "signal",
+        "palette": [
+          "#264653",
+          "#5C8D89",
+          "#E9C46A"
+        ],
+        "seed": 672304713,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "robotic-sentinel-s0",
+      "index": 215,
+      "family_id": "robotic",
+      "line_id": "robotic-sentinel",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Rubinel",
+      "rarity": "common",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "shield",
+        "palette": [
+          "#3D405B",
+          "#777B9E",
+          "#E63946"
+        ],
+        "seed": 65044877,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "robotic-sentinel-s1",
+      "index": 216,
+      "family_id": "robotic",
+      "line_id": "robotic-sentinel",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Rubinelin",
+      "rarity": "common",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "shield",
+        "palette": [
+          "#3D405B",
+          "#777B9E",
+          "#E63946"
+        ],
+        "seed": 1607100894,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "robotic-sentinel-s2",
+      "index": 217,
+      "family_id": "robotic",
+      "line_id": "robotic-sentinel",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Rubinelon",
+      "rarity": "uncommon",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "shield",
+        "palette": [
+          "#3D405B",
+          "#777B9E",
+          "#E63946"
+        ],
+        "seed": 1126040140,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "robotic-sentinel-s3",
+      "index": 218,
+      "family_id": "robotic",
+      "line_id": "robotic-sentinel",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Rubinelarca",
+      "rarity": "rare",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "shield",
+        "palette": [
+          "#3D405B",
+          "#777B9E",
+          "#E63946"
+        ],
+        "seed": 1717168507,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "robotic-sentinel-s4",
+      "index": 219,
+      "family_id": "robotic",
+      "line_id": "robotic-sentinel",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Rubinel Ômega",
+      "rarity": "mythic",
+      "temperament": "loyal",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "shield",
+        "palette": [
+          "#3D405B",
+          "#777B9E",
+          "#E63946"
+        ],
+        "seed": 2298583194,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "robotic-synth-s0",
+      "index": 220,
+      "family_id": "robotic",
+      "line_id": "robotic-synth",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Synthra",
+      "rarity": "common",
+      "temperament": "creative",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "prism",
+        "palette": [
+          "#20223A",
+          "#5B5FEF",
+          "#FF4FD8"
+        ],
+        "seed": 3279434278,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "robotic-synth-s1",
+      "index": 221,
+      "family_id": "robotic",
+      "line_id": "robotic-synth",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Synthrain",
+      "rarity": "common",
+      "temperament": "creative",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "prism",
+        "palette": [
+          "#20223A",
+          "#5B5FEF",
+          "#FF4FD8"
+        ],
+        "seed": 1539181904,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "robotic-synth-s2",
+      "index": 222,
+      "family_id": "robotic",
+      "line_id": "robotic-synth",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Synthraon",
+      "rarity": "uncommon",
+      "temperament": "creative",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "prism",
+        "palette": [
+          "#20223A",
+          "#5B5FEF",
+          "#FF4FD8"
+        ],
+        "seed": 2280528373,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "robotic-synth-s3",
+      "index": 223,
+      "family_id": "robotic",
+      "line_id": "robotic-synth",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Synthraarca",
+      "rarity": "rare",
+      "temperament": "creative",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "prism",
+        "palette": [
+          "#20223A",
+          "#5B5FEF",
+          "#FF4FD8"
+        ],
+        "seed": 665735523,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "robotic-synth-s4",
+      "index": 224,
+      "family_id": "robotic",
+      "line_id": "robotic-synth",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Synthra Ômega",
+      "rarity": "mythic",
+      "temperament": "creative",
+      "sprite": {
+        "shape": "robotic",
+        "motif": "prism",
+        "palette": [
+          "#20223A",
+          "#5B5FEF",
+          "#FF4FD8"
+        ],
+        "seed": 1967434336,
+        "variant": 4,
+        "growth": 4
+      }
+    },
+    {
+      "id": "cosmic-star-s0",
+      "index": 225,
+      "family_id": "cosmic",
+      "line_id": "cosmic-star",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Pulsar",
+      "rarity": "common",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "star",
+        "palette": [
+          "#355CDE",
+          "#88A7FF",
+          "#FFF06A"
+        ],
+        "seed": 3710836539,
+        "variant": 0,
+        "growth": 0
+      }
+    },
+    {
+      "id": "cosmic-star-s1",
+      "index": 226,
+      "family_id": "cosmic",
+      "line_id": "cosmic-star",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Pulsarin",
+      "rarity": "common",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "star",
+        "palette": [
+          "#355CDE",
+          "#88A7FF",
+          "#FFF06A"
+        ],
+        "seed": 4032282601,
+        "variant": 0,
+        "growth": 1
+      }
+    },
+    {
+      "id": "cosmic-star-s2",
+      "index": 227,
+      "family_id": "cosmic",
+      "line_id": "cosmic-star",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Pulsaron",
+      "rarity": "uncommon",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "star",
+        "palette": [
+          "#355CDE",
+          "#88A7FF",
+          "#FFF06A"
+        ],
+        "seed": 3275106618,
+        "variant": 0,
+        "growth": 2
+      }
+    },
+    {
+      "id": "cosmic-star-s3",
+      "index": 228,
+      "family_id": "cosmic",
+      "line_id": "cosmic-star",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Pulsararca",
+      "rarity": "rare",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "star",
+        "palette": [
+          "#355CDE",
+          "#88A7FF",
+          "#FFF06A"
+        ],
+        "seed": 3132079736,
+        "variant": 0,
+        "growth": 3
+      }
+    },
+    {
+      "id": "cosmic-star-s4",
+      "index": 229,
+      "family_id": "cosmic",
+      "line_id": "cosmic-star",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Pulsar Ômega",
+      "rarity": "mythic",
+      "temperament": "bright",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "star",
+        "palette": [
+          "#355CDE",
+          "#88A7FF",
+          "#FFF06A"
+        ],
+        "seed": 1842764941,
+        "variant": 0,
+        "growth": 4
+      }
+    },
+    {
+      "id": "cosmic-comet-s0",
+      "index": 230,
+      "family_id": "cosmic",
+      "line_id": "cosmic-comet",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Iricom",
+      "rarity": "common",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "trail",
+        "palette": [
+          "#6A4C93",
+          "#B48EED",
+          "#4DEEEA"
+        ],
+        "seed": 1456988250,
+        "variant": 1,
+        "growth": 0
+      }
+    },
+    {
+      "id": "cosmic-comet-s1",
+      "index": 231,
+      "family_id": "cosmic",
+      "line_id": "cosmic-comet",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Iricomin",
+      "rarity": "common",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "trail",
+        "palette": [
+          "#6A4C93",
+          "#B48EED",
+          "#4DEEEA"
+        ],
+        "seed": 3533170517,
+        "variant": 1,
+        "growth": 1
+      }
+    },
+    {
+      "id": "cosmic-comet-s2",
+      "index": 232,
+      "family_id": "cosmic",
+      "line_id": "cosmic-comet",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Iricomon",
+      "rarity": "uncommon",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "trail",
+        "palette": [
+          "#6A4C93",
+          "#B48EED",
+          "#4DEEEA"
+        ],
+        "seed": 2686423817,
+        "variant": 1,
+        "growth": 2
+      }
+    },
+    {
+      "id": "cosmic-comet-s3",
+      "index": 233,
+      "family_id": "cosmic",
+      "line_id": "cosmic-comet",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Iricomarca",
+      "rarity": "rare",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "trail",
+        "palette": [
+          "#6A4C93",
+          "#B48EED",
+          "#4DEEEA"
+        ],
+        "seed": 3356390273,
+        "variant": 1,
+        "growth": 3
+      }
+    },
+    {
+      "id": "cosmic-comet-s4",
+      "index": 234,
+      "family_id": "cosmic",
+      "line_id": "cosmic-comet",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Iricom Ômega",
+      "rarity": "mythic",
+      "temperament": "energetic",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "trail",
+        "palette": [
+          "#6A4C93",
+          "#B48EED",
+          "#4DEEEA"
+        ],
+        "seed": 449241452,
+        "variant": 1,
+        "growth": 4
+      }
+    },
+    {
+      "id": "cosmic-void-s0",
+      "index": 235,
+      "family_id": "cosmic",
+      "line_id": "cosmic-void",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Voidim",
+      "rarity": "common",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "orbit",
+        "palette": [
+          "#0B1026",
+          "#30365C",
+          "#64F4D2"
+        ],
+        "seed": 3920016039,
+        "variant": 2,
+        "growth": 0
+      }
+    },
+    {
+      "id": "cosmic-void-s1",
+      "index": 236,
+      "family_id": "cosmic",
+      "line_id": "cosmic-void",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Voidimin",
+      "rarity": "common",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "orbit",
+        "palette": [
+          "#0B1026",
+          "#30365C",
+          "#64F4D2"
+        ],
+        "seed": 122830791,
+        "variant": 2,
+        "growth": 1
+      }
+    },
+    {
+      "id": "cosmic-void-s2",
+      "index": 237,
+      "family_id": "cosmic",
+      "line_id": "cosmic-void",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Voidimon",
+      "rarity": "uncommon",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "orbit",
+        "palette": [
+          "#0B1026",
+          "#30365C",
+          "#64F4D2"
+        ],
+        "seed": 2723067751,
+        "variant": 2,
+        "growth": 2
+      }
+    },
+    {
+      "id": "cosmic-void-s3",
+      "index": 238,
+      "family_id": "cosmic",
+      "line_id": "cosmic-void",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Voidimarca",
+      "rarity": "rare",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "orbit",
+        "palette": [
+          "#0B1026",
+          "#30365C",
+          "#64F4D2"
+        ],
+        "seed": 441069242,
+        "variant": 2,
+        "growth": 3
+      }
+    },
+    {
+      "id": "cosmic-void-s4",
+      "index": 239,
+      "family_id": "cosmic",
+      "line_id": "cosmic-void",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Voidim Ômega",
+      "rarity": "mythic",
+      "temperament": "quiet",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "orbit",
+        "palette": [
+          "#0B1026",
+          "#30365C",
+          "#64F4D2"
+        ],
+        "seed": 2913709480,
+        "variant": 2,
+        "growth": 4
+      }
+    },
+    {
+      "id": "cosmic-moon-s0",
+      "index": 240,
+      "family_id": "cosmic",
+      "line_id": "cosmic-moon",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Lunabro",
+      "rarity": "common",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "leaf",
+        "palette": [
+          "#C9D6EA",
+          "#F4F7FF",
+          "#8DD7CF"
+        ],
+        "seed": 1625925115,
+        "variant": 3,
+        "growth": 0
+      }
+    },
+    {
+      "id": "cosmic-moon-s1",
+      "index": 241,
+      "family_id": "cosmic",
+      "line_id": "cosmic-moon",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Lunabroin",
+      "rarity": "common",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "leaf",
+        "palette": [
+          "#C9D6EA",
+          "#F4F7FF",
+          "#8DD7CF"
+        ],
+        "seed": 1774147915,
+        "variant": 3,
+        "growth": 1
+      }
+    },
+    {
+      "id": "cosmic-moon-s2",
+      "index": 242,
+      "family_id": "cosmic",
+      "line_id": "cosmic-moon",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Lunabroon",
+      "rarity": "uncommon",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "leaf",
+        "palette": [
+          "#C9D6EA",
+          "#F4F7FF",
+          "#8DD7CF"
+        ],
+        "seed": 4252926525,
+        "variant": 3,
+        "growth": 2
+      }
+    },
+    {
+      "id": "cosmic-moon-s3",
+      "index": 243,
+      "family_id": "cosmic",
+      "line_id": "cosmic-moon",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Lunabroarca",
+      "rarity": "rare",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "leaf",
+        "palette": [
+          "#C9D6EA",
+          "#F4F7FF",
+          "#8DD7CF"
+        ],
+        "seed": 2467320207,
+        "variant": 3,
+        "growth": 3
+      }
+    },
+    {
+      "id": "cosmic-moon-s4",
+      "index": 244,
+      "family_id": "cosmic",
+      "line_id": "cosmic-moon",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Lunabro Ômega",
+      "rarity": "mythic",
+      "temperament": "gentle",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "leaf",
+        "palette": [
+          "#C9D6EA",
+          "#F4F7FF",
+          "#8DD7CF"
+        ],
+        "seed": 3432857940,
+        "variant": 3,
+        "growth": 4
+      }
+    },
+    {
+      "id": "cosmic-nebula-s0",
+      "index": 245,
+      "family_id": "cosmic",
+      "line_id": "cosmic-nebula",
+      "stage": 0,
+      "stage_name": "Ovo",
+      "name": "Ovo Nebulita",
+      "rarity": "common",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "cloud",
+        "palette": [
+          "#7B2CBF",
+          "#C77DFF",
+          "#FF85A1"
+        ],
+        "seed": 3596486409,
+        "variant": 4,
+        "growth": 0
+      }
+    },
+    {
+      "id": "cosmic-nebula-s1",
+      "index": 246,
+      "family_id": "cosmic",
+      "line_id": "cosmic-nebula",
+      "stage": 1,
+      "stage_name": "Filhote",
+      "name": "Nebulitain",
+      "rarity": "common",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "cloud",
+        "palette": [
+          "#7B2CBF",
+          "#C77DFF",
+          "#FF85A1"
+        ],
+        "seed": 3373622904,
+        "variant": 4,
+        "growth": 1
+      }
+    },
+    {
+      "id": "cosmic-nebula-s2",
+      "index": 247,
+      "family_id": "cosmic",
+      "line_id": "cosmic-nebula",
+      "stage": 2,
+      "stage_name": "Jovem",
+      "name": "Nebulitaon",
+      "rarity": "uncommon",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "cloud",
+        "palette": [
+          "#7B2CBF",
+          "#C77DFF",
+          "#FF85A1"
+        ],
+        "seed": 1337680130,
+        "variant": 4,
+        "growth": 2
+      }
+    },
+    {
+      "id": "cosmic-nebula-s3",
+      "index": 248,
+      "family_id": "cosmic",
+      "line_id": "cosmic-nebula",
+      "stage": 3,
+      "stage_name": "Adulto",
+      "name": "Nebulitaarca",
+      "rarity": "rare",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "cloud",
+        "palette": [
+          "#7B2CBF",
+          "#C77DFF",
+          "#FF85A1"
+        ],
+        "seed": 63516929,
+        "variant": 4,
+        "growth": 3
+      }
+    },
+    {
+      "id": "cosmic-nebula-s4",
+      "index": 249,
+      "family_id": "cosmic",
+      "line_id": "cosmic-nebula",
+      "stage": 4,
+      "stage_name": "Forma rara",
+      "name": "Nebulita Ômega",
+      "rarity": "mythic",
+      "temperament": "dreamy",
+      "sprite": {
+        "shape": "cosmic",
+        "motif": "cloud",
+        "palette": [
+          "#7B2CBF",
+          "#C77DFF",
+          "#FF85A1"
+        ],
+        "seed": 1640685610,
+        "variant": 4,
+        "growth": 4
+      }
+    }
+  ]
+}
