@@ -7,7 +7,9 @@ queue, CSV preservation, restart/dedup, new/known XP messages, independent
 sensor states, offline pending counts, confirmed-offset resume and uncertain
 upload recovery. HTTP replies and radios are simulated; no live upload was made.
 
-- [ ] Install 0.8.7 on stock 2.0.0-stable, preserving pet/config/history.
+- [x] Install 0.8.7 on the user's stock 2.0.0-stable Pager; installer returned
+  exit code 0, backed up the previous payload and reported save/config preserved.
+  The user also confirmed "PRONTO! App instalado" on 2026-11-03.
 - [ ] Check readability of sensors and CIMA/BAIXO summary on the 480x222 screen.
 - [ ] Walk/drive with more than 500 located records; standalone queue must not grow.
 - [ ] Observe XP above 120 and repeated addresses without additional rewards.
@@ -15,8 +17,12 @@ upload recovery. HTTP replies and radios are simulated; no live upload was made.
 - [ ] End/restart and compare summary/CSV to the actual route.
 - [ ] Confirm live WDGWars receipt/resume and compare local pending count/history.
 
-This version is packaged and desktop-tested; none of these device checks is
-claimed complete by the automated suite. GPS remains on the stock GPSd service.
+The installation diagnostic read 24 recent Recon Wi-Fi observations and 4 Blue5
+LE observations, loaded libpagerctl and reached the stock GPSd port. It did not
+initialize the screen, verify a GPS fix, scan, capture, pair or upload. The optional
+aircrack-ng command was absent, so dictionary tests remain unavailable on this
+installation until that dependency is installed. GPS remains on the stock service.
+The remaining field checks above have not been confirmed.
 
 ## Daily XP ceiling removal — 0.8.6
 
