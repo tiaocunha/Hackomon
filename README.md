@@ -24,7 +24,7 @@ This incremental release contains:
 - full expedition CSV synchronization in small resumable WDGWars batches, account
   validation, local receipts/history, cancellation and explicit uncertain-upload recovery.
 - an original Hackomon Field Companion overlay for the stock 2.0 Wargames theme,
-  a Windows fresh-install helper and read-only `--doctor` diagnostics (0.8.0).
+  a double-click Windows installer and read-only `--doctor` diagnostics (0.8.1).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -46,7 +46,7 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters remain **experimental in 0.8.0**: desktop tests use fixtures
+Network and lab adapters remain **experimental in 0.8.1**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
@@ -65,7 +65,11 @@ remain future work. See the
 ## Install
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
-[the Portuguese setup guide](docs/INSTALAR_2_0.md). The full setup archive also
+[the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
+`hackomon-instalar-0.8.1.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+system password when OpenSSH asks. No manual PowerShell or file copy is needed.
+The installer uses one SSH session and preserves a recognized existing theme.
+The full setup archive also
 creates a locally derived stock theme, preserving firmware-specific menus.
 The original overlay contains no copied Hak5 assets; the assembled on-device
 theme remains subject to Hak5 licensing. No physical 2.0 compatibility claim is made.
@@ -94,6 +98,8 @@ payload does not erase the save.
 ## Development
 
 Only the Python standard library is required on a development computer.
+Windows integration tests additionally use the built-in Windows PowerShell,
+tar, a local compiled fixture and loopback port 22; they simulate the Pager.
 
 ```text
 python -m unittest discover -s tests -v
@@ -101,6 +107,9 @@ python tools/generate_bestiary.py --check
 python tools/render_preview.py
 python tools/build_release.py
 ```
+
+For Windows binary-transport checks, also run
+`powershell -NoProfile -ExecutionPolicy Bypass -File tests/test_installer_transport.ps1`.
 
 The payload itself has no Python package downloads and never fetches code at
 runtime. Generated release archives are written to `dist/`.

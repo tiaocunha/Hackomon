@@ -3,6 +3,8 @@
 ## Firmware 2.0.0-stable / 0.8.0 first installation
 
 - [ ] Complete Windows setup after a factory reset; record actual installed package versions.
+- [ ] Double-click INSTALAR.cmd; authenticate through native OpenSSH during the binary transfer.
+- [ ] Interrupted copy never reaches setup; a retry preserves progress/config and an existing valid theme.
 - [ ] Pinned MIPS library loads and renders correctly on firmware 2.0 (not just API symbol check).
 - [ ] Wargames local base passes overlay schema, reference and six-icon layout checks.
 - [ ] Hackomon theme appears in Settings > General > Theme; stock Wargames stays selectable.

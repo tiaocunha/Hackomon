@@ -2,7 +2,8 @@
 
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.8.0.zip` (app + original stock-theme overlay + Windows setup).
+`hackomon-instalar-0.8.1.zip`: extract everything and double-click `INSTALAR.cmd`
+(app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not
 physical firmware validation.

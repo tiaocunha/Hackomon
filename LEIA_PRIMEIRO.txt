@@ -1,0 +1,20 @@
+HACKOMON - INSTALACAO FACIL NO WINDOWS
+
+1. Conecte seu Pager ao PC por USB-C DE DADOS ou pelo Wi-Fi de gerenciamento.
+   No Pager, ative Settings > System > SSH e conecte-o a Internet.
+2. Extraia TODO o ZIP usando "Extrair tudo".
+3. Abra INSTALAR.cmd com dois cliques e digite a senha do Pager quando solicitado.
+   Confira a identidade do dispositivo na primeira conexao.
+4. Quando aparecer PRONTO, selecione no Pager:
+   Settings > General > Theme > hackomon-field
+   e abra Payloads > Games > Hackomon.
+
+Deixe o app fechado enquanto instala. Nao precisa abrir o PowerShell, copiar
+pastas manualmente, informar a chave WDGWars ou cadastrar redes para instalar.
+O instalador preserva save/config, guarda o app anterior e reconhece um tema
+Hackomon valido ja instalado. Nenhuma senha SSH e guardada pelo instalador.
+
+O PC precisa de Internet para o primeiro download da biblioteca. O Pager precisa
+de Internet se ainda faltar Python. Radios, Bluetooth e GPS sao recursos opcionais
+e podem precisar de ajustes; a instalacao nao comprova que funcionem no hardware.
+Detalhes, GPS, WDGWars e recuperacao: COMECE_AQUI.md.

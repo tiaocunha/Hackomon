@@ -60,6 +60,24 @@ def deploy(source, payload_root, backup_root, library, manifest):
     return target, backup
 
 
+def ensure_theme(module, base=None, themes_root=Path("/root/themes")):
+    target = Path(themes_root) / "hackomon-field"
+    if target.exists() or target.is_symlink():
+        if target.is_symlink():
+            raise ValueError("Destino do tema e um link; preservado sem alteracao")
+        marker = json.loads((target / "hackomon-overlay.json").read_text(encoding="utf-8"))
+        if marker.get("name") != "hackomon-field" or marker.get("overlay_version") != "0.8.0":
+            raise ValueError("Tema existente nao reconhecido; preservado sem alteracao")
+        module.prepare(target)
+        print("Tema Hackomon existente conferido e preservado.")
+        return "preserved"
+    theme_args = ["--themes-root", str(themes_root)]
+    if base:
+        theme_args += ["--base", str(base)]
+    module.main(theme_args)
+    return "created"
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--theme-base", type=Path)
@@ -85,11 +103,10 @@ def main(argv=None):
         spec = importlib.util.spec_from_file_location("install_theme", ROOT / "tools" / "install_theme.py")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        theme_args = ["--base", str(args.theme_base)] if args.theme_base else []
         try:
-            module.main(theme_args)
-        except SystemExit as error:
-            print("AVISO: payload instalado; tema pendente (codigo %s). Veja o guia e o erro acima." % error.code)
+            ensure_theme(module, args.theme_base)
+        except (SystemExit, ValueError, OSError, KeyError, TypeError, IndexError) as error:
+            print("AVISO: payload instalado; tema pendente: %s. Veja o guia." % error)
             return 3
     print("Save/config preservados. Abra o Hackomon no menu Payloads > Games.")
     return 0

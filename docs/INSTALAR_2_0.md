@@ -1,4 +1,4 @@
-# Hackomon 0.8.0: instalar depois do reset
+# Hackomon 0.8.1: instalacao facil no Windows
 
 Preparado para o seu **WiFi Pineapple Pager com Hak5 2.0.0-stable**.
 App separado + tema Hackomon Field Companion. O firmware nao e substituido.
@@ -13,43 +13,33 @@ Ative SSH em **Settings > System > SSH** se estiver desativado.
 Conecte o Pager a sua Internet pelo Wi-Fi Client Mode; confira data e hora.
 O instalador usa a Internet do PC para a biblioteca e a do Pager para os pacotes.
 
-No PowerShell do Windows, confirme que consegue entrar:
-
-```powershell
-ssh root@172.16.52.1
-```
-
-Use a senha criada no primeiro inicio. Digite `exit` para voltar ao Windows.
+Nao precisa abrir o PowerShell nem testar a conexao manualmente. O instalador
+confere se o Pager esta acessivel antes de preparar o envio. Quando solicitado,
+use a senha criada no primeiro inicio; os caracteres digitados ficam invisiveis.
 O IP de gerenciamento e a conta sao os documentados pela
 [Hak5 para SSH](https://documentation.hak5.org/wifi-pineapple-pager/connecting-to-the-wifi-pineapple-pager/ssh-and-the-wifi-pineapple-pager).
 
-Se o reset gerar um aviso de chave SSH diferente, confirme que esta conectado
-ao seu Pager e confira a identidade antes de retirar a entrada antiga:
-
-```powershell
-ssh-keygen -R 172.16.52.1
-```
-
 ## 2. Instale pelo Windows
 
-Baixe **hackomon-instalar-0.8.0.zip** e extraia **tudo** para uma pasta.
-Abra o PowerShell nessa pasta, que contem `payload`, `themes` e `tools`.
-Execute:
+1. Baixe **hackomon-instalar-0.8.1.zip** e use **Extrair tudo** do Windows.
+2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
+3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
+   e informe sua senha quando solicitado.
+4. Aguarde **PRONTO!**. A janela permanece aberta para mostrar o resultado.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Instalar-Hackomon.ps1
-```
-
-Essa opcao de execucao vale apenas para esse processo. O script e local e
-pode ser lido antes de executar; nao executa um script baixado da Internet.
-Se surgir pergunta sobre a identidade do Pager, confira antes de aceitar.
-A senha pode ser solicitada nas etapas de conexao, copia e instalacao.
+Deixe o Hackomon fechado durante a instalacao. Nao copie arquivos manualmente.
+O instalador usa uma unica conexao SSH para transferencia e instalacao; assim
+nao pede a senha novamente em cada etapa. A senha e tratada pelo OpenSSH,
+sem ser lida, gravada ou enviada como argumento pelo script do Hackomon.
+O atalho usa uma opcao de execucao PowerShell apenas nesse processo; nao muda
+a politica permanente do Windows e os scripts locais podem ser lidos no ZIP.
 
 O instalador:
 
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
-- copia os arquivos para `/mmc/root/hackomon-setup-0.8.0`;
+- reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.1` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - verifica importacoes e carrega a biblioteca sem abrir a tela;
@@ -57,6 +47,10 @@ O instalador:
 - preserva um payload anterior em `/mmc/root/hackomon-backups/` e nao altera
   o save nem a configuracao em `/mmc/root/hackomon`;
 - cria `/root/themes/hackomon-field` a partir do Wargames **local** do firmware.
+
+Se um tema Hackomon 0.8.0 valido ja existir, a reinstalacao o confere e preserva
+automaticamente. Uma pasta desconhecida ou um tema incompleto permanece intacto
+e gera um aviso especifico, sem impedir que o app instalado seja identificado.
 
 A base original e procurada primeiro em `/lib/pager/themes/wargames`, conforme
 o [README oficial do Wargames](https://github.com/hak5/wifipineapplepager-themes/blob/master/themes/wargames/README).
@@ -68,7 +62,8 @@ A instalacao de pacotes segue o destino MMC recomendado pela
 A biblioteca fixada e de terceiros; integridade e API nao comprovam compatibilidade
 com o firmware 2.0. Se o carregamento falhar, a instalacao para com o erro.
 
-Sem tema, por exemplo numa segunda instalacao com o tema ja criado:
+Para instalar novamente, basta abrir **INSTALAR.cmd** outra vez. Para uma
+instalacao avancada que ignore o tema, ainda existe a opcao manual:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Instalar-Hackomon.ps1 -SkipTheme
@@ -171,7 +166,8 @@ ainda precisa desse teste. Detalhes: `docs/WDGWARS.md` no ZIP.
 O app pode ter sido instalado com sucesso mesmo que o tema seja recusado.
 O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 
-- **Tema ja existe:** selecione o existente; para atualizar so o app, use `-SkipTheme`.
+- **Tema ja existe:** uma copia Hackomon reconhecida e valida e preservada automaticamente;
+  uma pasta desconhecida fica pendente para nao sobrescrever suas alteracoes.
 - **Base nao encontrada:** localize no SSH com `find /lib/pager/themes /root /usr/share /rom/root -name theme.json 2>/dev/null`.
 - **Formato/layout diferente:** nao force o instalador; preserve a base e envie
   o erro para adaptar o overlay ao formato realmente instalado.
@@ -179,7 +175,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.8.0/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.8.1/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,
@@ -193,3 +189,30 @@ O save fica em `/mmc/root/hackomon/state.json`; a pasta tambem guarda expedicoes
 configuracao e evidencias privadas. Faca copia dela antes de outro factory reset.
 Nao publique o tema montado no Pager como MIT: ele contem a sua base Hak5
 licenciada. O ZIP distribuido aqui contem apenas o overlay original e o app.
+
+## Se a conexao pedir atencao
+
+**Pager nao encontrado:** confira USB-C de dados ou Wi-Fi de gerenciamento e
+SSH em Settings > System > SSH. Depois abra INSTALAR.cmd novamente.
+
+**Senha incorreta:** use a senha de sistema criada depois do reset. Ela nao e
+necessariamente a mesma senha do AP de gerenciamento.
+
+**Identidade SSH alterada depois do reset:** confirme que esta conectado ao
+seu Pager e confira sua identidade antes de remover a entrada antiga. Nesse
+caso especifico, abra o PowerShell e rode:
+
+```powershell
+ssh-keygen -R 172.16.52.1
+```
+
+Depois abra INSTALAR.cmd novamente e confira a nova identidade. O instalador
+nao desativa a verificacao SSH nem remove identidades automaticamente.
+
+**Falta OpenSSH ou tar.exe:** use o Cliente OpenSSH e o tar do Windows 10/11.
+A instalacao manual alternativa esta em `docs/INSTALL.md`. O instalador nao
+pede privilegios de administrador para instalar componentes do Windows.
+
+**Validacao desta entrega:** transferencia binaria e fluxo Windows testados
+com um servidor local simulado, inclusive repeticao, caminhos com espacos e
+falhas. Isso nao valida autenticacao interativa, radios ou execucao no Pager real.
