@@ -7,6 +7,8 @@ memorials, persistent trainer XP, egg preparation/incubation, explicit branching
 save migration/backup, failed writes and UI bounds. They do not wait ten real
 hours or validate the full lifecycle on hardware.
 
+- [x] Install 0.10.0 on the Pager: installer exited 0 on 2026-11-03, backed up
+  the previous payload and reported save/config/theme preserved.
 - [ ] Open the upgraded app; retain current pet/XP/level/form and start age at zero.
 - [ ] Check TR/PET header and Geracoes / Ovos screens on the physical display.
 - [ ] Reach a young-stage branch, confirm/cancel and verify the chosen line.
@@ -16,8 +18,12 @@ hours or validate the full lifecycle on hardware.
 - [ ] Confirm successor begins at level 1 while trainer/bestiary/receipts remain.
 - [ ] Measure save size, memory, battery and frame time on the Pager.
 
-The first compatible load makes a private pre-generation save copy. Nothing
-below from earlier releases establishes that this lifecycle has been field-tested.
+The installation check loaded libpagerctl, read 22 recent Recon APs and 2 Blue5
+LE observations, and reached the GPSd port without initializing the screen,
+performing discovery/capture or uploading. The 198 passing desktop tests cover
+simulated lifetimes and all 250 forms. Save migration happens on first app load;
+the first compatible load makes a private pre-generation copy. Installation
+does not establish that the full lifecycle or migration has been field-tested.
 
 ## Repeat-route progression — 0.9.0
 
