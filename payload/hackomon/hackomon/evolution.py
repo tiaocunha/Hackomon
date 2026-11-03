@@ -5,9 +5,9 @@ from dataclasses import dataclass
 
 GATES = {
     1: {"level": 3, "care": 4, "wellness": 0},
-    2: {"level": 6, "care": 10, "wellness": 35},
-    3: {"level": 10, "care": 20, "wellness": 45},
-    4: {"level": 15, "care": 35, "wellness": 55},
+    2: {"level": 8, "care": 10, "wellness": 35},
+    3: {"level": 16, "care": 20, "wellness": 45},
+    4: {"level": 25, "care": 35, "wellness": 55},
 }
 
 
@@ -29,7 +29,8 @@ def gate_status(state):
         return None
     return {
         "level": (state.level, gate["level"]),
-        "care": (state.care_points, gate["care"]),
+        "care": (state.care_points + state.field_bond, gate["care"]),
+        "bond": state.field_bond,
         "wellness": (state.wellness, gate["wellness"]),
     }
 
@@ -40,7 +41,7 @@ def advance_one_if_ready(state, catalog):
         return EvolutionResult(False, state.creature_id, state.creature_id, "forma final")
     if state.level < gate["level"]:
         return EvolutionResult(False, state.creature_id, state.creature_id, "nível insuficiente")
-    if state.care_points < gate["care"]:
+    if state.care_points + state.field_bond < gate["care"]:
         return EvolutionResult(False, state.creature_id, state.creature_id, "cuidados insuficientes")
     if state.wellness < gate["wellness"]:
         return EvolutionResult(False, state.creature_id, state.creature_id, "bem-estar insuficiente")

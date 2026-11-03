@@ -98,16 +98,21 @@ The state store writes a temporary file, flushes and fsyncs it, then replaces
 the previous save atomically. Invalid saves are quarantined with a timestamp
 instead of being silently overwritten. The schema is versioned.
 
-## Evolution gates
+## Progression and evolution gates (0.9.0)
 
-| Target stage | Minimum level | Care points | Minimum wellness |
+The XP cost for level L to L+1 is 40 + 5*(L-1), up to level 100. Old saves
+retain XP and earned levels via a one-time level credit. Revisit receipts
+enforce a six-hour interval per address/type. Field bonus receipts are saved
+atomically with XP and bond; only the current expedition is resumable in the UI.
+See [PROGRESSION.md](PROGRESSION.md) for reward rates and migration details.
+
+| Target stage | Minimum level | Care + field bond | Minimum wellness |
 | --- | ---: | ---: | ---: |
 | Filhote | 3 | 4 | 0 |
-| Jovem | 6 | 10 | 35 |
-| Adulto | 10 | 20 | 45 |
-| Forma rara | 15 | 35 | 55 |
+| Jovem | 8 | 10 | 35 |
+| Adulto | 16 | 20 | 45 |
+| Forma rara | 25 | 35 | 55 |
 
 Wellness is the integer average of hunger, happiness and energy. At most one
-stage is advanced per successful care action, so an old or imported save cannot
-skip the evolution presentation.
+stage is advanced per care/field reward event. Existing forms never regress.
 

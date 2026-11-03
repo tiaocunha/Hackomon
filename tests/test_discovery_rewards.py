@@ -62,12 +62,13 @@ class DiscoveryRewardTests(unittest.TestCase):
         self.assertEqual(0, reward_discoveries(migrated, [unlocated(5)], NOW)["xp"])
         self.assertEqual(2, reward_discoveries(migrated, [unlocated(6)], NOW)["xp"])
 
-    def test_no_daily_cap_and_next_day_does_not_farm_existing_addresses(self):
+    def test_no_daily_cap_and_next_day_can_reconfirm_known_addresses(self):
         result = reward_discoveries(self.state, [unlocated(i) for i in range(100)], NOW)
         self.assertEqual(200, result["xp"])
         self.assertEqual(2, reward_discoveries(self.state, [unlocated(200)], NOW)["xp"])
         self.assertEqual(202, self.state.exploration_daily_xp)
         tomorrow = NOW + 86400
+        self.assertEqual(1, reward_discoveries(self.state, [unlocated(1, stamp=tomorrow)], tomorrow)["xp"])
         self.assertEqual(0, reward_discoveries(self.state, [unlocated(1, stamp=tomorrow)], tomorrow)["xp"])
         self.assertEqual(2, reward_discoveries(self.state, [unlocated(300, stamp=tomorrow)], tomorrow)["xp"])
 

@@ -2,7 +2,7 @@
 # Title: Hackomon
 # Description: Virtual creatures, GPS discoveries, WDGWars sync and scoped office lab
 # Author: tiaocunha
-# Version: 0.8.8
+# Version: 0.9.0
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 

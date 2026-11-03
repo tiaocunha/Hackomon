@@ -1,5 +1,23 @@
 # Hardware validation checklist
 
+## Repeat-route progression — 0.9.0
+
+Desktop regressions cover six-hour boundaries, duplicate batches, day changes,
+restarts, old award-day migration, growing level thresholds, preservation of
+all old levels including 1,230 XP/level 42, activity gaps/pauses, bonus receipts
+and combined care/bond evolution. No live device validation is inferred.
+
+- [ ] Install on the Pager, retain 1,230 XP/level 42 and previously earned forms/medals.
+- [ ] Repeat a normal route, verify distance/activity bonuses and the XP breakdown.
+- [ ] Revisit the same addresses after six hours; verify +1 each, once per interval.
+- [ ] Pause/restart; verify cooldowns and bonuses are not paid twice.
+- [ ] Confirm XP progress display and evolution with combined care/field bond.
+- [ ] Measure collection intervals, travel accuracy, memory and battery in the field.
+
+This release changes local progression only. WDGWars scoring, native radio/GPS
+services and selected-test behavior are unchanged. The 0.8.8 device checks below
+do not establish that this new progression is already installed or field-tested.
+
 ## Upload dashboard and field missions — 0.8.8
 
 Desktop tests cover all-source/queue overlap counts, over 500 sources, durable

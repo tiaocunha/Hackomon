@@ -40,6 +40,8 @@ This incremental release contains:
   reconciliation, durable last-confirmed receipt and actionable recovery hints;
 - three persistent field medals and short discovery reactions for all ten
   creature families, with no extra scans or discovery XP repayment (0.8.8).
+- six-hour revisit XP, distance/activity bonuses, permanent field bond and a
+  growing 100-level curve with preservation of previous XP/levels/forms (0.9.0).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -57,10 +59,10 @@ rare form, including the matching environment growth:
 
 The catalog, game logic, persistence, renderer and desktop test suite are
 implemented and tested. Earlier builds ran on the user's stock 2.0.0-stable
-Pager; the 0.8.8 changes still require a device field test. See
+Pager; the 0.9.0 changes still require a device field test. See
 [hardware validation](docs/HARDWARE_VALIDATION.md) for the remaining checks.
 
-Network and lab adapters remain **experimental in 0.8.8**. Automated tests use
+Network and lab adapters remain **experimental in 0.9.0**. Automated tests use
 fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
 also checked on one physical 2.0.0-stable Pager and returned recent observations.
 The user also confirmed both Expedition discovery counters increment on that
@@ -85,7 +87,7 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.8.8.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.9.0.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`
@@ -98,10 +100,13 @@ report without SSIDs, device addresses, GPS coordinates or account credentials.
 The 0.8.4 readers target the native Recon/Blue5 schema observed on a real
 2.0.0-stable unit; old/classic-only/unknown records are not fresh BLE discoveries.
 The app does not start a competing Bluetooth daemon or retune native collectors.
-In 0.8.6, new fresh discoveries in Expeditions grant 2 XP per Wi-Fi address and
-1 XP per BLE address without requiring GPS, once per address/type, with no daily
-XP ceiling. A separate persisted hash ledger prevents repeat rewards.
-Unlocated sightings stay local; later GPS mapping does not award the same XP twice.
+New discoveries grant 2 XP per Wi-Fi address and 1 XP per BLE address. From
+0.9.0, known addresses can grant 1 XP again after six hours, with persisted
+per-address/type cooldowns and no daily XP ceiling. Valid distance and radio
+activity earn additional XP; field bond combines with care for evolution.
+Previous earned levels and XP are retained when adopting the growing level curve.
+Unlocated sightings stay local; GPS mapping itself never bypasses the cooldown.
+See [the progression rules](docs/PROGRESSION.md).
 The full setup archive also
 creates a locally derived stock theme, preserving firmware-specific menus.
 The original overlay contains no copied Hak5 assets; the assembled on-device

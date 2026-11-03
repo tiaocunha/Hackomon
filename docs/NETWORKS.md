@@ -1,5 +1,9 @@
 # Networks and office laboratory — 0.7.0
 
+0.9.0: known addresses can earn 1 XP again after a persisted six-hour cooldown.
+GPS distance and valid sampling time earn separate bonuses. See PROGRESSION.md.
+Rules in older-version sections below are historical.
+
 0.8.6 update: Expedition discovery XP does not require GPS or a daily ceiling.
 Fresh valid addresses earn 2 XP Wi-Fi/1 XP BLE once, with a
 separate persisted reward ledger. GPS is still required for map/upload rows.

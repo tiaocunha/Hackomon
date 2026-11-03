@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 
-from . import missions, radio, visit, recon
+from . import missions, progression, radio, visit, recon
 from .exploration import MAC, export_csv, normalize_observation
 
 
@@ -84,6 +84,7 @@ class Journal:
         if not math.isfinite(float(self.summary["distance_m"])) or self.summary["distance_m"] < 0:
             raise ValueError("invalid expedition distance")
         missions.progress(self.summary)
+        progression.field_progress(self.summary)
         self.folder = self.root / self.summary["id"]
         self.folder.mkdir(parents=True, exist_ok=True)
         self.seen = set()
@@ -131,6 +132,7 @@ class Journal:
             self.summary["active_seconds"] = self.summary.get("active_seconds", 0) + max(0, now - self.summary.get("active_since", now))
         self.summary["status"] = status
         self.last_fix = None
+        progression.reset_activity(self.summary)
         if status == "running":
             self.summary["active_since"] = now
         if status == "ended":
@@ -149,6 +151,10 @@ class Journal:
                         self.summary["distance_m"] / 1000, self.summary["xp"], self.summary["audits"], self.summary["recoveries"]))
         text += "Novas descobertas premiadas desde 0.8.7: %d\n" % self.summary.get("rewarded_discoveries", 0)
         text += "Tempo ativo registrado: %d s\n" % self.summary.get("active_seconds", 0)
+        text += "Revisitas premiadas desde 0.9.0: %d\n" % self.summary.get("revisit_awards", 0)
+        breakdown = self.summary.get("xp_breakdown", {})
+        text += "XP desde 0.9.0: novos=%d revisitas=%d atividade=%d percurso=%d\n" % tuple(
+            breakdown.get(key, 0) for key in ("discoveries", "revisits", "activity", "distance"))
         medals = [title for identity, title, _key, _target in missions.RULES
                   if identity in self.summary.get("mission_medals", [])]
         text += "Medalhas nesta saida: %s\n" % (", ".join(medals) or "nenhuma")

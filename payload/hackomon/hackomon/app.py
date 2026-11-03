@@ -13,7 +13,7 @@ from .storage import StateStore
 from .ui import HackomonUI, NETWORK_MENU
 from .exploration import export_csv, record_observations, reward_discoveries
 from .network_config import load_config
-from . import bluetooth_lab, expedition, lab, missions, radio, visit, wdgwars
+from . import bluetooth_lab, expedition, lab, missions, progression, radio, visit, wdgwars
 from . import sync as wdg_sync
 
 
@@ -162,9 +162,17 @@ class HackomonApp:
         creature = self.catalog.creature(self.state.creature_id)
         self.companion_line = missions.speech(creature, event)
         self.companion_until = time.monotonic() + 6
-        if event in ("discovery", "mission"):
+        if event in ("discovery", "mission", "revisit", "field"):
             self.pose = "happy"
             self.pose_until = time.monotonic() + 2
+
+    def _field_bonus(self, observed=None):
+        bonus = progression.field_rewards(self.state, self.journal.summary, int(self.clock()), observed)
+        self.journal.summary["xp"] += bonus["xp"]
+        breakdown = self.journal.summary.setdefault("xp_breakdown", {})
+        for key in ("activity", "distance"):
+            breakdown[key] = breakdown.get(key, 0) + bonus[key + "_xp"]
+        return bonus
 
     def _tick_expedition(self):
         if self.pump is None or self.journal is None:
@@ -178,8 +186,16 @@ class HackomonApp:
                 if kind == "gps" and self.journal.summary["status"] == "running":
                     self.journal.gps(value)
                     self.journal.summary.pop("gps_error", None)
-                    if missions.record(self.state, self.journal.summary):
-                        self._companion_say("mission")
+                    bonus = self._field_bonus()
+                    earned = missions.record(self.state, self.journal.summary)
+                    if bonus["xp"] or earned:
+                        evolved = advance_one_if_ready(self.state, self.catalog)
+                        self._companion_say("mission" if earned else "field")
+                        if bonus["xp"]:
+                            self.expedition_message = "+%d XP | percurso %d | atividade %d" % (
+                                bonus["xp"], bonus["distance_xp"], bonus["activity_xp"])
+                        if evolved.evolved:
+                            self.expedition_message = "EVOLUCAO! " + self.expedition_message
                         self.journal.checkpoint()
                         self.store.save(self.state)
                 elif kind == "targets":
@@ -190,6 +206,11 @@ class HackomonApp:
                     # Expedition CSVs are the durable upload source. Do not duplicate
                     # them into the 500-entry queue reserved for standalone snapshots.
                     self.journal.summary["xp"] += reward["xp"]
+                    self.journal.summary["revisit_awards"] = self.journal.summary.get("revisit_awards", 0) + reward["revisited"]
+                    breakdown = self.journal.summary.setdefault("xp_breakdown", {})
+                    breakdown["discoveries"] = breakdown.get("discoveries", 0) + reward["xp"] - reward["revisited"]
+                    breakdown["revisits"] = breakdown.get("revisits", 0) + reward["revisited"]
+                    bonus = self._field_bonus(observed=bool(reward["new"] or reward["known"] or reward["blocked"]))
                     self.journal.summary["rewarded_discoveries"] = self.journal.summary.get("rewarded_discoveries", 0) + reward["new"]
                     earned = missions.record(self.state, self.journal.summary, reward)
                     upload = self.journal.summary.get("upload", {})
@@ -197,21 +218,23 @@ class HackomonApp:
                         upload["pending"] += len(located)
                     self.journal.checkpoint()
                     evolved = advance_one_if_ready(self.state, self.catalog)
-                    if reward["xp"] or evolved.evolved:
+                    if reward["xp"] or bonus["xp"] or evolved.evolved:
                         self.pose = "happy"
                         self.pose_until = time.monotonic() + 2
-                    if reward["new"]:
-                        self.expedition_message = "+%d XP | %d novos | %d conhecidos" % (reward["xp"], reward["new"], reward["known"])
+                    if reward["xp"] or bonus["xp"]:
+                        self.expedition_message = "+%d XP | %d novos | %d revisitas" % (
+                            reward["xp"] + bonus["xp"], reward["new"], reward["revisited"])
                     elif reward["blocked"]:
                         self.expedition_message = "Registro de recompensas cheio; CSV continua"
                     elif reward["known"]:
-                        self.expedition_message = "%d conhecidos; XP ja concedido" % reward["known"]
+                        self.expedition_message = "%d conhecidos; XP ja concedido (<6h)" % reward["known"]
                     elif reward["invalid"] or reward["excluded"]:
                         self.expedition_message = "Sem XP: %d invalidos/antigos; %d excluidos" % (reward["invalid"], reward["excluded"])
                     else:
                         self.expedition_message = "Busca concluida; sem descobertas recentes"
-                    if earned or reward["new"]:
-                        self._companion_say("mission" if earned else "discovery")
+                    if earned or reward["xp"] or bonus["xp"]:
+                        self._companion_say("mission" if earned else "discovery" if reward["new"] else
+                                            "revisit" if reward["revisited"] else "field")
                     self.store.save(self.state)
                 elif kind == "radio_status" and value.get("radio") in ("wifi", "ble"):
                     self.journal.summary.setdefault("radios", {})[value["radio"]] = dict(value, at=int(self.clock()))
@@ -368,19 +391,16 @@ class HackomonApp:
             reward = result.get("reward_id")
             if result.get("found") and reward not in self.state.lab_rewards:
                 self.state.lab_rewards.append(reward)
-                self.state.xp += 10
-                self.state.level = min(99, 1 + self.state.xp // 30)
+                progression.grant(self.state, 10)
             elif (action == "bluetooth_audit" and result.get("completed")
                   and reward not in self.state.lab_rewards):
                 self.state.lab_rewards.append(reward)
-                self.state.xp += 5
-                self.state.level = min(99, 1 + self.state.xp // 30)
+                progression.grant(self.state, 5)
                 self.network_message += " +5 XP"
             elif (action == "visit_assess" and result.get("completed")
                   and reward not in self.state.lab_rewards):
                 self.state.lab_rewards.append(reward)
-                self.state.xp += 5
-                self.state.level = min(99, 1 + self.state.xp // 30)
+                progression.grant(self.state, 5)
         evolution = advance_one_if_ready(self.state, self.catalog)
         if evolution.evolved:
             self.network_message = "EVOLUCAO! " + self.network_message

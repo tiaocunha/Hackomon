@@ -1,5 +1,15 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Rotas habituais e progressao — 0.9.0
+
+Revisitas agora rendem 1 XP por endereco/tipo apos 6 horas. Percurso rende
+5 XP/500 m aceitos pelo GPS; coleta valida rende 10 XP e 1 vinculo/10 min.
+Nao ha teto diario. O resumo mostra novas descobertas, revisitas e bonus.
+O vinculo soma aos cuidados na evolucao; niveis usam custos crescentes, com
+preservacao de XP/nivel/formas anteriores. Leia [PROGRESSION](PROGRESSION.md)
+para intervalo, pausas, limites de memoria, migracao e tabela de evolucao.
+As secoes de versoes anteriores abaixo descrevem suas regras historicas.
+
 ## Missoes e envio global — 0.8.8
 
 CIMA/BAIXO percorre sensores, resumo e missoes. As tres primeiras medalhas

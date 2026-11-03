@@ -41,7 +41,7 @@ class NetworksTests(unittest.TestCase):
         state.network_queue = []
         later = observation()
         later["timestamp"] += 86400
-        self.assertEqual(0, record_observations(state, [later], later["timestamp"])["xp"])
+        self.assertEqual(1, record_observations(state, [later], later["timestamp"])["xp"])
         self.assertEqual(1, len(state.network_queue))
 
     def test_ble_reward_invalid_gps_optout_and_stale_are_handled(self):

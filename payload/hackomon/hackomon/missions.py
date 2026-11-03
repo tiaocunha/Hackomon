@@ -73,4 +73,5 @@ def speech(creature, event):
     if event == "discovery":
         return DISCOVERY_LINES.get(creature["family_id"], "Uma nova descoberta!")
     return {"mission": "Ganhamos uma medalha!", "gps_lost": "Sem GPS, sigo descobrindo.",
+            "revisit": "Bom rever nossos caminhos!", "field": "Cada passeio nos aproxima!",
             "pause": "Uma pausa para respirar."}.get(event, "Vamos explorar juntos!")

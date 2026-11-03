@@ -9,6 +9,7 @@ from dataclasses import asdict, dataclass, field
 from .constants import STATE_SCHEMA_VERSION
 from .exploration import MAX_KNOWN, MAX_QUEUE, normalize_observation
 from .missions import MEDAL_IDS
+from . import progression
 
 
 ACTION_RULES = {
@@ -69,6 +70,11 @@ class GameState:
     network_queue: list = field(default_factory=list)
     lab_rewards: list = field(default_factory=list)
     field_badges: list = field(default_factory=list)
+    progression_revision: int = progression.REVISION
+    level_credit: int = 0
+    field_bond: int = 0
+    revisit_rewarded_at: dict = field(default_factory=dict)
+    field_bonus_receipt: dict = field(default_factory=dict)
 
     @classmethod
     def new(cls, catalog, line_id=None, now=None, rng=None):
@@ -101,6 +107,21 @@ class GameState:
         known_fields = {field_info.name for field_info in cls.__dataclass_fields__.values()}
         clean = {key: item for key, item in value.items() if key in known_fields}
         state = cls(**clean)
+        if (type(state.progression_revision) is not int or state.progression_revision != progression.REVISION
+                or type(state.level_credit) is not int or state.level_credit < 0
+                or type(state.field_bond) is not int or state.field_bond < 0
+                or not isinstance(state.revisit_rewarded_at, dict) or len(state.revisit_rewarded_at) > MAX_KNOWN):
+            raise ValueError("invalid progression state")
+        for identity, stamp in state.revisit_rewarded_at.items():
+            if (not isinstance(identity, str) or not re.fullmatch(r"[0-9a-f]{64}", identity)
+                    or type(stamp) is not int or stamp < 0):
+                raise ValueError("invalid revisit receipt")
+        receipt = state.field_bonus_receipt
+        if not isinstance(receipt, dict):
+            raise ValueError("invalid field receipt")
+        if receipt and (not re.fullmatch(r"[0-9a-f]{32}", str(receipt.get("id", "")))
+                        or any(type(receipt.get(key)) is not int or receipt[key] < 0 for key in ("activity", "distance"))):
+            raise ValueError("invalid field receipt")
         if (not isinstance(state.field_badges, list) or len(state.field_badges) > len(MEDAL_IDS)
                 or any(not isinstance(value, str) or value not in MEDAL_IDS for value in state.field_badges)
                 or len(set(state.field_badges)) != len(state.field_badges)):
@@ -129,6 +150,10 @@ class GameState:
         state.exploration_daily_xp = max(0, int(state.exploration_daily_xp))
         state.exploration_xp = max(0, int(state.exploration_xp))
         state._clamp_stats()
+        if "progression_revision" not in value:
+            progression.migrate_levels(state)
+        else:
+            state.level = progression.level_for(state.xp + state.level_credit)
         state.discovered = [item for item in state.discovered if item in catalog.creature_by_id]
         if creature_id not in state.discovered:
             state.discovered.append(creature_id)
@@ -149,7 +174,7 @@ class GameState:
         self.hunger = max(0, min(100, int(self.hunger)))
         self.happiness = max(0, min(100, int(self.happiness)))
         self.energy = max(0, min(100, int(self.energy)))
-        self.level = max(1, min(99, int(self.level)))
+        self.level = max(1, min(progression.MAX_LEVEL, int(self.level)))
         self.xp = max(0, int(self.xp))
         self.care_points = max(0, int(self.care_points))
 
@@ -191,9 +216,8 @@ class GameState:
 
         for stat, delta in rule["delta"].items():
             setattr(self, stat, getattr(self, stat) + delta)
-        self.xp += int(rule["xp"])
+        progression.grant(self, int(rule["xp"]))
         self.care_points += int(rule["care"])
-        self.level = min(99, 1 + self.xp // 30)
         self.last_action_at[action] = now
         self.action_counts[action] = int(self.action_counts.get(action, 0)) + 1
         self._clamp_stats()

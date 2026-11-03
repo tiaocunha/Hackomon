@@ -1,5 +1,10 @@
 # Missoes e companheiro de campo — 0.8.8
 
+Na 0.9.0, revisitas podem render XP apos 6 horas, e tempo/percurso rendem bonus
+e vinculo. As medalhas abaixo continuam sem XP extra. As duas primeiras exigem
+enderecos **novos**, portanto uma revisita premiada nao as avanca. Veja
+[as regras atuais de progressao](PROGRESSION.md); a descricao original segue abaixo.
+
 Na **Expedicao**, CIMA/BAIXO percorre **sensores -> resumo -> missoes**.
 A coleta continua enquanto voce consulta essas telas. A inicia/pausa,
 ESQ encerra, DIR continua abrindo a escolha de um alvo autorizado.

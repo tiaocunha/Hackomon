@@ -20,6 +20,7 @@ from .evolution import gate_status
 from .expedition import sensor_status
 from .sync import guidance
 from .missions import cards as mission_cards
+from .progression import level_progress
 from .backgrounds import draw_background
 from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
@@ -83,7 +84,8 @@ class HackomonUI:
         _bar(display, 202, 38, 96, state.hunger, COLOR_YELLOW, "FOME")
         _bar(display, 202, 52, 96, state.happiness, COLOR_PURPLE, "HUMOR")
         _bar(display, 202, 66, 96, state.energy, COLOR_GREEN, "ENERG")
-        display.draw_text(202, 83, "CUIDADO %02d  BEM-ESTAR %02d" % (state.care_points, state.wellness), COLOR_MUTED, 1)
+        display.draw_text(202, 83, "CUID %d + VINC %d | BEM %d" % (
+            state.care_points, state.field_bond, state.wellness), COLOR_MUTED, 1)
 
         for index, label in enumerate(ACTIONS):
             y = 99 + index * 12
@@ -97,8 +99,11 @@ class HackomonUI:
             display.draw_text(204, y, prefix + label, color, 1)
 
         footer = message or "D-PAD escolhe  A confirma  B sai"
-        display.fill_rect(0, 197, SCREEN_WIDTH, SCREEN_HEIGHT - 197, COLOR_PANEL_ALT)
-        display.draw_text_centered(205, footer[:72], COLOR_TEXT if not message else COLOR_YELLOW, 1)
+        display.fill_rect(0, 193, SCREEN_WIDTH, SCREEN_HEIGHT - 193, COLOR_PANEL_ALT)
+        current, needed = level_progress(state)
+        progress = "Proximo nivel: %d/%d XP" % (current, needed) if needed else "Nivel maximo; XP continua acumulando"
+        display.draw_text_centered(195, progress, COLOR_CYAN, 1)
+        display.draw_text_centered(209, footer[:72], COLOR_TEXT if not message else COLOR_YELLOW, 1)
         display.flip()
 
     def bestiary(self, state, index, frame_index=0):
@@ -157,7 +162,7 @@ class HackomonUI:
                 display.draw_text(202, y, card["title"], COLOR_GREEN if card["earned"] else COLOR_TEXT, 1)
                 text = "MEDALHA CONQUISTADA" if card["earned"] else "%d/%d | %s" % (card["value"], card["target"], card["detail"])
                 display.draw_text(202, y + 13, text[:43], COLOR_MUTED, 1)
-            display.draw_text(202, 172, "Medalhas salvas; XP sem repeticao", COLOR_YELLOW, 1)
+            display.draw_text(202, 172, "Medalhas salvas; revisitas apos 6h", COLOR_YELLOW, 1)
         elif details:
             seconds = summary.get("active_seconds", 0)
             if summary["status"] == "running":
@@ -165,8 +170,9 @@ class HackomonUI:
             display.draw_text(202, 39, "RESUMO | %d min ativos" % (seconds // 60), COLOR_CYAN, 1)
             display.draw_text(202, 59, "Wi-Fi %d  BLE %d" % (summary["wifi"], summary["ble"]), COLOR_TEXT, 1)
             display.draw_text(202, 77, "%.2f km  XP +%d" % (summary["distance_m"] / 1000, summary["xp"]), COLOR_GREEN, 1)
-            display.draw_text(202, 95, "Novos com XP: %d" % summary.get("rewarded_discoveries", 0), COLOR_TEXT, 1)
-            hint = "Contagem parcial nesta saida" if summary.get("reward_count_partial") else "Reencontros nao repetem XP"
+            display.draw_text(202, 95, "Novos %d | Revisitas %d" % (summary.get("rewarded_discoveries", 0), summary.get("revisit_awards", 0)), COLOR_TEXT, 1)
+            breakdown = summary.get("xp_breakdown", {})
+            hint = "XP atividade %d | percurso %d" % (breakdown.get("activity", 0), breakdown.get("distance", 0))
             display.draw_text(202, 108, hint, COLOR_MUTED, 1)
             display.draw_text(202, 123, "Com GPS %d / sem %d" % (summary["located"], summary["unlocated"]), COLOR_TEXT, 1)
             upload = summary.get("upload", {})
@@ -211,9 +217,9 @@ class HackomonUI:
         else:
             display.draw_text(20, 96, "PROXIMA EVOLUCAO", COLOR_CYAN, 1)
             display.draw_text(20, 113, "Nivel     %d / %d" % status["level"], COLOR_TEXT, 1)
-            display.draw_text(20, 129, "Cuidados  %d / %d" % status["care"], COLOR_TEXT, 1)
+            display.draw_text(20, 129, "Cuidado + vinculo %d / %d" % status["care"], COLOR_TEXT, 1)
             display.draw_text(20, 145, "Bem-estar %d / %d" % status["wellness"], COLOR_TEXT, 1)
-        display.draw_text(20, 171, "Atendimento: descubra e escolha a rede do cliente.", COLOR_MUTED, 1)
+        display.draw_text(20, 171, "Coleta valida: +1 vinculo a cada 10 min.", COLOR_MUTED, 1)
         display.draw_text_centered(205, "A ou B volta", COLOR_TEXT, 1)
         display.flip()
 

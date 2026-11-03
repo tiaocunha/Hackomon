@@ -8,6 +8,7 @@ import math
 import re
 
 from . import __version__
+from . import progression
 
 
 MAC = re.compile(r"(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\Z")
@@ -52,12 +53,13 @@ def normalize_observation(value):
 
 
 def reward_discoveries(state, observations, now):
-    """One-time radio discovery XP, independent of GPS/map upload eligibility."""
+    """New discovery XP and six-hour revisits, independent of GPS eligibility."""
+    now = int(now)
     day = datetime.datetime.fromtimestamp(now, datetime.timezone.utc).date().isoformat()
     if state.exploration_day != day:
         state.exploration_day = day
         state.exploration_daily_xp = 0
-    awarded = new = invalid = excluded = known = blocked = 0
+    awarded = new = invalid = excluded = known = blocked = revisited = 0
     new_by_type = {"WIFI": 0, "BLE": 0}
     for raw in observations:
         try:
@@ -73,21 +75,34 @@ def reward_discoveries(state, observations, now):
         identity = hashlib.sha256((item["type"] + ":" + item["mac"]).encode()).hexdigest()
         if identity in state.discovery_rewarded or identity in state.exploration_known:
             known += 1
+            if identity not in state.revisit_rewarded_at:
+                if len(state.revisit_rewarded_at) >= MAX_KNOWN:
+                    blocked += 1
+                    continue
+                previous = state.discovery_rewarded.get(identity, state.exploration_known.get(identity))
+                try:
+                    # Old saves retain only the award day. Be conservative for today.
+                    end = datetime.datetime.fromisoformat(previous).replace(tzinfo=datetime.timezone.utc).timestamp() + 86400
+                    state.revisit_rewarded_at[identity] = min(now, int(end))
+                except (ValueError, TypeError, OverflowError):
+                    state.revisit_rewarded_at[identity] = now
+            if now - state.revisit_rewarded_at[identity] >= progression.REVISIT_SECONDS:
+                state.revisit_rewarded_at[identity] = now
+                awarded += 1
+                revisited += 1
             continue
-        if len(state.discovery_rewarded) >= MAX_KNOWN:
+        if len(state.discovery_rewarded) >= MAX_KNOWN or len(state.revisit_rewarded_at) >= MAX_KNOWN:
             blocked += 1
             continue
         reward = 2 if item["type"] == "WIFI" else 1
         state.discovery_rewarded[identity] = day
-        state.exploration_daily_xp += reward
-        state.exploration_xp += reward
+        state.revisit_rewarded_at[identity] = now
         awarded += reward
         new += 1
         new_by_type[item["type"]] += 1
-    state.xp += awarded
-    state.level = min(99, 1 + state.xp // 30)
+    progression.grant(state, awarded, now=now, exploration=True)
     return dict(xp=awarded, new=new, invalid=invalid, excluded=excluded, known=known, blocked=blocked,
-                new_by_type=new_by_type,
+                new_by_type=new_by_type, revisited=revisited,
                 full=len(state.discovery_rewarded) >= MAX_KNOWN)
 
 

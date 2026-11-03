@@ -1,5 +1,12 @@
 # Proximas entregas
 
+## Progressao para rotas habituais — implementado na 0.9.0; teste fisico pendente
+
+- Revisitas com intervalo individual persistente de 6 horas, escolhido pelo usuario.
+- Bonus por percurso GPS e tempo de coleta valida, sem teto diario de XP.
+- Vinculo de campo combinado com cuidados para evolucao.
+- Custos crescentes ate nivel 100, com migracao que preserva niveis e XP anteriores.
+
 ## Implementado na 0.8.8; validacao fisica pendente
 
 - Painel local do WDGWars: todas as expedicoes, fila avulsa conciliada, ultimo
