@@ -1,5 +1,11 @@
 # Progressao para rotas habituais — 0.9.0
 
+Na **0.10.0**, XP/nivel tambem pertencem a uma carreira permanente de treinador.
+Cada pet vivo recebe os mesmos ganhos e possui nivel proprio. O sucessor comeca
+no nivel 1 enquanto a carreira continua. Vinculo e fracoes de atividade sao
+acumulados por vida; a revisita de 6 horas e os recibos de XP continuam globais.
+Leia [GENERATIONS](GENERATIONS.md) para idade, ovos, memorial e ramificacoes.
+
 O Hackomon passa a valorizar reencontros e atividade de campo, mesmo em cidades
 com poucas rotas. Os pontos abaixo sao XP local do pet; nao alteram as regras
 nem os pontos do WDGWars. Nao ha teto diario de XP.

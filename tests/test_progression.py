@@ -193,7 +193,9 @@ class ProgressionTests(unittest.TestCase):
         self.assertFalse(advance_one_if_ready(state, self.catalog).evolved)
         state.field_bond = 4
         self.assertEqual((10, 10), gate_status(state)["care"])
-        self.assertTrue(advance_one_if_ready(state, self.catalog).evolved)
+        self.assertFalse(advance_one_if_ready(state, self.catalog).evolved)
+        self.assertTrue(state.branch_pending)
+        self.assertTrue(advance_one_if_ready(state, self.catalog, selected_line=state.line_id).evolved)
 
     def test_invalid_progression_metadata_is_rejected(self):
         for field, value in (("level_credit", -1), ("progression_revision", 999), ("field_bond", "3"),

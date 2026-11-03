@@ -1,4 +1,7 @@
-# Hackomon 0.9.0: instalacao facil no Windows
+# Hackomon 0.10.0: instalacao facil no Windows
+
+0.10.0: Geracoes / Ovos, carreira permanente de treinador, vida util do pet e
+escolha evolutiva. Seu pet atual e mantido, com idade ativa zero.
 
 0.9.0: revisitas apos 6 horas, bonus de atividade/percurso, vinculo e nova curva de
 niveis. XP/nivel/formas anteriores sao preservados. Detalhes em PROGRESSION.md.
@@ -34,7 +37,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.9.0.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.10.0.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -52,7 +55,7 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.9.0` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.10.0` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - tenta instalar python3-sqlite3 no MMC se faltar o modulo para leitura do Recon;
@@ -240,7 +243,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.9.0/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.10.0/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,

@@ -1,5 +1,9 @@
 # Missoes e companheiro de campo — 0.8.8
 
+Na 0.10.0, cada companheiro tem medalhas individuais e as conquistas da carreira
+tambem permanecem. Um sucessor nao recebe progresso/quilometros do pet anterior
+para cumprir objetivos. Veja [GENERATIONS](GENERATIONS.md).
+
 Na 0.9.0, revisitas podem render XP apos 6 horas, e tempo/percurso rendem bonus
 e vinculo. As medalhas abaixo continuam sem XP extra. As duas primeiras exigem
 enderecos **novos**, portanto uma revisita premiada nao as avanca. Veja

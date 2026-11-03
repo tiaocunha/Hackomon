@@ -42,6 +42,9 @@ This incremental release contains:
   creature families, with no extra scans or discovery XP repayment (0.8.8).
 - six-hour revisit XP, distance/activity bonuses, permanent field bond and a
   growing 100-level curve with preservation of previous XP/levels/forms (0.9.0).
+- finite active lifetimes, a veteran phase, memorials and one incubated successor
+  per generation; permanent trainer progression and explicit in-family evolution
+  choices using the existing 250 creatures (0.10.0).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -59,10 +62,10 @@ rare form, including the matching environment growth:
 
 The catalog, game logic, persistence, renderer and desktop test suite are
 implemented and tested. Earlier builds ran on the user's stock 2.0.0-stable
-Pager; the 0.9.0 changes still require a device field test. See
+Pager; the 0.10.0 changes still require a device field test. See
 [hardware validation](docs/HARDWARE_VALIDATION.md) for the remaining checks.
 
-Network and lab adapters remain **experimental in 0.9.0**. Automated tests use
+Network and lab adapters remain **experimental in 0.10.0**. Automated tests use
 fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
 also checked on one physical 2.0.0-stable Pager and returned recent observations.
 The user also confirmed both Expedition discovery counters increment on that
@@ -71,7 +74,8 @@ recovery and live WDGWars acceptance remain separate validation.
 See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
 and [expedition behavior and limits](docs/EXPEDITIONS.md).
-See [missions](docs/MISSIONS.md) and the [remaining roadmap](docs/ROADMAP.md).
+See [missions](docs/MISSIONS.md), [generations](docs/GENERATIONS.md) and the
+[remaining roadmap](docs/ROADMAP.md).
 The [WDGWars synchronization guide](docs/WDGWARS.md) explains checkpoints,
 server acceptance versus imported counts, and recovery from interrupted uploads.
 
@@ -79,7 +83,7 @@ server acceptance versus imported counts, and recovery from interrupted uploads.
 
 The product direction combines a wardriving companion, expeditions and
 an authorized pentesting assistant. Version 0.6.0 implements the first serial
-hybrid workflow; advanced scheduling, affinities and computer/AI integration
+hybrid workflow; advanced scheduling and computer/AI integration
 remain future work. See the
 [wardriving and hybrid-mode design](docs/WARDRIVING_DESIGN.md) (Portuguese).
 
@@ -87,7 +91,7 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.9.0.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.10.0.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`
@@ -105,6 +109,9 @@ New discoveries grant 2 XP per Wi-Fi address and 1 XP per BLE address. From
 per-address/type cooldowns and no daily XP ceiling. Valid distance and radio
 activity earn additional XP; field bond combines with care for evolution.
 Previous earned levels and XP are retained when adopting the growing level curve.
+In 0.10.0, the current pet is preserved and its future gains also build a
+permanent trainer career. New generations start a new pet without resetting
+that career. Active aging starts at upgrade, with no retroactive lifetime loss.
 Unlocated sightings stay local; GPS mapping itself never bypasses the cooldown.
 See [the progression rules](docs/PROGRESSION.md).
 The full setup archive also

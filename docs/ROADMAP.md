@@ -1,5 +1,12 @@
 # Proximas entregas
 
+## Geracoes — implementado na 0.10.0; ciclo real pendente
+
+- Vida util por coleta, fase veterana e despedida apos 10 horas adultas.
+- Memorial, carreira permanente, uma escolha de ovo sucessor e incubacao.
+- Tres opcoes evolutivas na juventude, sugeridas por afinidades dentro da familia.
+- Reutilizacao das 250 formas existentes, com colecao de linhas nascidas.
+
 ## Progressao para rotas habituais — implementado na 0.9.0; teste fisico pendente
 
 - Revisitas com intervalo individual persistente de 6 horas, escolhido pelo usuario.
@@ -26,7 +33,7 @@
 ## Ainda nao implementado
 
 1. Diario navegavel de saidas e mapa simples com pontos GPS.
-2. Mais missoes, afinidades de familia, itens e recompensas de colecao.
+2. Mais missoes, itens e recompensas de colecao; habilidades distintas por familia.
 3. Perfis normal/economico, definidos apos medir bateria e memoria no Pager.
 4. Melhor organizacao e comparacao de evidencias por atendimento; explicacoes
    e relatorio assistido para o cliente. A primeira versao nao exige IA externa.

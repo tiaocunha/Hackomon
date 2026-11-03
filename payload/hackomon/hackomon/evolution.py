@@ -1,6 +1,7 @@
 """Evolution gates for the five-stage Hackomon lines."""
 
 from dataclasses import dataclass
+from . import generations
 
 
 GATES = {
@@ -35,7 +36,9 @@ def gate_status(state):
     }
 
 
-def advance_one_if_ready(state, catalog):
+def advance_one_if_ready(state, catalog, selected_line=None):
+    if state.life_status != "alive":
+        return EvolutionResult(False, state.creature_id, state.creature_id, "ciclo encerrado")
     gate = next_gate(state)
     if gate is None:
         return EvolutionResult(False, state.creature_id, state.creature_id, "forma final")
@@ -45,6 +48,17 @@ def advance_one_if_ready(state, catalog):
         return EvolutionResult(False, state.creature_id, state.creature_id, "cuidados insuficientes")
     if state.wellness < gate["wellness"]:
         return EvolutionResult(False, state.creature_id, state.creature_id, "bem-estar insuficiente")
+    if state.stage == 1 and not state.branch_locked:
+        generations.prepare_branch(state, catalog)
+        state.branch_pending = True
+        if selected_line is None:
+            return EvolutionResult(False, state.creature_id, state.creature_id, "escolha evolutiva")
+        if selected_line not in state.branch_offers:
+            raise ValueError("branch not offered")
+        state.line_id = selected_line
+        state.branch_locked = True
+        state.branch_pending = False
+        state.branch_offers = []
 
     previous_id = state.creature_id
     state.stage += 1

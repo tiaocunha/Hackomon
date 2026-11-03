@@ -1,5 +1,6 @@
 """Interactive Pager application loop."""
 
+import copy
 import os
 from pathlib import Path
 import queue
@@ -10,10 +11,10 @@ from .catalog import CreatureCatalog
 from .evolution import advance_one_if_ready
 from .pager_backend import PagerDisplay
 from .storage import StateStore
-from .ui import HackomonUI, NETWORK_MENU
+from .ui import ACTIONS, HackomonUI, NETWORK_MENU
 from .exploration import export_csv, record_observations, reward_discoveries
 from .network_config import load_config
-from . import bluetooth_lab, expedition, lab, missions, progression, radio, visit, wdgwars
+from . import bluetooth_lab, expedition, generations, lab, missions, progression, radio, visit, wdgwars
 from . import sync as wdg_sync
 
 
@@ -29,7 +30,7 @@ class HackomonApp:
         self.clock = clock or time.time
         self.state, self.warning = store.load_or_create(catalog, now=int(self.clock()))
         self.ui = HackomonUI(display, catalog)
-        self.selected = 0
+        self.selected = ACTIONS.index("Geracoes / Ovos") if self.state.life_status == "memorial" else 0
         self.screen = "home"
         self.bestiary_index = catalog.creature(self.state.creature_id)["index"]
         self.message = self.warning or ""
@@ -61,6 +62,10 @@ class HackomonApp:
         self.sync_cancel = threading.Event()
         self.sync_events = queue.Queue(maxsize=64)
         self.worker_action = ""
+        self.generation_tab = 0
+        self.generation_selected = 0
+        self.generation_confirm = ""
+        self.generation_message = ""
         try:
             self.journal = expedition.Journal.restore(self.store.data_dir)
         except (ValueError, OSError, KeyError, TypeError):
@@ -85,6 +90,7 @@ class HackomonApp:
             self.expedition_page = 0
             self.journal.summary.pop("gps_at", None)
             self.journal.status("running")
+            generations.begin_field(self.state, self.journal.summary)
             if self.pump is None:
                 self.pump = expedition.Pump(config, self.radio_lock)
                 self.pump.start()
@@ -174,6 +180,17 @@ class HackomonApp:
             breakdown[key] = breakdown.get(key, 0) + bonus[key + "_xp"]
         return bonus
 
+    def _cycle_feedback(self, bonus):
+        if bonus.get("life_event") == "ended":
+            self.selected = ACTIONS.index("Geracoes / Ovos")
+            self.expedition_message = "Fim do ciclo. Abra Geracoes / Ovos para continuar."
+            self._companion_say("farewell")
+        elif bonus.get("life_event") == "veteran":
+            self._companion_say("veteran")
+        elif self.state.branch_pending:
+            self.companion_line = "Escolha minha evolucao!"
+            self.companion_until = time.monotonic() + 6
+
     def _tick_expedition(self):
         if self.pump is None or self.journal is None:
             return
@@ -198,11 +215,14 @@ class HackomonApp:
                             self.expedition_message = "EVOLUCAO! " + self.expedition_message
                         self.journal.checkpoint()
                         self.store.save(self.state)
+                    self._cycle_feedback(bonus)
                 elif kind == "targets":
                     self.expedition_targets = value
                 elif kind == "observations":
                     located = self.journal.observations(value)
                     reward = reward_discoveries(self.state, value, int(self.clock()))
+                    generations.record_contacts(self.state, reward)
+                    earned = missions.record(self.state, self.journal.summary, reward)
                     # Expedition CSVs are the durable upload source. Do not duplicate
                     # them into the 500-entry queue reserved for standalone snapshots.
                     self.journal.summary["xp"] += reward["xp"]
@@ -212,7 +232,6 @@ class HackomonApp:
                     breakdown["revisits"] = breakdown.get("revisits", 0) + reward["revisited"]
                     bonus = self._field_bonus(observed=bool(reward["new"] or reward["known"] or reward["blocked"]))
                     self.journal.summary["rewarded_discoveries"] = self.journal.summary.get("rewarded_discoveries", 0) + reward["new"]
-                    earned = missions.record(self.state, self.journal.summary, reward)
                     upload = self.journal.summary.get("upload", {})
                     if upload.get("pending") is not None:
                         upload["pending"] += len(located)
@@ -235,6 +254,7 @@ class HackomonApp:
                     if earned or reward["xp"] or bonus["xp"]:
                         self._companion_say("mission" if earned else "discovery" if reward["new"] else
                                             "revisit" if reward["revisited"] else "field")
+                    self._cycle_feedback(bonus)
                     self.store.save(self.state)
                 elif kind == "radio_status" and value.get("radio") in ("wifi", "ble"):
                     self.journal.summary.setdefault("radios", {})[value["radio"]] = dict(value, at=int(self.clock()))
@@ -550,6 +570,8 @@ class HackomonApp:
         self.message_until = time.monotonic() + seconds
 
     def _current_pose(self):
+        if self.state.life_status != "alive":
+            return "sleep"
         now = time.monotonic()
         if now < self.pose_until:
             return self.pose
@@ -557,7 +579,7 @@ class HackomonApp:
             return "sleep"
         if self.state.hunger < 15 or self.state.happiness < 15:
             return "sad"
-        return "idle"
+        return "walk" if self.state.adult_active_seconds >= generations.VETERAN_AT else "idle"
 
     def _care(self, action):
         outcome = self.state.perform_care(action, now=int(self.clock()))
@@ -573,13 +595,15 @@ class HackomonApp:
             self.display.vibrate(180)
         else:
             self.display.vibrate(55)
+            if self.state.branch_pending:
+                self._set_message("Escolha a evolucao em Geracoes / Ovos", seconds=5)
         self.store.save(self.state)
 
     def _handle_home(self, pressed):
         if pressed & self.display.BTN_UP:
-            self.selected = (self.selected - 1) % 7
+            self.selected = (self.selected - 1) % len(ACTIONS)
         if pressed & self.display.BTN_DOWN:
-            self.selected = (self.selected + 1) % 7
+            self.selected = (self.selected + 1) % len(ACTIONS)
         if pressed & self.display.BTN_A:
             if self.selected < 3:
                 self._care(ACTION_KEYS[self.selected])
@@ -590,10 +614,93 @@ class HackomonApp:
                 self.screen = "network"
             elif self.selected == 5:
                 self.screen = "expedition"
-            else:
+            elif self.selected == 6:
                 self.screen = "help"
+            else:
+                self.screen = "generations"
+                self._prepare_generations()
         if pressed & (self.display.BTN_B | self.display.BTN_POWER):
             return False
+        return True
+
+    def _prepare_generations(self):
+        if self.state.egg_offers or self.state.egg_activity_seconds < generations.EGG_PREPARATION:
+            return
+        try:
+            candidate = copy.deepcopy(self.state)
+            if generations.ensure_egg_offers(candidate, self.catalog):
+                self.store.save(candidate)
+                self.state = candidate
+        except OSError:
+            self.generation_message = "Nao foi possivel salvar os ovos; confira armazenamento."
+
+    def _handle_generations(self, pressed):
+        if self.worker is not None:
+            return True
+        if pressed & (self.display.BTN_B | self.display.BTN_POWER):
+            if self.generation_confirm:
+                self.generation_confirm = ""
+            else:
+                self.screen = "home"
+            return True
+        if self.generation_confirm:
+            if pressed & self.display.BTN_A:
+                try:
+                    candidate = copy.deepcopy(self.state)
+                    summary = copy.deepcopy(self.journal.summary) if self.journal else None
+                    if self.generation_confirm == "birth":
+                        generations.birth(candidate, self.catalog, int(self.clock()), summary)
+                        message = "Nova geracao nasceu! Treinador preservado."
+                    else:
+                        line = candidate.branch_offers[self.generation_selected % len(candidate.branch_offers)]
+                        outcome = advance_one_if_ready(candidate, self.catalog, selected_line=line)
+                        if not outcome.evolved:
+                            self.generation_message = outcome.reason
+                            self.generation_confirm = ""
+                            return True
+                        message = "Evolucao escolhida!"
+                    self.store.save(candidate)
+                    self.state = candidate
+                    self.generation_confirm = ""
+                    self.generation_message = message
+                    self._companion_say("discovery")
+                    if self.journal and summary is not None:
+                        self.journal.summary = summary
+                        self.journal.checkpoint()
+                except (ValueError, OSError, IndexError):
+                    self.generation_message = "Nao foi possivel concluir; confira o armazenamento."
+            return True
+        if pressed & (self.display.BTN_LEFT | self.display.BTN_RIGHT):
+            self.generation_tab = (self.generation_tab + (1 if pressed & self.display.BTN_RIGHT else -1)) % 4
+            self.generation_selected = 0
+            self.generation_message = ""
+            self._prepare_generations()
+        count = (len(self.state.egg_offers) if self.generation_tab == 1 else len(self.state.memorial)
+                 if self.generation_tab == 2 else len(self.state.branch_offers) if self.generation_tab == 3 else 1)
+        if count:
+            if pressed & self.display.BTN_UP:
+                self.generation_selected = (self.generation_selected - 1) % count
+            if pressed & self.display.BTN_DOWN:
+                self.generation_selected = (self.generation_selected + 1) % count
+        if pressed & self.display.BTN_A:
+            try:
+                if self.generation_tab == 0:
+                    self.generation_tab = 1
+                    self.generation_selected = 0
+                    self._prepare_generations()
+                elif self.generation_tab == 1:
+                    if generations.birth_ready(self.state):
+                        self.generation_confirm = "birth"
+                    elif self.state.egg_offers and not self.state.egg_line_id:
+                        candidate = copy.deepcopy(self.state)
+                        generations.select_egg(candidate, candidate.egg_offers[self.generation_selected % len(candidate.egg_offers)])
+                        self.store.save(candidate)
+                        self.state = candidate
+                        self.generation_message = "Ovo escolhido; incuba com 20 min de coleta valida."
+                elif self.generation_tab == 3 and self.state.branch_pending:
+                    self.generation_confirm = "branch"
+            except (ValueError, OSError, IndexError):
+                self.generation_message = "Nao foi possivel salvar a escolha."
         return True
 
     def _handle_bestiary(self, pressed):
@@ -643,6 +750,9 @@ class HackomonApp:
                                details=self.expedition_details, now=self.clock(),
                                mission_page=self.expedition_page == 2,
                                companion=self.companion_line if time.monotonic() < self.companion_until else "")
+        elif self.screen == "generations":
+            self.ui.generations(self.state, self.generation_tab, self.generation_selected,
+                                self.generation_message, self.generation_confirm, frame_index)
         else:
             self.ui.help(self.state)
 
@@ -667,6 +777,8 @@ class HackomonApp:
                     running = self._handle_wdgwars(pressed)
                 elif self.screen == "expedition":
                     running = self._handle_expedition(pressed)
+                elif self.screen == "generations":
+                    running = self._handle_generations(pressed)
                 else:
                     running = self._handle_help(pressed)
                 if self.screen != "expedition" or frame % 2 == 0:

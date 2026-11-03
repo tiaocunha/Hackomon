@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from .constants import STATE_SCHEMA_VERSION
 from .exploration import MAX_KNOWN, MAX_QUEUE, normalize_observation
 from .missions import MEDAL_IDS
-from . import progression
+from . import generations, progression
 
 
 ACTION_RULES = {
@@ -75,6 +75,31 @@ class GameState:
     field_bond: int = 0
     revisit_rewarded_at: dict = field(default_factory=dict)
     field_bonus_receipt: dict = field(default_factory=dict)
+    generations_revision: int = generations.REVISION
+    trainer_xp: int = 0
+    trainer_level: int = 1
+    trainer_level_credit: int = 0
+    generation: int = 1
+    life_status: str = "alive"
+    life_active_seconds: int = 0
+    adult_active_seconds: int = 0
+    pet_contacts: int = 0
+    pet_distance_m: float = 0.0
+    life_field_receipt: dict = field(default_factory=dict)
+    birth_line_id: str = ""
+    hatched_lines: list = field(default_factory=list)
+    pet_badges: list = field(default_factory=list)
+    affinities: dict = field(default_factory=dict)
+    heritage_trait: str = ""
+    branch_locked: bool = False
+    branch_pending: bool = False
+    branch_offers: list = field(default_factory=list)
+    egg_activity_seconds: int = 0
+    egg_incubation_seconds: int = 0
+    egg_offers: list = field(default_factory=list)
+    egg_line_id: str = ""
+    memorial_total: int = 0
+    memorial: list = field(default_factory=list)
 
     @classmethod
     def new(cls, catalog, line_id=None, now=None, rng=None):
@@ -91,6 +116,8 @@ class GameState:
             born_at=now,
             last_seen_at=now,
             discovered=[first["id"]],
+            birth_line_id=line_id,
+            hatched_lines=[line_id],
         )
 
     @classmethod
@@ -154,6 +181,10 @@ class GameState:
             progression.migrate_levels(state)
         else:
             state.level = progression.level_for(state.xp + state.level_credit)
+        if "generations_revision" not in value:
+            generations.migrate(state)
+        generations.validate(state, catalog)
+        state.trainer_level = progression.level_for(state.trainer_xp + state.trainer_level_credit)
         state.discovered = [item for item in state.discovered if item in catalog.creature_by_id]
         if creature_id not in state.discovered:
             state.discovered.append(creature_id)
@@ -180,6 +211,9 @@ class GameState:
 
     def apply_elapsed_time(self, now=None):
         now = int(time.time() if now is None else now)
+        if self.life_status != "alive":
+            self.last_seen_at = now
+            return False
         elapsed = max(0, min(now - int(self.last_seen_at), 48 * 60 * 60))
         if elapsed == 0:
             self.last_seen_at = now
@@ -199,6 +233,8 @@ class GameState:
         return changed
 
     def perform_care(self, action, now=None):
+        if self.life_status != "alive":
+            return ActionOutcome(False, "Ciclo encerrado; escolha o ovo sucessor", action)
         if action not in ACTION_RULES:
             return ActionOutcome(False, "Ação desconhecida", action)
         now = int(time.time() if now is None else now)
@@ -218,6 +254,7 @@ class GameState:
             setattr(self, stat, getattr(self, stat) + delta)
         progression.grant(self, int(rule["xp"]))
         self.care_points += int(rule["care"])
+        generations.add_affinity(self, "companionship", 1)
         self.last_action_at[action] = now
         self.action_counts[action] = int(self.action_counts.get(action, 0)) + 1
         self._clamp_stats()

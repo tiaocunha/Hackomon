@@ -1,5 +1,24 @@
 # Hardware validation checklist
 
+## Generations, successor eggs and branches — 0.10.0
+
+Desktop tests simulate juvenile/adult aging, veteran/death boundaries, one-time
+memorials, persistent trainer XP, egg preparation/incubation, explicit branching,
+save migration/backup, failed writes and UI bounds. They do not wait ten real
+hours or validate the full lifecycle on hardware.
+
+- [ ] Open the upgraded app; retain current pet/XP/level/form and start age at zero.
+- [ ] Check TR/PET header and Geracoes / Ovos screens on the physical display.
+- [ ] Reach a young-stage branch, confirm/cancel and verify the chosen line.
+- [ ] Collect 60 minutes, choose an unhatched egg and incubate for 20 minutes.
+- [ ] Verify pause/restart does not age the pet or reset incubation/cooldowns.
+- [ ] Observe veteran/farewell after 8/10 actual valid adult hours.
+- [ ] Confirm successor begins at level 1 while trainer/bestiary/receipts remain.
+- [ ] Measure save size, memory, battery and frame time on the Pager.
+
+The first compatible load makes a private pre-generation save copy. Nothing
+below from earlier releases establishes that this lifecycle has been field-tested.
+
 ## Repeat-route progression — 0.9.0
 
 Desktop regressions cover six-hour boundaries, duplicate batches, day changes,

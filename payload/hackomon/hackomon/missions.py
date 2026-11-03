@@ -40,17 +40,23 @@ def progress(summary):
 
 
 def cards(state, summary):
-    values = progress(summary)
+    values = progress(summary) if summary.get("mission_generation", 1) == state.generation else dict(discoveries=0, wifi=0, ble=0)
     values["both"] = min(values["wifi"], values["ble"])
-    values["distance_m"] = max(0, int(summary.get("distance_m", 0)))
+    distance = summary.get("distance_m", 0)
+    if state.generation > 1:
+        distance = min(distance, state.pet_distance_m)
+    values["distance_m"] = max(0, int(distance))
     return [dict(id=identity, title=title, value=min(target, values[key]), target=target,
-                 earned=identity in state.field_badges,
+                 earned=identity in state.pet_badges,
                  detail="%d Wi-Fi + %d BLE novos" % (min(5, values["wifi"]), min(5, values["ble"]))
                         if key == "both" else "Metros com GPS" if key == "distance_m" else "Enderecos novos com XP")
             for identity, title, key, target in RULES]
 
 
 def record(state, summary, reward=None):
+    if summary.get("mission_generation", 1) != state.generation:
+        summary["mission_progress"] = {}
+    summary["mission_generation"] = state.generation
     values = progress(summary)
     if reward:
         values["discoveries"] = min(10000, values["discoveries"] + reward["new"])
@@ -58,9 +64,11 @@ def record(state, summary, reward=None):
             values[key] = min(10000, values[key] + reward.get("new_by_type", {}).get(kind, 0))
     summary["mission_progress"] = values
     earned = []
-    for card in cards(state, summary):
+    for card in cards(state, summary) if state.life_status == "alive" else ():
         if not card["earned"] and card["value"] >= card["target"]:
-            state.field_badges.append(card["id"])
+            state.pet_badges.append(card["id"])
+            if card["id"] not in state.field_badges:
+                state.field_badges.append(card["id"])
             medals = summary.setdefault("mission_medals", [])
             if card["id"] not in medals:
                 medals.append(card["id"])
@@ -74,4 +82,5 @@ def speech(creature, event):
         return DISCOVERY_LINES.get(creature["family_id"], "Uma nova descoberta!")
     return {"mission": "Ganhamos uma medalha!", "gps_lost": "Sem GPS, sigo descobrindo.",
             "revisit": "Bom rever nossos caminhos!", "field": "Cada passeio nos aproxima!",
+            "veteran": "Tenho muitas historias!", "farewell": "Obrigado pela nossa jornada.",
             "pause": "Uma pausa para respirar."}.get(event, "Vamos explorar juntos!")

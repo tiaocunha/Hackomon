@@ -21,11 +21,12 @@ from .expedition import sensor_status
 from .sync import guidance
 from .missions import cards as mission_cards
 from .progression import level_progress
+from . import generations as lifecycle
 from .backgrounds import draw_background
 from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
 
-ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Expedicao", "Ajuda")
+ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Expedicao", "Ajuda", "Geracoes / Ovos")
 NETWORK_MENU = (("visit_scan", "Atendimento: buscar redes do cliente"),
                 ("WIFI", "Descobrir Wi-Fi com GPS"), ("BLE", "Descobrir Bluetooth LE com GPS"),
                 ("export", "Exportar CSV"), ("upload", "WDGWars: sincronizacao e conta"),
@@ -65,7 +66,7 @@ class HackomonUI:
         display = self.display
         display.fill_rect(0, 0, SCREEN_WIDTH, 20, COLOR_PANEL_ALT)
         display.draw_text(7, 5, title, COLOR_CYAN, 1)
-        right = "LV %02d  XP %04d" % (state.level, state.xp)
+        right = "TR %02d XP %d | PET %02d" % (state.trainer_level, state.trainer_xp, state.level)
         display.draw_text(SCREEN_WIDTH - display.text_width(right, 1) - 7, 5, right, COLOR_TEXT, 1)
 
     def home(self, state, selected, pose, frame_index, message=""):
@@ -77,8 +78,9 @@ class HackomonUI:
         _panel(display, 8, 27, 174, 164)
         draw_background(display, creature, 9, 28, 172, 140, frame_index)
         draw_sprite(display, creature, 31, 39, scale=4, pose=pose, frame_index=frame_index)
-        display.draw_text_centered(171, creature["name"][:24], COLOR_TEXT, 1)
-        display.draw_text_centered(181, "%s / %s" % (family["name"], creature["stage_name"]), COLOR_MUTED, 1)
+        name = creature["name"][:24]
+        display.draw_text(8 + max(0, (174 - display.text_width(name)) // 2), 170, name, COLOR_TEXT, 1)
+        display.draw_text(14, 182, lifecycle.age_label(state)[:27], COLOR_MUTED, 1)
 
         _panel(display, 190, 27, 282, 164)
         _bar(display, 202, 38, 96, state.hunger, COLOR_YELLOW, "FOME")
@@ -88,7 +90,7 @@ class HackomonUI:
             state.care_points, state.field_bond, state.wellness), COLOR_MUTED, 1)
 
         for index, label in enumerate(ACTIONS):
-            y = 99 + index * 12
+            y = 99 + index * 11
             if index == selected:
                 display.fill_rect(199, y - 2, 262, 12, COLOR_PANEL_ALT)
                 color = COLOR_CYAN
@@ -98,10 +100,11 @@ class HackomonUI:
                 prefix = "  "
             display.draw_text(204, y, prefix + label, color, 1)
 
-        footer = message or "D-PAD escolhe  A confirma  B sai"
+        footer = message or ("Ciclo encerrado: abra Geracoes / Ovos" if state.life_status != "alive" else
+                             "Evolucao pronta: Geracoes / Ovos" if state.branch_pending else "D-PAD escolhe  A confirma  B sai")
         display.fill_rect(0, 193, SCREEN_WIDTH, SCREEN_HEIGHT - 193, COLOR_PANEL_ALT)
         current, needed = level_progress(state)
-        progress = "Proximo nivel: %d/%d XP" % (current, needed) if needed else "Nivel maximo; XP continua acumulando"
+        progress = "Pet: proximo nivel %d/%d XP" % (current, needed) if needed else "Pet no nivel maximo; carreira continua"
         display.draw_text_centered(195, progress, COLOR_CYAN, 1)
         display.draw_text_centered(209, footer[:72], COLOR_TEXT if not message else COLOR_YELLOW, 1)
         display.flip()
@@ -219,8 +222,93 @@ class HackomonUI:
             display.draw_text(20, 113, "Nivel     %d / %d" % status["level"], COLOR_TEXT, 1)
             display.draw_text(20, 129, "Cuidado + vinculo %d / %d" % status["care"], COLOR_TEXT, 1)
             display.draw_text(20, 145, "Bem-estar %d / %d" % status["wellness"], COLOR_TEXT, 1)
-        display.draw_text(20, 171, "Coleta valida: +1 vinculo a cada 10 min.", COLOR_MUTED, 1)
+        hint = "Escolha a linha em Geracoes / Ovos > Evolucao" if state.branch_pending else "Coleta valida: +1 vinculo a cada 10 min."
+        display.draw_text(20, 171, hint, COLOR_MUTED, 1)
         display.draw_text_centered(205, "A ou B volta", COLOR_TEXT, 1)
+        display.flip()
+
+    def generations(self, state, tab, selected, message="", confirm="", frame_index=0):
+        display = self.display
+        display.clear(COLOR_BG)
+        self._header("GERACOES", state)
+        _panel(display, 8, 28, 464, 164)
+        tabs = ("VIDA", "OVO SUCESSOR", "MEMORIAL", "EVOLUCAO")
+        display.draw_text(20, 39, "%d/4 %s" % (tab + 1, tabs[tab]), COLOR_CYAN, 1)
+        if confirm:
+            line_id = state.egg_line_id if confirm == "birth" else state.branch_offers[selected % len(state.branch_offers)]
+            creature = self.catalog.creature_for_stage(line_id, 0 if confirm == "birth" else 2)
+            display.draw_text(20, 66, "Confirmar nascimento?" if confirm == "birth" else "Confirmar esta evolucao?", COLOR_YELLOW, 1)
+            display.draw_text(20, 88, creature["name"], COLOR_TEXT, 1)
+            display.draw_text(20, 112, "Novo pet: ovo e nivel 1." if confirm == "birth" else "Esta linha segue ate a forma especial.", COLOR_TEXT, 1)
+            display.draw_text(20, 132, "Treinador, bestiario e memorial preservados.", COLOR_MUTED, 1)
+            draw_sprite(display, creature, 375, 65, scale=2, frame_index=frame_index)
+            display.draw_text(20, 171, "A confirma  B cancela", COLOR_CYAN, 1)
+        elif tab == 0:
+            creature = self.catalog.creature(state.creature_id)
+            display.draw_text(20, 63, "Geracao %d | %s" % (state.generation, creature["name"]), COLOR_TEXT, 1)
+            display.draw_text(20, 83, lifecycle.age_label(state), COLOR_YELLOW, 1)
+            display.draw_text(20, 103, "Coleta nesta vida: %dh %02dmin" % (state.life_active_seconds // 3600, state.life_active_seconds // 60 % 60), COLOR_TEXT, 1)
+            remaining = max(0, lifecycle.ADULT_LIFETIME - state.adult_active_seconds)
+            text = "Vida adulta restante: %dh %02dmin" % (remaining // 3600, remaining // 60 % 60) if state.stage >= 3 else "Relogio adulto comeca na fase adulta."
+            display.draw_text(20, 123, text, COLOR_TEXT, 1)
+            display.draw_text(20, 144, "Linhas nascidas %d/50 | Ciclos concluidos %d" % (len(state.hatched_lines), state.memorial_total), COLOR_MUTED, 1)
+            display.draw_text(20, 171, "A abre o ovo sucessor", COLOR_CYAN, 1)
+        elif tab == 1:
+            if state.egg_line_id:
+                line = self.catalog.evolution_line(state.egg_line_id)
+                display.draw_text(20, 66, "Ovo escolhido: " + line["name"], COLOR_TEXT, 1)
+                minutes = max(0, lifecycle.EGG_INCUBATION - state.egg_incubation_seconds + 59) // 60
+                display.draw_text(20, 91, "Incubacao: pronto" if not minutes else "Incubacao: faltam %d min de coleta" % minutes, COLOR_YELLOW, 1)
+                display.draw_text(20, 121, "Heranca: uma afinidade inicial, sem XP extra.", COLOR_MUTED, 1)
+                text = "A inicia a proxima geracao" if lifecycle.birth_ready(state) else "Nascimento apos o fim do ciclo atual." if not minutes else "Continue explorando para incubar."
+                display.draw_text(20, 162, text, COLOR_CYAN, 1)
+            elif state.egg_offers:
+                display.draw_text(20, 64, "Escolha um ovo para a proxima geracao:", COLOR_TEXT, 1)
+                for index, line_id in enumerate(state.egg_offers):
+                    line = self.catalog.evolution_line(line_id)
+                    family = self.catalog.family_by_id[line["family_id"]]
+                    y = 91 + index * 23
+                    if index == selected % len(state.egg_offers):
+                        display.fill_rect(17, y - 3, 446, 17, COLOR_PANEL_ALT)
+                    display.draw_text(22, y, ("> " if index == selected % len(state.egg_offers) else "  ") + family["name"] + " / " + line["name"], COLOR_CYAN, 1)
+                display.draw_text(20, 174, "A escolhe; depois incuba por 20 min de coleta.", COLOR_MUTED, 1)
+            else:
+                minutes = max(0, lifecycle.EGG_PREPARATION - state.egg_activity_seconds + 59) // 60
+                display.draw_text(20, 74, "Proximo ovo: faltam %d min de coleta valida" % minutes, COLOR_TEXT, 1)
+                display.draw_text(20, 103, "Rotas conhecidas tambem contam.", COLOR_MUTED, 1)
+                display.draw_text(20, 132, "O progresso fica salvo entre expedicoes.", COLOR_MUTED, 1)
+        elif tab == 2:
+            if not state.memorial:
+                display.draw_text(20, 76, "Cada companheiro deixara sua historia aqui.", COLOR_TEXT, 1)
+            else:
+                entry = list(reversed(state.memorial))[selected % len(state.memorial)]
+                creature = self.catalog.creature(entry["creature_id"])
+                display.draw_text(20, 64, "Geracao %d: %s" % (entry["generation"], creature["name"]), COLOR_TEXT, 1)
+                display.draw_text(20, 86, "Nivel %d | XP %d" % (entry["level"], entry["xp"]), COLOR_GREEN, 1)
+                display.draw_text(20, 108, "Jornada %.1fh | %.2f km" % (entry["active_seconds"] / 3600, entry["distance_m"] / 1000), COLOR_TEXT, 1)
+                display.draw_text(20, 130, "Descobertas/revisitas %d | Medalhas %d" % (entry["contacts"], len(entry["medals"])), COLOR_MUTED, 1)
+                display.draw_text(20, 153, "Legado: " + lifecycle.PROFILE_LABELS[entry["trait"]], COLOR_YELLOW, 1)
+                display.draw_text(20, 176, "Registro %d/%d | CIMA/BAIXO navega" % (selected % len(state.memorial) + 1, len(state.memorial)), COLOR_MUTED, 1)
+        else:
+            if state.branch_pending:
+                display.draw_text(20, 64, "Escolha a linha da fase jovem:", COLOR_TEXT, 1)
+                for index, line_id in enumerate(state.branch_offers):
+                    line = self.catalog.evolution_line(line_id)
+                    y = 91 + index * 23
+                    if index == selected % len(state.branch_offers):
+                        display.fill_rect(17, y - 3, 446, 17, COLOR_PANEL_ALT)
+                    profile = lifecycle.PROFILE_LABELS[lifecycle.LINE_PROFILES[line["family_line_index"]]]
+                    display.draw_text(22, y, ("> " if index == selected % len(state.branch_offers) else "  ") + line["name"] + " | " + profile, COLOR_CYAN, 1)
+                display.draw_text(20, 174, "A mostra a confirmacao; todas estao acessiveis.", COLOR_MUTED, 1)
+            else:
+                line = self.catalog.evolution_line(state.line_id)
+                display.draw_text(20, 72, "Linha atual: " + line["name"], COLOR_TEXT, 1)
+                text = "Linha ja definida para este companheiro." if state.branch_locked else "A escolha abre ao evoluir de filhote a jovem."
+                display.draw_text(20, 105, text, COLOR_MUTED, 1)
+                display.draw_text(20, 138, "Exploracao, sintonia e cuidado sugerem opcoes.", COLOR_MUTED, 1)
+        display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
+        footer = "A confirma  B cancela" if confirm else "ESQ/DIR abas  CIMA/BAIXO escolhe  A acao  B volta"
+        display.draw_text_centered(212, footer, COLOR_TEXT, 1)
         display.flip()
 
     def network(self, state, selected, message, busy=False, confirm=False):

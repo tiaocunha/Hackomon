@@ -3,6 +3,7 @@
 import datetime
 import math
 import re
+from . import generations
 
 REVISION = 2
 MAX_LEVEL = 100
@@ -58,8 +59,11 @@ def grant(state, amount, now=None, exploration=False):
             state.exploration_daily_xp = 0
         state.exploration_xp += amount
         state.exploration_daily_xp += amount
-    state.xp += amount
-    state.level = level_for(state.xp + state.level_credit)
+    state.trainer_xp += amount
+    state.trainer_level = level_for(state.trainer_xp + state.trainer_level_credit)
+    if state.life_status == "alive":
+        state.xp += amount
+        state.level = level_for(state.xp + state.level_credit)
 
 
 def field_progress(summary):
@@ -125,7 +129,7 @@ def field_rewards(state, summary, now, observed=None):
     receipt["activity"] = max(receipt["activity"], activity)
     receipt["distance"] = max(receipt["distance"], distance)
     amount = new_activity * ACTIVITY_XP + new_distance * DISTANCE_XP
-    state.field_bond += new_activity
     grant(state, amount, now=now, exploration=True)
+    life = generations.observe_field(state, summary, now)
     return dict(xp=amount, activity_xp=new_activity * ACTIVITY_XP,
-                distance_xp=new_distance * DISTANCE_XP, bond=new_activity)
+                distance_xp=new_distance * DISTANCE_XP, bond=life["bond"], life_event=life["event"])

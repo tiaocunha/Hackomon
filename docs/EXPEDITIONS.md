@@ -1,5 +1,13 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Ciclos de vida e sucessores — 0.10.0
+
+Coleta valida agora alimenta idade, preparacao do ovo e incubacao. A vida adulta
+tem 10 horas de coleta, com fase veterana nas ultimas duas. Tempo antigo nao e
+convertido em idade. O XP da expedicao passa a alimentar a carreira permanente
+e o companheiro vivo. O fim do ciclo nao inicia capturas, pareamentos ou uploads.
+Leia [GENERATIONS](GENERATIONS.md) para controles, memorial e nascimento.
+
 ## Rotas habituais e progressao — 0.9.0
 
 Revisitas agora rendem 1 XP por endereco/tipo apos 6 horas. Percurso rende

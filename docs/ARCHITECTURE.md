@@ -100,6 +100,14 @@ instead of being silently overwritten. The schema is versioned.
 
 ## Progression and evolution gates (0.9.0)
 
+In 0.10.0 a permanent trainer receives all XP, while only the living companion
+receives pet XP. Active field counters age each pet without wall-clock aging.
+The adult lifecycle lasts 10 valid active hours, followed by a single memorial
+entry; the last 200 details are bounded in the atomic state. Successor eggs,
+incubation, lineage collection and young-stage branch offers share that save.
+Old saves retain the current pet and start active age at zero; a private
+pre-generation backup is created on first compatible loading.
+
 The XP cost for level L to L+1 is 40 + 5*(L-1), up to level 100. Old saves
 retain XP and earned levels via a one-time level credit. Revisit receipts
 enforce a six-hour interval per address/type. Field bonus receipts are saved
@@ -114,5 +122,6 @@ See [PROGRESSION.md](PROGRESSION.md) for reward rates and migration details.
 | Forma rara | 25 | 35 | 55 |
 
 Wellness is the integer average of hunger, happiness and energy. At most one
-stage is advanced per care/field reward event. Existing forms never regress.
+stage is advanced per care/field reward event. Young-stage advancement now
+waits for an explicit offered in-family line choice. Existing forms never regress.
 

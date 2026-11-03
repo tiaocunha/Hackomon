@@ -18,8 +18,28 @@ class StateStore:
             return GameState.new(catalog, line_id=line_id, now=now), None
         try:
             with self.path.open("r", encoding="utf-8") as handle:
-                state = GameState.from_dict(json.load(handle), catalog)
+                original = json.load(handle)
+                state = GameState.from_dict(original, catalog)
             state.apply_elapsed_time(now)
+            if "generations_revision" not in original:
+                backup = self.data_dir / "state.json.before-generations-v1"
+                temporary_backup = self.data_dir / ("state.json.before-generations-v1.tmp-%d" % os.getpid())
+                try:
+                    if not backup.exists():
+                        fd = os.open(str(temporary_backup), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+                        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                            json.dump(original, handle, ensure_ascii=False)
+                            handle.flush()
+                            os.fsync(handle.fileno())
+                        if not backup.exists():
+                            os.replace(str(temporary_backup), str(backup))
+                except OSError:
+                    return state, "Save carregado; copia anterior a geracoes indisponivel"
+                finally:
+                    try:
+                        temporary_backup.unlink()
+                    except OSError:
+                        pass
             return state, None
         except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as error:
             self.data_dir.mkdir(parents=True, exist_ok=True)

@@ -1,5 +1,11 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.10.0: novo menu Geracoes / Ovos. Seu pet atual e preservado, sem idade retroativa.
+Coleta valida: 60 min prepara ovo, 20 min incuba apos escolher. Nascimento so apos
+fim da vida atual. Adulto tem 10h de coleta; ultimas 2h como veterano.
+Treinador/bestiario continuam entre vidas; sucessor comeca ovo/nivel 1.
+Na juventude escolha a linha evolutiva. Detalhes: docs/GENERATIONS.md.
+
 0.9.0: revisitas rendem 1 XP apos 6 horas por endereco. Percurso: 5 XP/500 m;
 coleta valida: 10 XP e 1 vinculo/10 min. Vinculo soma aos cuidados na evolucao.
 Niveis agora tem custos crescentes. Seu XP, nivel e formas sao preservados.

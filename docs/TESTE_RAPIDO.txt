@@ -1,7 +1,11 @@
-HACKOMON 0.9.0 - TESTE DE CAMPO
+HACKOMON 0.10.0 - TESTE DE CAMPO
 
 Esta e uma versao experimental. Testes automatizados usam simulacoes; radios,
 GPS, consumo e comportamento no firmware original ainda precisam do teste fisico.
+
+NOVO: menu Geracoes / Ovos. ESQ/DIR troca VIDA/OVO/MEMORIAL/EVOLUCAO.
+O companheiro atual comeca com idade ativa zero; carreira e bestiario ficam.
+Escolha a linha ao passar de filhote a jovem. Leia GENERATIONS.md.
 
 1. Extraia o ZIP e copie a pasta hackomon para o mesmo local do payload anterior
    (/root/payloads/user/games/hackomon). Preserve /mmc/root/hackomon, onde fica o save.

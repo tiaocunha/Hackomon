@@ -19,6 +19,8 @@ class EvolutionTests(unittest.TestCase):
             self.state.care_points = gate["care"]
             self.state.hunger = self.state.happiness = self.state.energy = max(70, gate["wellness"])
             result = advance_one_if_ready(self.state, self.catalog)
+            if self.state.branch_pending:
+                result = advance_one_if_ready(self.state, self.catalog, selected_line=self.state.line_id)
             self.assertTrue(result.evolved)
             self.assertEqual(target_stage, self.state.stage)
         self.assertEqual(5, len(self.state.discovered))
