@@ -1,5 +1,25 @@
 # Sincronizacao WDGWars — 0.7.0 experimental
 
+## Ajustes 0.8.7
+
+A Expedicao deixa de ocupar a fila avulsa. Seus CSVs continuam sendo enviados
+por **Sincronizar expedicoes + fila**, com os mesmos recibos e lotes pequenos.
+Os 500 registros limitam a fila avulsa e cada lote, nao o tamanho da expedicao.
+Registros existentes da fila antiga sao preservados e conciliados durante o
+envio completo quando correspondem exatamente a uma linha enviada do CSV.
+
+O resumo da expedicao consulta localmente quantas linhas validas ainda estao
+apos o ultimo recibo da chave configurada. Inclui lotes sem confirmacao e nao
+afirma importacao quando o servidor apenas recebeu/processou dados. Sem chave
+ou com historico invalido mostra pendencias desconhecidas. A contagem e somente
+da expedicao exibida; linhas invalidas e finais incompletas ficam fora dela.
+
+Retomar **Sincronizar expedicoes + fila** continua de onde os lotes foram
+confirmados, inclusive depois de fechar o app. Um lote com resultado incerto
+agora e identificado antes de consultar a conta; use **Repetir envio incerto**
+quando decidir repetir. Sem Internet nao ha repeticao automatica. A espera
+pedida pelo servidor continua persistida e nao pode ser ignorada pela retomada.
+
 ## Uso na tela
 
 Abra **Redes / Laboratorio → WDGWars: sincronizacao e conta**. A chave continua

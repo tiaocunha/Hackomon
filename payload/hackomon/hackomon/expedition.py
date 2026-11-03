@@ -41,6 +41,29 @@ def _atomic(path, value):
     os.replace(str(temporary), str(path))
 
 
+def sensor_status(summary, key, now):
+    """Describe recent evidence, without calling an empty scan a broken radio."""
+    if summary.get("status") != "running":
+        return "pausado", "Coleta parada"
+    if key == "gps":
+        stamp = summary.get("gps_at")
+        if stamp is not None and 0 <= now - stamp <= 15:
+            return "ok", "posicao recente (%ds)" % (now - stamp)
+        return "waiting", "sem posicao recente"
+    value = summary.get("radios", {}).get(key, {})
+    if value.get("state") == "disabled":
+        return "disabled", "desativado"
+    if "at" not in value:
+        return "waiting", "verificando"
+    if not 0 <= now - value["at"] <= 45:
+        return "waiting", "sem leitura recente"
+    if not value.get("ok"):
+        return "error", value.get("message", "falha de leitura")
+    if value.get("count") == 0:
+        return "empty", "busca OK; sem anuncios recentes"
+    return "ok", value.get("message", "leitura recente")
+
+
 class Journal:
     def __init__(self, data_dir, summary=None, now=None):
         now = int(time.time() if now is None else now)
@@ -49,10 +72,13 @@ class Journal:
         self.summary = summary or dict(id=uuid.uuid4().hex, started_at=now, status="paused",
                                        wifi=0, ble=0, records=0, located=0, unlocated=0,
                                        distance_m=0.0, xp=0, audits=0, recoveries=0,
-                                       gps_gaps=0, full=False)
+                                       gps_gaps=0, full=False, rewarded_discoveries=0)
+        if "rewarded_discoveries" not in self.summary:
+            self.summary["rewarded_discoveries"] = 0
+            self.summary["reward_count_partial"] = True
         if not re.fullmatch(r"[0-9a-f]{32}", str(self.summary.get("id", ""))):
             raise ValueError("invalid expedition id")
-        for key in ("started_at", "wifi", "ble", "records", "located", "unlocated", "xp", "audits", "recoveries", "gps_gaps"):
+        for key in ("started_at", "wifi", "ble", "records", "located", "unlocated", "xp", "audits", "recoveries", "gps_gaps", "rewarded_discoveries"):
             if not isinstance(self.summary.get(key), int) or self.summary[key] < 0:
                 raise ValueError("invalid expedition counter")
         if not math.isfinite(float(self.summary["distance_m"])) or self.summary["distance_m"] < 0:
@@ -108,14 +134,30 @@ class Journal:
             self.summary["active_since"] = now
         if status == "ended":
             self.summary["ended_at"] = now
-            text = ("HACKOMON - RESUMO DA EXPEDICAO\nWi-Fi: %d\nBLE: %d\n"
+            self.write_summary()
+        self.checkpoint()
+
+    def write_summary(self):
+        pending = self.summary.get("upload", {})
+        count = pending.get("pending")
+        text = ("HACKOMON - RESUMO DA EXPEDICAO\nWi-Fi: %d\nBLE: %d\n"
                     "Registros com GPS: %d\nSem localizacao: %d\nPercurso aproximado: %.2f km\n"
                     "XP: %d\nAvaliacoes: %d\nSenhas recuperadas: %d\n"
                     "CSV contem apenas descobertas com localizacao; evidencias de testes ficam separadas.\n" % (
                         self.summary["wifi"], self.summary["ble"], self.summary["located"], self.summary["unlocated"],
                         self.summary["distance_m"] / 1000, self.summary["xp"], self.summary["audits"], self.summary["recoveries"]))
-            _append(self.folder / "summary.txt", text.encode())
-        self.checkpoint()
+        text += "Novas descobertas premiadas desde 0.8.7: %d\n" % self.summary.get("rewarded_discoveries", 0)
+        text += "Tempo ativo registrado: %d s\n" % self.summary.get("active_seconds", 0)
+        text += "Registros desta expedicao aguardando envio: %s\n" % (count if count is not None else "desconhecido")
+        text += "WDGWars: %s\n" % pending.get("message", "nao consultado")
+        path = self.folder / "summary.txt"
+        temporary = path.with_suffix(".tmp")
+        fd = os.open(str(temporary), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(str(temporary), str(path))
 
     def gps(self, fix):
         stamp = float(fix["fix_time"])
@@ -343,13 +385,13 @@ class Pump:
                     values = self._ble()
                     self.emit("observations", [self.locate(item) for item in values])
                     source = getattr(values, "source", "BLE")
-                    self.emit("radio_status", dict(radio="ble", ok=True, message="%s: %d anuncios LE" % (source, len(values))))
+                    self.emit("radio_status", dict(radio="ble", ok=True, count=len(values), message="%s: %d anuncios LE" % (source, len(values))))
                 else:
                     observations = visit.find_networks(self.config, limit=500)
                     self.emit("targets", observations[:100])
                     self.emit("observations", [self.locate(item) for item in observations])
                     source = getattr(observations, "source", "iw")
-                    self.emit("radio_status", dict(radio="wifi", ok=True, message="%s: %d APs recentes" % (source, len(observations))))
+                    self.emit("radio_status", dict(radio="wifi", ok=True, count=len(observations), message="%s: %d APs recentes" % (source, len(observations))))
             except (RuntimeError, OSError, ValueError) as error:
                 message = str(error) if isinstance(error, RuntimeError) else "Falha ao ler o radio (%s)" % type(error).__name__
                 self.emit("radio_status", dict(radio="ble" if turn % 2 and self.config.get("expedition_ble", True) else "wifi", ok=False, message=message))

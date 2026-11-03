@@ -13,7 +13,7 @@ This incremental release contains:
 - care actions, experience, levels and gated evolution rules;
 - atomic JSON persistence on the Pager's MMC storage;
 - a 480×222 interface controlled entirely by the D-pad and A/B buttons;
-- optional Wi-Fi passive scans and BLE discovery with external GPSD fixes;
+- optional Wi-Fi passive scans and BLE discovery with fixes from the stock GPSd service;
 - discovery XP, an offline queue, CSV export and manual WDGWars upload;
 - scoped office-lab EAPOL capture and bounded offline WPA/WPA2-PSK dictionary tests.
 - target-scoped Bluetooth metadata and classic SDP service inventory, with local reports.
@@ -33,6 +33,9 @@ This incremental release contains:
   map uploads still require valid location (0.8.5).
 - no daily discovery XP ceiling; fresh new addresses keep earning 2 XP Wi-Fi
   and 1 XP BLE while repeat-address protection remains (0.8.6).
+- expeditions use their durable CSVs directly, without filling the 500-entry
+  standalone queue; new/known discovery feedback, sensor freshness states and
+  an outing summary with local per-account pending counts (0.8.7).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -49,12 +52,11 @@ rare form, including the matching environment growth:
 ## Status
 
 The catalog, game logic, persistence, renderer and desktop test suite are
-implemented and tested. The framebuffer/input adapter follows the public
-`libpagerctl` API, but this release has not yet been validated on the author's
-physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
-remaining device checks.
+implemented and tested. Earlier builds ran on the user's stock 2.0.0-stable
+Pager; the 0.8.7 changes still require a device field test. See
+[hardware validation](docs/HARDWARE_VALIDATION.md) for the remaining checks.
 
-Network and lab adapters remain **experimental in 0.8.6**. Automated tests use
+Network and lab adapters remain **experimental in 0.8.7**. Automated tests use
 fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
 also checked on one physical 2.0.0-stable Pager and returned recent observations.
 The user also confirmed both Expedition discovery counters increment on that
@@ -78,7 +80,7 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.8.6.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.8.7.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`

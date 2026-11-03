@@ -1,5 +1,43 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Companheiro de campo — 0.8.7
+
+A coleta da Expedicao grava as descobertas localizadas diretamente em
+`expeditions/<id>/discoveries.csv`, sem copiar cada registro para a fila avulsa
+de 500. A fila antiga e preservada para o proximo envio. Use **Redes /
+Laboratorio -> WDGWars -> Sincronizar expedicoes + fila** para enviar o conjunto
+completo; enviar somente a fila avulsa nao inclui a Expedicao. Os limites de
+armazenamento do diario continuam, assim como os lotes de ate 500 por requisicao.
+
+O rodape distingue XP por novos enderecos, enderecos ja premiados, amostras
+invalidas/antigas, exclusoes e buscas sem descobertas recentes. Nao existe teto
+diario de XP. O limite de memoria do registro de recompensas continua explicito.
+
+Wi-Fi e BLE mostram verificando, leitura recente, busca bem-sucedida sem anuncios,
+falha, desativado ou sem leitura recente (mais de 45s). GPS mostra posicao recente
+(ate 15s) ou ausencia de fix; pausa nao e exibida como defeito do radio. Esses
+estados descrevem os dados recebidos, nao certificam a saude fisica do hardware.
+O GPS continua usando o servico GPSd nativo; nenhum outro daemon e iniciado.
+
+**CIMA/BAIXO** alterna sensores e resumo. O resumo aparece ao encerrar e mostra
+distancia aproximada, tempo ativo, Wi-Fi/BLE distintos nesta expedicao, XP ganho,
+novos enderecos premiados e registros com/sem GPS. A contagem de novos premiados
+começa nesta versao para expedicoes antigas; Wi-Fi/BLE nao representam
+necessariamente aparelhos fisicos distintos por causa de enderecos aleatorios.
+
+**WDG pendentes** conta linhas validas ainda sem recibo local da chave configurada
+para a **expedicao atual**, incluindo lotes incertos. Nao inclui a fila avulsa ou
+outras expedicoes. E uma consulta local, sem Internet nem upload automatico.
+Reabrir o resumo atualiza a contagem; um envio concluido tambem a atualiza.
+Sem chave ou com recibo inconsistente mostra `?`, nunca presume que tudo foi
+enviado. Linhas invalidas/incompletas nao contam como registros prontos para envio.
+Linhas processadas pelo servidor podem ter descartes: confira o historico.
+
+`summary.txt` e regravado atomicamente ao encerrar/atualizar o resumo final,
+incluindo as pendencias conhecidas nesse instante. Nao e uma consulta ao servidor.
+Testes de desktop cobrem coleta acima de 500, reinicio, erros e retomada simulada;
+esta versao ainda precisa de teste no Pager e de aceite real no WDGWars.
+
 ## Recompensas independentes de GPS — 0.8.6
 
 Na Expedicao, descobertas recentes e validas rendem XP mesmo sem fix: 2 XP por

@@ -1,5 +1,10 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.8.7: Expedicao sem preencher a fila avulsa, mensagens claras de XP e sensores.
+CIMA/BAIXO abre o resumo; ESQ encerra. Para enviar toda a saida, escolha
+WDGWars > Sincronizar expedicoes + fila. O GPS usa o servico nativo do Pager.
+Esta atualizacao ainda precisa de teste no aparelho; save/config sao preservados.
+
 0.8.6: novas descobertas na Expedicao rendem XP mesmo sem GPS (Wi-Fi 2, BLE 1),
 uma vez por endereco/tipo, sem teto diario. Mapa/envio continuam exigindo GPS.
 Feche o Hackomon antes de atualizar; save e recompensas anteriores sao preservados.

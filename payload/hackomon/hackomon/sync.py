@@ -131,6 +131,26 @@ class Manager:
                     found.append((stat.st_mtime_ns, folder.name, stat.st_size))
         return sorted(found)[:500]
 
+    def expedition_pending(self, identity):
+        """Local snapshot only; count valid unsent rows against this key's receipts."""
+        path = self.source(identity)
+        pending = skipped = 0
+        for batch in self.batches(identity, path.stat().st_size):
+            pending += len(batch["rows"])
+            skipped += batch["skipped"]
+        inflight = self.state.get("inflight") or {}
+        kind = inflight.get("kind")
+        delay = max(0, int(self.state.get("retry_at", 0) - self.clock()))
+        if kind in ("uncertain", "pending_remote", "sending"):
+            message = "Lote incerto; revisar em WDGWars"
+        elif delay:
+            message = "Retomar em %ds no menu WDGWars" % delay
+        elif inflight:
+            message = "Lote salvo; retome em WDGWars"
+        else:
+            message = "Sincronize no menu WDGWars" if pending else "CSV processado; confira historico"
+        return dict(pending=pending, skipped=skipped, message=message, at=int(self.clock()))
+
     def batches(self, identity, limit):
         path = self.source(identity)
         saved = self.state["files"].get(identity, {})
@@ -326,6 +346,12 @@ class Manager:
             if delay > 0:
                 self.report["status"] = "rate_limited"
                 self.update("Aguarde %ds antes de tentar novamente" % delay)
+                return self.report
+            pending = self.state.get("inflight")
+            if (mode != "account" and pending and not retry_uncertain
+                    and pending.get("kind") in ("uncertain", "pending_remote", "sending")):
+                self.report["status"] = "needs_confirmation"
+                self.update("Lote sem confirmacao; use Repetir envio incerto")
                 return self.report
             self.update("Validando conta WDGWars...")
             self.state["account"] = wdgwars.account(self.key, self.opener)

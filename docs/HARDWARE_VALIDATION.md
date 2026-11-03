@@ -1,5 +1,23 @@
 # Hardware validation checklist
 
+## Expedition companion — 0.8.7
+
+Desktop regression tests cover outings above 500 discoveries with a full old
+queue, CSV preservation, restart/dedup, new/known XP messages, independent
+sensor states, offline pending counts, confirmed-offset resume and uncertain
+upload recovery. HTTP replies and radios are simulated; no live upload was made.
+
+- [ ] Install 0.8.7 on stock 2.0.0-stable, preserving pet/config/history.
+- [ ] Check readability of sensors and CIMA/BAIXO summary on the 480x222 screen.
+- [ ] Walk/drive with more than 500 located records; standalone queue must not grow.
+- [ ] Observe XP above 120 and repeated addresses without additional rewards.
+- [ ] Check empty scans versus disabled/error/stale radios and GPS loss/recovery.
+- [ ] End/restart and compare summary/CSV to the actual route.
+- [ ] Confirm live WDGWars receipt/resume and compare local pending count/history.
+
+This version is packaged and desktop-tested; none of these device checks is
+claimed complete by the automated suite. GPS remains on the stock GPSd service.
+
 ## Daily XP ceiling removal — 0.8.6
 
 - [ ] Verify fresh new addresses can earn XP after today's counter exceeds 120.

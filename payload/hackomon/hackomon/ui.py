@@ -17,6 +17,7 @@ from .constants import (
     SCREEN_WIDTH,
 )
 from .evolution import gate_status
+from .expedition import sensor_status
 from .backgrounds import draw_background
 from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
@@ -125,23 +126,43 @@ class HackomonUI:
         display.draw_text_centered(205, "ESQ/DIR 1  CIMA/BAIXO 5  A/B volta", COLOR_TEXT, 1)
         display.flip()
 
-    def expedition(self, state, summary, message, frame_index=0, pose="idle"):
+    def expedition(self, state, summary, message, frame_index=0, pose="idle", details=False, now=None):
+        now = time.time() if now is None else now
         display = self.display
         creature = self.catalog.creature(state.creature_id)
         display.clear(COLOR_BG)
         self._header("EXPEDICAO HACKOMON", state)
         _panel(display, 8, 27, 174, 164)
         draw_background(display, creature, 9, 28, 172, 140, frame_index)
-        if summary and summary["status"] == "running" and time.time() - summary.get("gps_at", 0) > 15 and pose == "idle":
+        if summary and summary["status"] == "running" and sensor_status(summary, "gps", now)[0] != "ok" and pose == "idle":
             pose = "sad"
         draw_sprite(display, creature, 31, 39, scale=4, pose=pose, frame_index=frame_index)
-        display.draw_text_centered(174, creature["name"][:24], COLOR_TEXT, 1)
+        name = creature["name"][:24]
+        display.draw_text(8 + max(0, (174 - display.text_width(name)) // 2), 174, name, COLOR_TEXT, 1)
         _panel(display, 190, 27, 282, 164)
         if summary is None:
             display.draw_text(202, 43, "Vamos explorar?", COLOR_CYAN, 2)
             display.draw_text(202, 78, "A inicia  Wi-Fi + BLE", COLOR_TEXT, 1)
-            display.draw_text(202, 98, "GPS externo via gpsd", COLOR_MUTED, 1)
+            display.draw_text(202, 98, "GPS externo do Pager", COLOR_MUTED, 1)
             display.draw_text(202, 122, "Offline; sincronize depois", COLOR_MUTED, 1)
+        elif details:
+            seconds = summary.get("active_seconds", 0)
+            if summary["status"] == "running":
+                seconds += max(0, int(now) - summary.get("active_since", int(now)))
+            display.draw_text(202, 39, "RESUMO | %d min ativos" % (seconds // 60), COLOR_CYAN, 1)
+            display.draw_text(202, 59, "Wi-Fi %d  BLE %d" % (summary["wifi"], summary["ble"]), COLOR_TEXT, 1)
+            display.draw_text(202, 77, "%.2f km  XP +%d" % (summary["distance_m"] / 1000, summary["xp"]), COLOR_GREEN, 1)
+            display.draw_text(202, 95, "Novos com XP: %d" % summary.get("rewarded_discoveries", 0), COLOR_TEXT, 1)
+            hint = "Contagem parcial nesta saida" if summary.get("reward_count_partial") else "Reencontros nao repetem XP"
+            display.draw_text(202, 108, hint, COLOR_MUTED, 1)
+            display.draw_text(202, 123, "Com GPS %d / sem %d" % (summary["located"], summary["unlocated"]), COLOR_TEXT, 1)
+            upload = summary.get("upload", {})
+            count = upload.get("pending")
+            display.draw_text(202, 139, "WDG pendentes: %s" % (count if count is not None else "?"), COLOR_YELLOW, 1)
+            note = upload.get("message", "BAIXO para atualizar pendencias")
+            display.draw_text(202, 155, note[:43], COLOR_MUTED, 1)
+            display.draw_text(202, 164, note[43:86], COLOR_MUTED, 1)
+            display.draw_text(202, 179, "A inicia/pausa  ESQ encerra", COLOR_TEXT, 1)
         else:
             labels = {"running": "EXPLORANDO", "paused": "PAUSADA", "ending": "ENCERRANDO", "ended": "FINALIZADA"}
             display.draw_text(202, 39, labels.get(summary["status"], "PAUSADA"), COLOR_CYAN, 1)
@@ -149,17 +170,18 @@ class HackomonUI:
             display.draw_text(202, 77, "GPS %d  Sem GPS %d" % (summary["located"], summary["unlocated"]), COLOR_TEXT, 1)
             display.draw_text(202, 95, "%.2f km  XP %d" % (summary["distance_m"] / 1000, summary["xp"]), COLOR_GREEN, 1)
             for key, label, y in (("wifi", "WiFi", 111), ("ble", "BLE", 133)):
-                status = summary.get("radios", {}).get(key, {})
-                text = "%s: %s" % (label, status.get("message", "aguardando ciclo"))
+                status, detail = sensor_status(summary, key, now)
+                text = "%s: %s" % (label, detail)
                 # Keep each radio's status visible; GPS errors never overwrite it.
-                color = COLOR_MUTED if status.get("ok", True) else COLOR_RED
+                color = {"error": COLOR_RED, "ok": COLOR_GREEN, "disabled": COLOR_MUTED,
+                         "pausado": COLOR_MUTED}.get(status, COLOR_YELLOW)
                 display.draw_text(202, y, text[:40], color, 1)
                 display.draw_text(202, y + 9, text[40:80], color, 1)
-            gps = "GPS recente" if time.time() - summary.get("gps_at", 0) <= 15 else "GPS ausente/antigo"
-            display.draw_text(202, 156, gps, COLOR_YELLOW, 1)
+            gps_status, gps = sensor_status(summary, "gps", now)
+            display.draw_text(202, 156, "GPS: " + gps, COLOR_GREEN if gps_status == "ok" else COLOR_YELLOW, 1)
             display.draw_text(202, 173, "A inicia/pausa  ESQ encerra", COLOR_TEXT, 1)
         display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
-        display.draw_text_centered(212, "DIR: escolher alvo autorizado  B: voltar", COLOR_TEXT, 1)
+        display.draw_text_centered(212, "DIR alvo  BAIXO resumo/sensores  B voltar", COLOR_TEXT, 1)
         display.flip()
 
     def help(self, state):
@@ -187,7 +209,7 @@ class HackomonUI:
         display.clear(COLOR_BG)
         self._header("REDES / LABORATORIO", state)
         _panel(display, 8, 28, 464, 164)
-        display.draw_text(20, 38, "Fila: %d/500  XP exploracao: %d" % (
+        display.draw_text(20, 38, "Fila avulsa: %d/500  XP exploracao: %d" % (
             len(state.network_queue), state.exploration_xp), COLOR_CYAN, 1)
         if confirm:
             display.draw_text(20, 66, "Enviar registros ao WDGWars?", COLOR_YELLOW, 2)

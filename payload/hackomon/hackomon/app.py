@@ -48,6 +48,7 @@ class HackomonApp:
         self.pump = None
         self.expedition_message = "A inicia uma expedicao"
         self.expedition_targets = []
+        self.expedition_details = False
         self.visit_origin = "network"
         self.resume_expedition = False
         self.sync_selected = 0
@@ -75,8 +76,10 @@ class HackomonApp:
             self.journal.summary.pop("storage_error", None)
             self.journal.summary["radios"] = {
                 "wifi": dict(ok=True, message="aguardando busca"),
-                "ble": dict(ok=True, message="aguardando busca" if config.get("expedition_ble", True) else "desativado no config"),
+                "ble": dict(ok=True, state="waiting" if config.get("expedition_ble", True) else "disabled"),
             }
+            self.expedition_details = False
+            self.journal.summary.pop("gps_at", None)
             self.journal.status("running")
             if self.pump is None:
                 self.pump = expedition.Pump(config, self.radio_lock)
@@ -92,9 +95,39 @@ class HackomonApp:
                 self.journal.summary["status"] = "paused"
             self.expedition_message = "Falha ao iniciar; confira config e armazenamento"
 
+    def _refresh_expedition_upload(self):
+        if self.journal is None:
+            return
+        try:
+            config = load_config(self.store.data_dir)
+            key = config.get("wdgwars_api_key", "")
+            if not (self.journal.folder / "discoveries.csv").exists():
+                if self.journal.summary["located"]:
+                    status = dict(pending=None, message="CSV ausente; confira armazenamento")
+                else:
+                    status = dict(pending=0, message="Sem registros com GPS para enviar")
+            elif not key:
+                status = dict(pending=None, message="Configure a chave WDGWars para consultar")
+            else:
+                manager = wdg_sync.Manager(self.store.data_dir, key, clock=self.clock)
+                status = manager.expedition_pending(self.journal.summary["id"])
+        except (RuntimeError, ValueError, OSError, KeyError, TypeError):
+            status = dict(pending=None, message="Pendencias indisponiveis; CSV preservado")
+        self.journal.summary["upload"] = status
+        try:
+            self.journal.checkpoint()
+            if self.journal.summary["status"] == "ended":
+                self.journal.write_summary()
+        except OSError:
+            self.expedition_message = "Falha ao salvar resumo; confira armazenamento"
+
     def _handle_expedition(self, pressed):
         if self.worker is not None:
             return True
+        if pressed & (self.display.BTN_UP | self.display.BTN_DOWN):
+            self.expedition_details = not self.expedition_details
+            if self.expedition_details:
+                self._refresh_expedition_upload()
         if pressed & self.display.BTN_A:
             if self.journal is not None and self.pump is not None and self.journal.summary["status"] == "running":
                 self.pump.pause()
@@ -130,24 +163,37 @@ class HackomonApp:
             try:
                 if kind == "gps" and self.journal.summary["status"] == "running":
                     self.journal.gps(value)
+                    self.journal.summary.pop("gps_error", None)
                 elif kind == "targets":
                     self.expedition_targets = value
                 elif kind == "observations":
                     located = self.journal.observations(value)
                     reward = reward_discoveries(self.state, value, int(self.clock()))
-                    result = record_observations(self.state, located, int(self.clock()), award_xp=False)
-                    result["xp"] = reward["xp"]
-                    self.journal.summary["xp"] += result["xp"]
+                    # Expedition CSVs are the durable upload source. Do not duplicate
+                    # them into the 500-entry queue reserved for standalone snapshots.
+                    self.journal.summary["xp"] += reward["xp"]
+                    self.journal.summary["rewarded_discoveries"] = self.journal.summary.get("rewarded_discoveries", 0) + reward["new"]
+                    upload = self.journal.summary.get("upload", {})
+                    if upload.get("pending") is not None:
+                        upload["pending"] += len(located)
                     self.journal.checkpoint()
                     evolved = advance_one_if_ready(self.state, self.catalog)
-                    if result["xp"] or evolved.evolved:
+                    if reward["xp"] or evolved.evolved:
                         self.pose = "happy"
                         self.pose_until = time.monotonic() + 2
-                    self.expedition_message = "%d na amostra; +%d XP%s" % (
-                        len(value), result["xp"], " (fila mapa cheia; CSV preservado)" if result["full"] else "")
+                    if reward["new"]:
+                        self.expedition_message = "+%d XP | %d novos | %d conhecidos" % (reward["xp"], reward["new"], reward["known"])
+                    elif reward["blocked"]:
+                        self.expedition_message = "Registro de recompensas cheio; CSV continua"
+                    elif reward["known"]:
+                        self.expedition_message = "%d conhecidos; XP ja concedido" % reward["known"]
+                    elif reward["invalid"] or reward["excluded"]:
+                        self.expedition_message = "Sem XP: %d invalidos/antigos; %d excluidos" % (reward["invalid"], reward["excluded"])
+                    else:
+                        self.expedition_message = "Busca concluida; sem descobertas recentes"
                     self.store.save(self.state)
                 elif kind == "radio_status" and value.get("radio") in ("wifi", "ble"):
-                    self.journal.summary.setdefault("radios", {})[value["radio"]] = value
+                    self.journal.summary.setdefault("radios", {})[value["radio"]] = dict(value, at=int(self.clock()))
                 elif kind == "gps_error":
                     self.journal.summary["gps_error"] = value
                 elif kind == "radio_error":
@@ -165,6 +211,8 @@ class HackomonApp:
         if self.journal.summary["status"] == "ending" and not self.pump.alive() and self.pump.events.empty():
             self.journal.summary["dropped_events"] = self.pump.dropped
             self.journal.status("ended")
+            self.expedition_details = True
+            self._refresh_expedition_upload()
             self.pump = None
             self.expedition_targets = []
             self.expedition_message = "Expedicao encerrada; diario e CSV salvos"
@@ -255,6 +303,7 @@ class HackomonApp:
             if result.get("status") == "cancelled":
                 self.sync_status["message"] = "Cancelado; lotes confirmados preservados"
             self.store.save(self.state)
+            self._refresh_expedition_upload()
             return
         if action == "visit_scan":
             self.visit_networks = result
@@ -523,7 +572,8 @@ class HackomonApp:
                            self.worker is not None, self.screen)
         elif self.screen == "expedition":
             self.ui.expedition(self.state, self.journal.summary if self.journal else None,
-                               self.expedition_message, frame_index, self._current_pose())
+                               self.expedition_message, frame_index, self._current_pose(),
+                               details=self.expedition_details, now=self.clock())
         else:
             self.ui.help(self.state)
 

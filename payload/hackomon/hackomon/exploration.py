@@ -57,7 +57,7 @@ def reward_discoveries(state, observations, now):
     if state.exploration_day != day:
         state.exploration_day = day
         state.exploration_daily_xp = 0
-    awarded = new = invalid = excluded = 0
+    awarded = new = invalid = excluded = known = blocked = 0
     for raw in observations:
         try:
             item = normalize_discovery(raw)
@@ -71,8 +71,10 @@ def reward_discoveries(state, observations, now):
             continue
         identity = hashlib.sha256((item["type"] + ":" + item["mac"]).encode()).hexdigest()
         if identity in state.discovery_rewarded or identity in state.exploration_known:
+            known += 1
             continue
         if len(state.discovery_rewarded) >= MAX_KNOWN:
+            blocked += 1
             continue
         reward = 2 if item["type"] == "WIFI" else 1
         state.discovery_rewarded[identity] = day
@@ -82,7 +84,7 @@ def reward_discoveries(state, observations, now):
         new += 1
     state.xp += awarded
     state.level = min(99, 1 + state.xp // 30)
-    return dict(xp=awarded, new=new, invalid=invalid, excluded=excluded,
+    return dict(xp=awarded, new=new, invalid=invalid, excluded=excluded, known=known, blocked=blocked,
                 full=len(state.discovery_rewarded) >= MAX_KNOWN)
 
 

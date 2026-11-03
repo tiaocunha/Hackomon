@@ -1,6 +1,11 @@
 # Install on a WiFi Pineapple Pager
 
-0.8.6 removes the daily discovery XP ceiling. Existing progress and address
+0.8.7 uses expedition CSVs directly without filling the standalone queue, and
+adds sensor freshness, new/known XP feedback and an outing summary (UP/DOWN).
+Use WDGWars -> Synchronize expeditions + queue for complete outing uploads.
+Hardware/live upload validation is pending; see HARDWARE_VALIDATION.md.
+
+0.8.6 removed the daily discovery XP ceiling. Existing progress and address
 deduplication remain; fresh new addresses can earn more XP on the same day.
 
 0.8.5 separates Expedition discovery XP from GPS/map eligibility: fresh new
@@ -9,7 +14,7 @@ Old saves migrate their previous rewards; close the app before reinstalling.
 
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.8.6.zip`: extract everything and double-click `INSTALAR.cmd`
+`hackomon-instalar-0.8.7.zip`: extract everything and double-click `INSTALAR.cmd`
 (app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not
