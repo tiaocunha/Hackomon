@@ -1,5 +1,12 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## GPS com pequeno adiantamento de horario — 0.10.2
+
+A tela agora considera recente o mesmo fix aceito pelo leitor: ate 15 s de
+diferenca em qualquer sentido. Se o GPS estiver um pouco a frente do Pager,
+mostra `GPS +Ns` em vez de declarar falta de posicao. Nao altera o horario do
+fix nem os limites para mapear. Recusas reais continuam visiveis. Veja [GPS](GPS.md).
+
 ## GPSd e motivos de recusa — 0.10.1
 
 O leitor aceita erro horizontal `eph` ou `epx`/`epy` e mensagens TPV parciais do

@@ -1,11 +1,34 @@
-# GPS no Hackomon — 0.10.1
+# GPS no Hackomon — 0.10.2
+
+## Correcao da tela e verificacao do instalador — 0.10.2
+
+O historico do aparelho mostrou uma posicao aceita pelo leitor com GPS 1,01 s
+a frente do Pager e erro estimado de 34,77 m. A tela exigia diferenca positiva
+no sentido oposto e mostrava "sem posicao recente" para esse fix aceito.
+Agora a tela usa a mesma janela simetrica de 15 s do leitor e sinaliza pequenos
+adiantamentos como `posicao recente (GPS +2s)`. Esse valor e arredondado para
+cima apenas na exibicao; o horario original usado para mapear nao e alterado.
+O limite de 3 s entre observacao e fix, a precisao de 100 m e as regras de
+percurso continuam. Uma recusa recente continua prevalecendo sobre um fix velho.
+
+O instalador agora consulta uma posicao pelo leitor do app e relata o motivo
+da recusa, erro em metros e diferenca GPS/Pager quando disponiveis. Falta de
+fix continua sendo opcional e nao impede instalar/jogar. Nao abre tela nem
+porta serial, muda servicos, faz buscas ou inclui coordenadas na mensagem.
+
+Na comparacao de 30 s, ambas as formas de ler GPSd receberam zero receptores
+e nenhum TPV. O usuario confirmou depois que tinha retirado o GPS ao voltar;
+isso explica aquela amostra e nao comprova desconexao durante a caminhada.
+O teste nao demonstrou vantagem de uma conexao continua sobre a atual. Esta
+atualizacao corrige a inconsistência confirmada da tela; estabilidade e eventuais
+interrupcoes de dados durante movimento ainda precisam de teste fisico.
 
 O Hackomon consulta o GPSd local da Hak5 em `127.0.0.1:2947`. Nao abre a porta
 serial, nao muda baud rate, nao reinicia servicos e nao troca o modo escolhido
 em Settings > GPS. O modo Native direto do pineapd ainda nao tem adaptador no
 Hackomon; para esta integracao use o modo GPSd da Hak5.
 
-## O que mudou
+## Compatibilidade implementada na 0.10.1
 
 - Aceita `eph`, erro horizontal em metros, alem do par `epx`/`epy`. Quando ha
   mais de uma estimativa, usa a maior. Valores ausentes, nao finitos, zero,
@@ -44,7 +67,7 @@ latitude, longitude, altitude e velocidade; o quarto campo nao e precisao.
 
 ## Teste minimo
 
-1. Feche o Hackomon, instale a 0.10.1 e mantenha o modo GPSd em Settings > GPS.
+1. Feche o Hackomon, instale a 0.10.2 e mantenha o modo GPSd em Settings > GPS.
 2. Com fix nativo, abra Expedicao e pressione A. Na pagina de sensores, confira
    a linha GPS durante uma caminhada curta.
 3. Se o nativo mantiver fix e o app recusar, anote a mensagem. `DIAGNOSTICAR.cmd`
@@ -60,5 +83,5 @@ O usuario confirmou em 2026-11-03 que a Hak5 manteve fix enquanto o Hackomon
 perdeu a posicao. Diagnosticos anteriores, feitos sem fix, mostraram GPSd com
 lista vazia de receptores; nao demonstram a causa da falha durante movimento.
 As mudancas de compatibilidade foram verificadas com mensagens simuladas.
-A causa exata e a estabilidade da 0.10.1 em movimento ainda precisam do teste
-no Pager; nao ha confirmacao de correcao fisica apenas pelos testes de bancada.
+A estabilidade da 0.10.2 em movimento ainda precisa do teste no Pager; nao ha
+confirmacao de correcao fisica apenas pelos testes de bancada.

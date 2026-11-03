@@ -55,7 +55,7 @@ def bluetooth_scan_error(line):
 
 
 GPS_MESSAGES = {
-    "valid": "posicao recente", "no_receiver": "GPSd sem receptor USB",
+    "valid": "posicao recente", "no_receiver": "GPSd sem receptor",
     "unavailable": "GPSd indisponivel", "no_reports": "aguardando dados do receptor",
     "no_fix": "receptor sem fix", "missing_time": "horario GPS indisponivel",
     "invalid_time": "horario GPS invalido", "stale_time": "horario GPS/Pager divergente",

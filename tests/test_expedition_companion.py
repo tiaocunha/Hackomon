@@ -195,7 +195,7 @@ class CompanionTests(unittest.TestCase):
         summary = dict(status="running", radios={"ble": {"state": "disabled"}}, gps_at=NOW + 10)
         self.assertEqual("disabled", sensor_status(summary, "ble", NOW)[0])
         self.assertEqual("waiting", sensor_status(summary, "wifi", NOW)[0])
-        self.assertEqual("waiting", sensor_status(summary, "gps", NOW)[0])
+        self.assertEqual("ok", sensor_status(summary, "gps", NOW)[0])
         with support.temporary_directory() as directory:
             app, pump = self.app(directory)
             app.journal.summary["gps_at"] = NOW

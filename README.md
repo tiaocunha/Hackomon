@@ -62,12 +62,13 @@ rare form, including the matching environment growth:
 
 The catalog, game logic, persistence, renderer and desktop test suite are
 implemented and tested. Earlier builds ran on the user's stock 2.0.0-stable
-Pager; 0.10.1 adds GPSd eph/incremental-TPV compatibility and specific rejection
-messages. The exact cause of the reported GPS drop and moving-device stability
-still require a field test, as does the complete pet lifecycle. See [GPS](docs/GPS.md) and
+Pager; 0.10.2 fixes a false screen GPS loss for accepted fixes slightly ahead
+of the Pager clock and checks real fix acceptance during installation. Earlier
+GPSd eph/incremental-TPV compatibility is retained. Moving-device stability and
+the complete pet lifecycle still require field tests. See [GPS](docs/GPS.md) and
 [hardware validation](docs/HARDWARE_VALIDATION.md) for the remaining checks.
 
-Network and lab adapters remain **experimental in 0.10.1**. Automated tests use
+Network and lab adapters remain **experimental in 0.10.2**. Automated tests use
 fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
 also checked on one physical 2.0.0-stable Pager and returned recent observations.
 The user also confirmed both Expedition discovery counters increment on that
@@ -93,7 +94,7 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.10.1.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.10.2.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`

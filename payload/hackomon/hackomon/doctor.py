@@ -2,7 +2,6 @@
 
 import importlib
 import shutil
-import socket
 
 
 MODULES = ("ctypes", "ssl", "urllib.request", "json", "threading", "subprocess", "hashlib")
@@ -44,15 +43,28 @@ def check(library=None):
                 rows.append(("INFO", "%s: %d observacoes recentes lidas, sem nova busca" % (label, len(reader()))))
             except RuntimeError as error:
                 rows.append(("OPCIONAL INDISPONIVEL", str(error)))
-    try:
-        # A connect proves only a listening service, not GPS fix/accuracy.
-        with socket.create_connection(("127.0.0.1", 2947), timeout=1):
-            rows.append(("OK", "Porta GPSd local acessivel; confirme fix em Settings > GPS"))
-    except OSError:
-        rows.append(("OPCIONAL AUSENTE", "GPSd local nao acessivel na porta 2947"))
+    rows.append(gps_check())
     rows.append(("INFO", "Nenhuma busca, captura, pareamento ou envio foi executado."))
     rows.append(("INFO", "Presenca dos comandos nao comprova driver, GPS, TLS ou compatibilidade no firmware."))
     return required_ok, rows
+
+
+def gps_check():
+    """Use the installed acceptance rules; never include coordinates or raw errors."""
+    from . import radio
+    try:
+        fix = radio.gps_fix()
+        health = radio.sanitize_gps_health(fix.get("gps_health", dict(code="valid")))
+    except radio.GPSFixError as error:
+        health = radio.sanitize_gps_health(error.health)
+    except (OSError, RuntimeError, ValueError, KeyError, TypeError):
+        health = radio.sanitize_gps_health(dict(code="unavailable"))
+    message = "GPS: " + health["message"]
+    if "accuracy_m" in health:
+        message += " | erro %.1fm" % health["accuracy_m"]
+    if "time_offset_s" in health:
+        message += " | GPS/Pager %+.2fs" % health["time_offset_s"]
+    return "OK" if health["code"] == "valid" else "OPCIONAL INDISPONIVEL", message
 
 
 def main(library=None):

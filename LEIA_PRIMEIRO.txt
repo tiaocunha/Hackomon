@@ -1,5 +1,8 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.10.2: corrige falso aviso de GPS na tela com pequeno adiantamento GPS/Pager.
+Instalador confere posicao/motivo real. Estabilidade em movimento ainda pendente.
+
 0.10.1: GPSd aceita eph e mensagens parciais da mesma medicao. A linha GPS
 explica a recusa e guarda historico filtrado. Feche o app antes de atualizar.
 Teste em movimento ainda pendente. Detalhes: docs/GPS.md.

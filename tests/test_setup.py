@@ -83,13 +83,13 @@ class SetupTests(unittest.TestCase):
                 if name in doctor.SYMBOLS:
                     return lambda *args: self.fail("hardware call")
                 raise AttributeError(name)
-        with patch("ctypes.CDLL", return_value=API()), patch("hackomon.pager_backend.find_library", return_value="fake"), patch("hackomon.doctor.shutil.which", return_value=None), patch("hackomon.doctor.socket.create_connection", side_effect=OSError("offline")):
+        with patch("ctypes.CDLL", return_value=API()), patch("hackomon.pager_backend.find_library", return_value="fake"), patch("hackomon.doctor.shutil.which", return_value=None), patch("hackomon.radio.gps_fix", side_effect=OSError("offline")):
             ok, rows = doctor.check()
         self.assertTrue(ok)
         self.assertTrue(any(status == "OPCIONAL AUSENTE" for status, _ in rows))
 
     def test_doctor_rejects_library_missing_api(self):
-        with patch("ctypes.CDLL", return_value=object()), patch("hackomon.pager_backend.find_library", return_value="fake"), patch("hackomon.doctor.socket.create_connection", side_effect=OSError("offline")):
+        with patch("ctypes.CDLL", return_value=object()), patch("hackomon.pager_backend.find_library", return_value="fake"), patch("hackomon.radio.gps_fix", side_effect=OSError("offline")):
             ok, rows = doctor.check()
         self.assertFalse(ok)
         self.assertTrue(any("API incompleta" in description for _, description in rows))

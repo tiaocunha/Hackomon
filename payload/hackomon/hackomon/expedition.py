@@ -53,8 +53,11 @@ def sensor_status(summary, key, now):
             if health["code"] != "valid":
                 return "waiting", health["message"]
         stamp = summary.get("gps_at")
-        if stamp is not None and 0 <= now - stamp <= 15:
-            return "ok", "posicao recente (%ds)" % (now - stamp)
+        if isinstance(stamp, (int, float)) and abs(now - stamp) <= 15:
+            age = now - stamp
+            if age < 0:
+                return "ok", "posicao recente (GPS +%ds)" % math.ceil(-age)
+            return "ok", "posicao recente (%ds)" % age
         return "waiting", "sem posicao recente"
     value = summary.get("radios", {}).get(key, {})
     if value.get("state") == "disabled":

@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from tests import support
-from hackomon import expedition, radio
+from hackomon import doctor, expedition, radio
 from hackomon.app import HackomonApp
 from hackomon.catalog import CreatureCatalog
 from hackomon.pager_backend import MemoryDisplay
@@ -138,6 +138,56 @@ class GPSProtocolTests(unittest.TestCase):
 
 
 class GPSHealthTests(unittest.TestCase):
+    def test_sensor_and_reader_agree_on_both_sides_of_the_fifteen_second_window(self):
+        for offset in (-15.01, -15, -0.8, 0, 1.01, 15, 15.01):
+            with self.subTest(offset=offset):
+                stamp = datetime.datetime.fromtimestamp(NOW + offset, datetime.timezone.utc).isoformat()
+                fix = radio.parse_gps_report(tpv(time=stamp), NOW)
+                summary = dict(status="running", gps_at=NOW + offset)
+                status, text = expedition.sensor_status(summary, "gps", NOW)
+                self.assertEqual(fix is not None, status == "ok")
+                if 0 < offset <= 15:
+                    self.assertIn("GPS +", text)
+
+    def test_ahead_fix_reaches_app_ui_and_does_not_hide_a_real_rejection(self):
+        with support.temporary_directory() as directory:
+            app = HackomonApp(MemoryDisplay(), CreatureCatalog.load_default(), StateStore(directory), clock=lambda: NOW)
+            pump = MagicMock()
+            pump.events = queue.Queue()
+            with patch("hackomon.app.expedition.Pump", return_value=pump):
+                app._start_expedition()
+            stamp = datetime.datetime.fromtimestamp(NOW + 1.01, datetime.timezone.utc).isoformat()
+            fix, health = radio.evaluate_gps_report(tpv(time=stamp, eph=34.77), NOW)
+            pump.events.put(("gps_health", health))
+            pump.events.put(("gps", fix))
+            app._tick_expedition()
+            self.assertEqual("ok", expedition.sensor_status(app.journal.summary, "gps", NOW)[0])
+            app.screen = "expedition"
+            app.render(0)
+            texts = [op[3] for op in app.display.operations if op[0] == "text"]
+            self.assertTrue(any("GPS +2s" in text for text in texts))
+            app.journal.gps_health(dict(code="no_receiver"), NOW)
+            status, text = expedition.sensor_status(app.journal.summary, "gps", NOW)
+            self.assertEqual("waiting", status)
+            self.assertEqual("GPSd sem receptor", text)
+
+    def test_installer_check_reports_accepted_accuracy_and_clock_without_positions(self):
+        with patch("hackomon.radio.gps_fix", return_value=dict(
+                lat=-20, lon=-40, gps_health=dict(code="valid", accuracy_m=34.77, time_offset_s=1.01))):
+            status, text = doctor.gps_check()
+        self.assertEqual("OK", status)
+        self.assertIn("34.8m", text)
+        self.assertIn("+1.01s", text)
+        self.assertNotIn("-20", text)
+        self.assertNotIn("-40", text)
+
+    def test_installer_check_keeps_gps_optional_and_filters_raw_failures(self):
+        for error in (radio.GPSFixError(dict(code="no_receiver", message="PRIVATE")), OSError("PRIVATE")):
+            with patch("hackomon.radio.gps_fix", side_effect=error):
+                status, text = doctor.gps_check()
+            self.assertEqual("OPCIONAL INDISPONIVEL", status)
+            self.assertNotIn("PRIVATE", text)
+
     def test_diagnostic_uses_app_decision_without_coordinates_or_raw_errors(self):
         for result in (dict(gps_health=dict(code="valid", accuracy_m=8, lat=-20)),
                        radio.GPSFixError(dict(code="missing_accuracy", device="PRIVATE"))):

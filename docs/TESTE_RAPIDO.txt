@@ -1,4 +1,7 @@
-HACKOMON 0.10.1 - TESTE DE CAMPO
+HACKOMON 0.10.2 - TESTE DE CAMPO
+
+0.10.2: pequeno adiantamento de horario GPS/Pager aparece como GPS +Ns,
+mantendo a posicao recente dentro dos mesmos 15 s. Instalador agora testa fix.
 
 GPS: na Expedicao confira a linha do sensor durante uma caminhada curta.
 Se a Hak5 mantiver fix e o app nao, anote o motivo mostrado. O diagnostico

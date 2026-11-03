@@ -1,5 +1,30 @@
 # Hardware validation checklist
 
+## Display freshness consistency and GPS install check — 0.10.2
+
+The device history contained an accepted 3D fix at GPS/Pager +1.01 seconds with
+34.77 m estimated error. The reader accepted it but the screen required a
+nonnegative age and showed no recent position. The screen now matches the
+reader's symmetric 15-second window and explicitly labels a small clock lead.
+The raw fix timestamp, 100 m accuracy and 3-second observation association
+limits are unchanged. An actual rejection still overrides a previous fix.
+
+The installer now asks the same reader for a fix, reports filtered rejection,
+accuracy and GPS/Pager offset, and keeps missing GPS optional. Regressions
+cover both freshness boundaries, the observed fractional clock lead reaching
+the app/display, real rejection priority, and installer output privacy.
+All 216 desktop tests pass; this does not establish moving-device stability.
+
+The 30-second comparison of continuous WATCH versus snapshots saw no receivers
+or TPV; the serial link had a missing target. The user then confirmed the GPS
+had been removed on return. USB reconnection logs and that sample cannot prove
+a disconnect during movement. No service or USB configuration was changed.
+
+- [ ] Install 0.10.2 and read its actual GPS acceptance/rejection check.
+- [ ] Confirm the reconnected receiver supplies TPV with usable position.
+- [ ] Compare stock/app GPS during movement, including a small GPS clock lead.
+- [ ] Investigate any remaining data interruptions while the GPS stays plugged in.
+
 ## GPSd compatibility and rejection evidence — 0.10.1
 
 The user reports that stock Hak5 retained a GPSd fix while Hackomon lost it.
