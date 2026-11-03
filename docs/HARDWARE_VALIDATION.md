@@ -7,16 +7,24 @@ restarts, old award-day migration, growing level thresholds, preservation of
 all old levels including 1,230 XP/level 42, activity gaps/pauses, bonus receipts
 and combined care/bond evolution. No live device validation is inferred.
 
-- [ ] Install on the Pager, retain 1,230 XP/level 42 and previously earned forms/medals.
+- [x] Install 0.9.0 on the Pager: installer exited 0 on 2026-11-03, backed up
+  the previous payload and reported save/config/theme preserved.
+- [ ] Open the app and verify migrated XP/level/forms/medals on the actual save.
 - [ ] Repeat a normal route, verify distance/activity bonuses and the XP breakdown.
 - [ ] Revisit the same addresses after six hours; verify +1 each, once per interval.
 - [ ] Pause/restart; verify cooldowns and bonuses are not paid twice.
 - [ ] Confirm XP progress display and evolution with combined care/field bond.
 - [ ] Measure collection intervals, travel accuracy, memory and battery in the field.
 
+The installation diagnostic loaded libpagerctl, read 19 recent Recon APs and
+2 Blue5 LE observations, and reached the GPSd port. It did not initialize the
+screen, migrate the live save, check a GPS fix, scan or upload. The 179 passing
+desktop tests include the migration reference of 1,230 XP/level 42; device save
+migration and the six-hour revisit boundary remain field checks.
+
 This release changes local progression only. WDGWars scoring, native radio/GPS
-services and selected-test behavior are unchanged. The 0.8.8 device checks below
-do not establish that this new progression is already installed or field-tested.
+services and selected-test behavior are unchanged. Installation does not establish
+field validation of the new reward rates.
 
 ## Upload dashboard and field missions — 0.8.8
 
