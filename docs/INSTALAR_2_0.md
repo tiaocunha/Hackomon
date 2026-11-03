@@ -1,4 +1,4 @@
-# Hackomon 0.8.1: instalacao facil no Windows
+# Hackomon 0.8.2: instalacao facil no Windows
 
 Preparado para o seu **WiFi Pineapple Pager com Hak5 2.0.0-stable**.
 App separado + tema Hackomon Field Companion. O firmware nao e substituido.
@@ -21,7 +21,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.8.1.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.8.2.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -39,10 +39,12 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.1` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.2` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - verifica importacoes e carrega a biblioteca sem abrir a tela;
+- confere o iniciador a partir de uma copia temporaria, usando a pasta real
+  informada pela Hak5, antes de apresentar a instalacao como concluida;
 - instala o app em `/root/payloads/user/games/hackomon`;
 - preserva um payload anterior em `/mmc/root/hackomon-backups/` e nao altera
   o save nem a configuracao em `/mmc/root/hackomon`;
@@ -175,7 +177,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.8.1/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.8.2/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,
@@ -191,6 +193,14 @@ Nao publique o tema montado no Pager como MIT: ele contem a sua base Hak5
 licenciada. O ZIP distribuido aqui contem apenas o overlay original e o app.
 
 ## Se a conexao pedir atencao
+
+**A versao anterior mostrou PRONTO, mas o jogo pediu PAGERCTL:** a 0.8.2 corrige
+o iniciador, que buscava a biblioteca junto da copia temporaria do script.
+Reaplique esta versao abrindo INSTALAR.cmd na nova pasta extraida. Python ja
+instalado e reaproveitado; save/config e tema valido sao preservados. Nao e
+necessario instalar o payload de demonstracao PAGERCTL separadamente.
+O iniciador agora usa `_PAYLOAD_HOME`, a pasta real fornecida pela Hak5, conforme
+a [documentacao oficial](https://documentation.hak5.org/wifi-pineapple-pager/payloads-1/speedrunning-payload-dev#loading-additional-content).
 
 **Pager nao encontrado:** confira USB-C de dados ou Wi-Fi de gerenciamento e
 SSH em Settings > System > SSH. Depois abra INSTALAR.cmd novamente.

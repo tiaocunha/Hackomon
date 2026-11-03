@@ -2,11 +2,21 @@
 # Title: Hackomon
 # Description: Virtual creatures, GPS discoveries, WDGWars sync and scoped office lab
 # Author: tiaocunha
-# Version: 0.8.1
+# Version: 0.8.2
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 
-PAYLOAD_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+# Hak5 executes payloads from /tmp and provides the real location here.
+# BASH_SOURCE is only a fallback for direct/source invocation outside that runner.
+PAYLOAD_DIR="$(CDPATH= cd -- "${_PAYLOAD_HOME:-$(dirname -- "${BASH_SOURCE[0]}")}" 2>/dev/null && pwd)"
+if ! command -v LOG >/dev/null 2>&1; then
+    LOG() { printf '%s\n' "$*"; }
+fi
+if [ -z "$PAYLOAD_DIR" ] || [ ! -f "$PAYLOAD_DIR/run_hackomon.py" ]; then
+    LOG "Hackomon: pasta instalada nao encontrada."
+    LOG "Execute INSTALAR.cmd novamente para reparar a instalacao."
+    exit 2
+fi
 DATA_DIR="${HACKOMON_DATA_DIR:-/mmc/root/hackomon}"
 LOG_FILE="/tmp/hackomon.log"
 
@@ -42,9 +52,16 @@ done
 
 if [ -z "$PAGERCTL_LIB" ]; then
     LOG "Hackomon: libpagerctl.so nao encontrada."
-    LOG "Instale o payload PAGERCTL antes de iniciar."
+    LOG "Execute INSTALAR.cmd novamente; ele inclui a biblioteca de tela."
+    LOG "Pasta verificada: $PAYLOAD_DIR/lib"
     WAIT_FOR_INPUT >/dev/null 2>&1
     exit 2
+fi
+
+if [ "${HACKOMON_CHECK_INSTALL:-0}" = "1" ]; then
+    LOG "Hackomon: verificando a instalacao em $PAYLOAD_DIR"
+    "$PYTHON_BIN" "$PAYLOAD_DIR/run_hackomon.py" --doctor --pagerctl-lib "$PAGERCTL_LIB"
+    exit $?
 fi
 
 UI_STOPPED=0

@@ -1,5 +1,8 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.8.2: corrige a mensagem de PAGERCTL mesmo depois de uma instalacao concluida.
+Para reparar, siga os mesmos passos abaixo. Seu save e preservado.
+
 1. Conecte seu Pager ao PC por USB-C DE DADOS ou pelo Wi-Fi de gerenciamento.
    No Pager, ative Settings > System > SSH e conecte-o a Internet.
 2. Extraia TODO o ZIP usando "Extrair tudo".

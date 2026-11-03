@@ -2,11 +2,16 @@
 
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.8.1.zip`: extract everything and double-click `INSTALAR.cmd`
+`hackomon-instalar-0.8.2.zip`: extract everything and double-click `INSTALAR.cmd`
 (app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not
 physical firmware validation.
+
+Version 0.8.2 fixes startup under the Hak5 temporary runner: `_PAYLOAD_HOME`
+locates the installed app and bundled library. The installer checks that same
+temporary-launch path before reporting success. Reapply the installer to fix
+an earlier successful installation that nevertheless asks for PAGERCTL.
 
 For the existing network field flow, see [TESTE_RAPIDO.txt](TESTE_RAPIDO.txt) in the repository
 or `LEIA_PRIMEIRO.txt` at the root of the release ZIP. Expeditions use the same

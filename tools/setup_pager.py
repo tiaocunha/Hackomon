@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -60,6 +61,20 @@ def deploy(source, payload_root, backup_root, library, manifest):
     return target, backup
 
 
+def verify_launcher(target, temp_parent="/tmp"):
+    """Mirror the Hak5 /tmp runner without taking the screen or scanning radios."""
+    target = Path(target).resolve()
+    with tempfile.TemporaryDirectory(prefix="hackomon-launch-check-", dir=str(temp_parent)) as directory:
+        script = Path(directory) / "payload.sh"
+        shutil.copyfile(str(target / "payload.sh"), str(script))
+        environment = os.environ.copy()
+        environment["_PAYLOAD_HOME"] = str(target)
+        environment["HACKOMON_CHECK_INSTALL"] = "1"
+        result = subprocess.run(["/bin/bash", str(script)], cwd=directory, env=environment, timeout=30)
+        if result.returncode:
+            raise ValueError("App copiado, mas a verificacao do iniciador falhou (codigo %s). Veja o erro acima." % result.returncode)
+
+
 def ensure_theme(module, base=None, themes_root=Path("/root/themes")):
     target = Path(themes_root) / "hackomon-field"
     if target.exists() or target.is_symlink():
@@ -98,6 +113,10 @@ def main(argv=None):
     print("Payload instalado: %s" % target)
     if backup:
         print("Payload anterior preservado: %s" % backup)
+    try:
+        verify_launcher(target)
+    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+        parser.exit(2, "%s\nSave/config preservados; a instalacao requer atencao.\n" % error)
     # Theme failure does not falsely report the successful payload deployment as failed.
     if not args.skip_theme:
         spec = importlib.util.spec_from_file_location("install_theme", ROOT / "tools" / "install_theme.py")
