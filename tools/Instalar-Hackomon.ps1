@@ -11,7 +11,7 @@ try {
     Write-Host ''
     Write-Host 'HACKOMON - INSTALACAO FACIL' -ForegroundColor Cyan
     Write-Host 'Conecte o Pager por USB-C de dados ou pelo Wi-Fi de gerenciamento.'
-    Write-Host 'No Pager: SSH ativado e Internet pelo Wi-Fi Client Mode.'
+    Write-Host 'No Pager: SSH ativado. Internet se precisar instalar dependencias ausentes.'
     Write-Host 'Deixe o Hackomon fechado durante a instalacao.'
     Write-Host ''
     $ssh = @(Get-Command ssh.exe -CommandType Application -ErrorAction SilentlyContinue)[0]
