@@ -1,5 +1,14 @@
 # Hardware validation checklist
 
+## Radio discovery 0.8.3
+
+- [ ] Test native Recon fallback with Client Mode off and with its interface connected.
+- [ ] Record actual ssid schema and confirm time is the observation time on firmware 2.0.
+- [ ] Verify Recon continues updating while the Hackomon display owns the screen.
+- [ ] Old/native unknown-schema data never becomes current located discoveries.
+- [ ] BLE controller-off and unavailable states are readable independently of GPS errors.
+- [ ] DIAGNOSTICAR.cmd collects the real support report without identifiers or credentials.
+
 ## Firmware 2.0.0-stable / 0.8.0 first installation
 
 - [ ] Complete Windows setup after a factory reset; record actual installed package versions.

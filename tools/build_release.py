@@ -8,8 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "hackomon-pager-0.8.2.zip"
-SETUP = DIST / "hackomon-instalar-0.8.2.zip"
+OUTPUT = DIST / "hackomon-pager-0.8.3.zip"
+SETUP = DIST / "hackomon-instalar-0.8.3.zip"
 
 
 def main():
@@ -38,7 +38,7 @@ def main():
             for path in sorted((ROOT / folder).rglob("*")):
                 if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc":
                     archive.write(path, path.relative_to(ROOT).as_posix())
-        for name in ("install_theme.py", "setup_pager.py", "setup_pager.sh", "Instalar-Hackomon.ps1", "InstallerTransport.ps1", "pagerctl-dependency.json"):
+        for name in ("install_theme.py", "setup_pager.py", "setup_pager.sh", "Instalar-Hackomon.ps1", "InstallerTransport.ps1", "pagerctl-dependency.json", "Diagnosticar-Hackomon.ps1", "diagnose_radios.py"):
             archive.write(ROOT / "tools" / name, "tools/" + name)
         for path in sorted((ROOT / "docs").glob("*.md")):
             archive.write(path, "docs/" + path.name)
@@ -47,6 +47,7 @@ def main():
         archive.writestr("COMECE_AQUI.md", guide)
         # Batch entry point must be directly usable by Windows after extracting the ZIP.
         archive.writestr("INSTALAR.cmd", (ROOT / "INSTALAR.cmd").read_text().replace("\r\n", "\n").replace("\n", "\r\n"))
+        archive.writestr("DIAGNOSTICAR.cmd", (ROOT / "DIAGNOSTICAR.cmd").read_text().replace("\r\n", "\n").replace("\n", "\r\n"))
         archive.write(ROOT / "LEIA_PRIMEIRO.txt", "LEIA_PRIMEIRO.txt")
         for name in ("LICENSE", "THIRD_PARTY.md"):
             archive.write(ROOT / name, name)

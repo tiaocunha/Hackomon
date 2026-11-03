@@ -1,5 +1,29 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Ajustes de descoberta — 0.8.3
+
+O modo automatico agora tenta ler APs recentes do banco local do Recon quando
+nao encontra uma interface cliente livre, a busca passiva falha ou vem vazia.
+Assim, pode aproveitar os radios ja usados pelo firmware, com Client Mode
+desligado ou conectado. Isso exige Recon/logging em funcionamento, schema
+reconhecido e modulo Python sqlite3; nao inicia, reinicia ou reconfigura o Recon.
+O leitor e somente leitura e ignora registros de mais de 30 segundos. Mantem
+o timestamp original; GPS so e associado se houver fix a ate 3 segundos desse
+instante. Sem detalhes de seguranca confirmados, o AP e marcado UNKNOWN e nao
+entra automaticamente em captura/teste de senha.
+
+Wi-Fi e BLE possuem estados independentes na tela. GPS ausente nao substitui
+esses estados. BLE verifica se o controlador existe e esta ligado antes da
+busca, detectando tambem erros retornados em texto com codigo de saida zero.
+Coleta BLE continua restrita a anuncios LE com RSSI; dispositivos classicos,
+silenciosos ou apenas no cache nao sao novos pontos de mapa.
+
+Use DIAGNOSTICAR.cmd no pacote Windows se ainda houver contadores zerados.
+Ele nao faz buscas ou altera servicos: registra modos de interfaces, estado do
+controlador, schema/contagens/idade do Recon e estado do GPS, sem identificadores
+de redes/dispositivos, coordenadas ou segredos. Os testes usam fixtures; estes
+ajustes ainda precisam ser confirmados no firmware 2.0.0-stable do usuario.
+
 ## Implementado nesta entrega
 
 Menu **Expedicao** com inicio, pausa, retomada, encerramento, companheiro animado,

@@ -257,7 +257,7 @@ class Pump:
 
     def locate(self, observation):
         item = dict(observation)
-        if item.get("time_source") not in ("iw_age", "ble_receipt"):
+        if item.get("time_source") not in ("iw_age", "ble_receipt", "hak5_recon"):
             return item
         with self.fix_lock:
             fixes = list(self.fixes)
@@ -283,6 +283,8 @@ class Pump:
     def _ble(self):
         values = {}
         names = {}
+        radio.bluetooth_ready()
+        failure = ""
         try:
             with subprocess.Popen(["bluetoothctl", "--timeout", "8", "scan", "le"],
                                   stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
@@ -295,6 +297,7 @@ class Pump:
                         if self.stop_event.is_set():
                             break
                         cleaned = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", line)
+                        failure = radio.bluetooth_scan_error(cleaned) or failure
                         match = re.search(r"Device ((?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}) (.*)", cleaned)
                         if match and "RSSI:" not in match.group(2):
                             detail = match.group(2).strip()
@@ -311,8 +314,8 @@ class Pump:
                     if process.poll() is None:
                         process.kill()
                     process.wait()
-                    if process.returncode and not self.stop_event.is_set():
-                        raise RuntimeError("Descoberta BLE terminou sem sucesso")
+                    if not self.stop_event.is_set() and (failure or process.returncode):
+                        raise RuntimeError(failure or "Descoberta BLE terminou sem sucesso")
                 finally:
                     timer.cancel()
                     self.ble_process = None
@@ -335,13 +338,18 @@ class Pump:
                 if not self.active.is_set():
                     continue
                 if turn % 2 and self.config.get("expedition_ble", True):
-                    self.emit("observations", self._ble())
+                    values = self._ble()
+                    self.emit("observations", values)
+                    self.emit("radio_status", dict(radio="ble", ok=True, message="%d anuncios LE com sinal" % len(values)))
                 else:
                     observations = visit.find_networks(self.config, limit=500)
                     self.emit("targets", observations[:100])
                     self.emit("observations", [self.locate(item) for item in observations])
+                    source = getattr(observations, "source", "iw")
+                    self.emit("radio_status", dict(radio="wifi", ok=True, message="%s: %d APs recentes" % (source, len(observations))))
             except (RuntimeError, OSError, ValueError) as error:
-                self.emit("radio_error", str(error) if isinstance(error, RuntimeError) else "Falha ao ler o radio")
+                message = str(error) if isinstance(error, RuntimeError) else "Falha ao ler o radio"
+                self.emit("radio_status", dict(radio="ble" if turn % 2 and self.config.get("expedition_ble", True) else "wifi", ok=False, message=message))
             finally:
                 self.radio_lock.release()
                 turn += 1

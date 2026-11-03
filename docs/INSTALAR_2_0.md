@@ -1,4 +1,4 @@
-# Hackomon 0.8.2: instalacao facil no Windows
+# Hackomon 0.8.3: instalacao facil no Windows
 
 Preparado para o seu **WiFi Pineapple Pager com Hak5 2.0.0-stable**.
 App separado + tema Hackomon Field Companion. O firmware nao e substituido.
@@ -21,7 +21,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.8.2.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.8.3.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -39,9 +39,10 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.2` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.3` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
+- tenta instalar python3-sqlite3 no MMC se faltar o modulo para leitura do Recon;
 - verifica importacoes e carrega a biblioteca sem abrir a tela;
 - confere o iniciador a partir de uma copia temporaria, usando a pasta real
   informada pela Hak5, antes de apresentar a instalacao como concluida;
@@ -103,6 +104,29 @@ Guarde a mensagem de erro e consulte `/tmp/hackomon.log`. Esse log e temporario
 e desaparece no reboot. Nao publique config, capturas ou chaves junto do log.
 
 ## 5. GPS, expedicoes e Bluetooth
+
+**A coleta nao precisa de Internet.** Nas versoes anteriores, o Wi-Fi automatico
+dependia de uma interface cliente livre, que pode desaparecer quando o Client
+Mode e desativado. A 0.8.3 acrescenta uma alternativa: ler os APs recentes do
+Recon original, sem mudar interfaces, canais ou a conexao de gerenciamento.
+Essa alternativa exige banco nativo disponivel, formato reconhecido, modulo
+sqlite3 e registros atualizados nos ultimos 30 segundos. Nao usa historico antigo
+como descoberta atual nem inventa a criptografia quando faltam detalhes.
+
+Na tela Expedição, as linhas **WiFi** e **BLE** agora mostram os resultados ou
+falhas de cada radio separadamente. Falta de GPS nao apaga mais esses erros.
+Dispositivos encontrados sem localizacao continuam locais, sem pontos no mapa.
+Se o Bluetooth estiver desligado ou sem controlador, isso aparece na sua linha.
+A busca implementada e **Bluetooth LE**; aparelhos Bluetooth classicos ou que
+nao anunciam naquele momento podem nao aparecer, mesmo estando proximos.
+
+**Se continuar tudo zerado:** feche o Hackomon, mantenha o Pager conectado ao
+PC e abra **DIAGNOSTICAR.cmd** na pasta extraida. Informe a senha quando pedido.
+O arquivo **DIAGNOSTICO-HACKOMON.txt** sera salvo na mesma pasta. Ele informa
+interfaces/modos, estado do Bluetooth, contagens e idade dos registros do Recon,
+GPS e os ultimos estados da coleta. Nao executa buscas nem altera configuracoes;
+nao inclui nomes de redes, MACs, coordenadas, config, chaves ou capturas.
+Esse relatorio permite adaptar o app ao que o seu firmware realmente apresenta.
 
 Conecte seu GPS externo. Em **Settings > GPS**, selecione a porta, ajuste a
 velocidade indicada pelo fabricante e use **Restart GPSd**. Confira o fix com
@@ -177,7 +201,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.8.2/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.8.3/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,

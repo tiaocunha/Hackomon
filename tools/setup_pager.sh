@@ -23,4 +23,14 @@ if ! command -v python3 >/dev/null 2>&1 || ! python3 -c 'import ctypes, ssl, url
     opkg install -d mmc python3 python3-ctypes
 fi
 python3 -c 'import ctypes, ssl, urllib.request, json, threading, subprocess, hashlib'
+if ! python3 -c 'import sqlite3' >/dev/null 2>&1; then
+    if [ "$INSTALL_DEPS" -eq 1 ]; then
+        echo 'Preparando leitura do Recon nativo (python3-sqlite3 no MMC)...'
+        if ! opkg update || ! opkg install -d mmc python3-sqlite3; then
+            echo 'AVISO: SQLite indisponivel; Recon nativo requer atencao. O pet continua disponivel.'
+        fi
+    else
+        echo 'AVISO: falta python3-sqlite3 para ler o Recon nativo.'
+    fi
+fi
 exec python3 "$SETUP_ROOT/tools/setup_pager.py" "$@"

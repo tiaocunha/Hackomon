@@ -73,6 +73,10 @@ class HackomonApp:
                 self.expedition_message = "Diario cheio; encerre e inicie outra expedicao"
                 return
             self.journal.summary.pop("storage_error", None)
+            self.journal.summary["radios"] = {
+                "wifi": dict(ok=True, message="aguardando busca"),
+                "ble": dict(ok=True, message="aguardando busca" if config.get("expedition_ble", True) else "desativado no config"),
+            }
             self.journal.status("running")
             if self.pump is None:
                 self.pump = expedition.Pump(config, self.radio_lock)
@@ -137,10 +141,14 @@ class HackomonApp:
                     if result["xp"] or evolved.evolved:
                         self.pose = "happy"
                         self.pose_until = time.monotonic() + 2
-                    self.expedition_message = "%d registros; +%d XP%s" % (
-                        len(located), result["xp"], " (fila mapa cheia; CSV preservado)" if result["full"] else "")
+                    self.expedition_message = "%d na amostra; +%d XP%s" % (
+                        len(value), result["xp"], " (fila mapa cheia; CSV preservado)" if result["full"] else "")
                     self.store.save(self.state)
-                elif kind in ("gps_error", "radio_error"):
+                elif kind == "radio_status" and value.get("radio") in ("wifi", "ble"):
+                    self.journal.summary.setdefault("radios", {})[value["radio"]] = value
+                elif kind == "gps_error":
+                    self.journal.summary["gps_error"] = value
+                elif kind == "radio_error":
                     self.expedition_message = value
                 if self.journal.summary.get("full"):
                     self.pump.pause()

@@ -20,8 +20,38 @@ def command(args, timeout=15):
     except subprocess.TimeoutExpired:
         raise RuntimeError("Tempo esgotado: %s" % args[0]) from None
     if result.returncode:
-        raise RuntimeError("%s falhou; confira interface e permissao" % args[0])
+        detail = (result.stderr or "") + (result.stdout or "")
+        reason = "falhou; confira interface e permissao"
+        for marker, message in (("Network is down", "interface desligada"),
+                                ("Device or resource busy", "radio ocupado"),
+                                ("Operation not supported", "operacao nao suportada"),
+                                ("No such device", "interface inexistente"),
+                                ("NotReady", "controlador nao esta pronto")):
+            if marker in detail:
+                reason = message
+                break
+        raise RuntimeError("%s: %s" % (args[0], reason))
     return result.stdout
+
+
+def bluetooth_ready():
+    text = command(["bluetoothctl", "show"], timeout=4)
+    if "No default controller" in text or not re.search(r"(?m)^\s*Controller\s", text):
+        raise RuntimeError("Bluetooth: nenhum controlador disponivel")
+    if re.search(r"(?m)^\s*Powered:\s*no\s*$", text):
+        raise RuntimeError("Bluetooth desligado; ative no Pager")
+    if not re.search(r"(?m)^\s*Powered:\s*yes\s*$", text):
+        raise RuntimeError("Bluetooth: estado do controlador desconhecido")
+
+
+def bluetooth_scan_error(line):
+    if "NotReady" in line:
+        return "Bluetooth nao pronto; confira se esta ligado"
+    if "No default controller" in line:
+        return "Bluetooth: nenhum controlador disponivel"
+    if "Failed to start discovery" in line or "Invalid command" in line or "Invalid argument" in line:
+        return "BLE: busca recusada ou scan le nao suportado"
+    return ""
 
 
 def gps_fix(now=None):
@@ -174,7 +204,11 @@ def discover(kind, interface):
         observations = wifi_observations(text, now)
     elif kind == "BLE":
         # A bounded LE discovery, without pairing or connecting to devices.
+        bluetooth_ready()
         text = command(["bluetoothctl", "--timeout", "8", "scan", "le"], timeout=12)
+        error = bluetooth_scan_error(text)
+        if error:
+            raise RuntimeError(error)
         now = int(time.time())
         observations = ble_observations(text, now)
     else:

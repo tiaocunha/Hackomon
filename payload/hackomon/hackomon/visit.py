@@ -8,7 +8,7 @@ import re
 import time
 import uuid
 
-from . import lab, radio
+from . import lab, radio, recon
 from .exploration import MAC
 
 
@@ -85,21 +85,44 @@ def find_networks(config, limit=100):
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,32}", interface):
             raise RuntimeError("Interface Wi-Fi invalida")
     else:
-        available = interfaces(radio.command(["iw", "dev"], timeout=3))
+        try:
+            available = interfaces(radio.command(["iw", "dev"], timeout=3))
+        except RuntimeError:
+            return recon.read_wifi(limit=limit)
         interface = ""
         for item in [value for value in available if value["type"] == "managed"][:3]:
-            status = radio.command(["iw", "dev", item["name"], "link"], timeout=3)
+            try:
+                status = radio.command(["iw", "dev", item["name"], "link"], timeout=3)
+            except RuntimeError:
+                continue
             if "Not connected." in status:
                 interface = item["name"]
                 break
         if not interface:
-            raise RuntimeError("Sem interface livre; escolha wifi_interface uma vez")
+            # Stock Pager radios may already be assigned to AP/monitor roles.
+            # Consume native recent observations instead of changing those roles.
+            try:
+                return recon.read_wifi(limit=limit)
+            except RuntimeError as error:
+                raise RuntimeError("Wi-Fi sem interface livre; %s" % error) from None
     # Client assessment is local: GPS and map upload are not involved.
-    text = radio.command(["iw", "dev", interface, "scan", "passive"], timeout=20)
+    try:
+        text = radio.command(["iw", "dev", interface, "scan", "passive"], timeout=20)
+    except RuntimeError:
+        if not config.get("wifi_interface"):
+            return recon.read_wifi(limit=limit)
+        raise
     values = radio.wifi_observations(text, int(time.time()))
+    if not values and not config.get("wifi_interface"):
+        try:
+            native = recon.read_wifi(limit=limit)
+            if native:
+                return native
+        except RuntimeError:
+            pass
     unique = {item["mac"]: item for item in values
               if not int(item["mac"][:2], 16) & 1 and item["mac"] != "00:00:00:00:00:00"}
-    return sorted(unique.values(), key=lambda item: item["rssi"], reverse=True)[:limit]
+    return recon.NetworkScan(sorted(unique.values(), key=lambda item: item["rssi"], reverse=True)[:limit])
 
 
 def session_config(config, target, now=None):

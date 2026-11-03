@@ -138,6 +138,7 @@ class ExpeditionTests(unittest.TestCase):
         process.poll.return_value = 0
         process.returncode = 0
         with patch("hackomon.expedition.time.time", return_value=NOW), \
+                patch("hackomon.expedition.radio.bluetooth_ready"), \
                 patch("hackomon.expedition.subprocess.Popen", return_value=process):
             values = pump._ble()
         self.assertEqual("Private_optout", values[0]["name"])

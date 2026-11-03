@@ -48,3 +48,13 @@ interoperability with Wardrive Go; no Wardrive Go (GPL-3.0) code is copied.
 Service accounts and third-party licenses remain separate from Hackomon's MIT
 source. WDGWars, Wardrive Go and WiGLE are not affiliated with this project.
 
+## Native Recon database adapter
+
+The original read-only adapter uses the public database path and column contract
+shown by the community-maintained
+[Recon report payload in Hak5's repository](https://github.com/hak5/wifipineapplepager-payloads/blob/master/library/user/reconnaissance/recondb_reporting/payload.sh).
+No reporting code or SQL expressions were copied. No native database, identifiers,
+captured credentials or firmware source is distributed. Unknown schema/freshness
+fails explicitly; this public example does not prove the exact on-device schema.
+Bluetooth readiness checks follow BlueZ's public bluetoothctl controller properties.
+

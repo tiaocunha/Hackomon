@@ -21,7 +21,7 @@ class WindowsInstallerTests(unittest.TestCase):
             root.mkdir()
             tools = root / "tools"
             tools.mkdir()
-            for name in ("Instalar-Hackomon.ps1", "InstallerTransport.ps1", "setup_pager.sh"):
+            for name in ("Instalar-Hackomon.ps1", "InstallerTransport.ps1", "setup_pager.sh", "Diagnosticar-Hackomon.ps1", "diagnose_radios.py"):
                 shutil.copyfile(support.ROOT / "tools" / name, tools / name)
             payload = root / "payload/hackomon"
             payload.mkdir(parents=True)
@@ -48,6 +48,7 @@ public class FakeSsh {
     File.AppendAllText(Environment.GetEnvironmentVariable("HACKOMON_TEST_CALLS"), "called\\n");
     using (var input = Console.OpenStandardInput())
     using (var output = File.Create(Environment.GetEnvironmentVariable("HACKOMON_TEST_ARCHIVE"))) { input.CopyTo(output); }
+    if (args[args.Length - 1].Contains("exec python3 -")) Console.WriteLine("HACKOMON - DIAGNOSTICO DE RADIOS\\nLOCAL FIXTURE");
     return Int32.Parse(Environment.GetEnvironmentVariable("HACKOMON_TEST_EXIT"));
   }
 }
@@ -100,3 +101,15 @@ Add-Type -TypeDefinition $source -OutputAssembly (Join-Path $PSScriptRoot 'bin/s
                 self.assertIn("payload/hackomon/payload.sh", archive.getnames())
                 self.assertIn("tools/setup_pager.sh", archive.getnames())
                 self.assertEqual(archive.extractfile("dependencies/libpagerctl.so").read(), library.read_bytes())
+            env["HACKOMON_TEST_EXIT"] = "0"
+            diagnose = ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(tools / "Diagnosticar-Hackomon.ps1"), "-PagerAddress", "127.0.0.1"]
+            result = subprocess.run(diagnose, env=env, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            saved = root / "DIAGNOSTICO-HACKOMON.txt"
+            self.assertIn("HACKOMON - DIAGNOSTICO DE RADIOS", saved.read_text())
+            self.assertEqual((root / "received.tar").read_bytes(), (tools / "diagnose_radios.py").read_bytes())
+            before = saved.read_bytes()
+            env["HACKOMON_TEST_EXIT"] = "255"
+            result = subprocess.run(diagnose, env=env, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 2)
+            self.assertEqual(saved.read_bytes(), before)

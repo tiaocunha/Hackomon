@@ -147,11 +147,16 @@ class HackomonUI:
             display.draw_text(202, 39, labels.get(summary["status"], "PAUSADA"), COLOR_CYAN, 1)
             display.draw_text(202, 59, "Wi-Fi %d  BLE %d" % (summary["wifi"], summary["ble"]), COLOR_TEXT, 1)
             display.draw_text(202, 77, "GPS %d  Sem GPS %d" % (summary["located"], summary["unlocated"]), COLOR_TEXT, 1)
-            display.draw_text(202, 95, "Percurso aprox. %.2f km" % (summary["distance_m"] / 1000), COLOR_TEXT, 1)
-            display.draw_text(202, 113, "XP da expedicao: %d" % summary["xp"], COLOR_GREEN, 1)
-            display.draw_text(202, 131, "Testes %d  Recuperacoes %d" % (summary["audits"], summary["recoveries"]), COLOR_MUTED, 1)
+            display.draw_text(202, 95, "%.2f km  XP %d" % (summary["distance_m"] / 1000, summary["xp"]), COLOR_GREEN, 1)
+            for key, label, y in (("wifi", "WiFi", 111), ("ble", "BLE", 133)):
+                status = summary.get("radios", {}).get(key, {})
+                text = "%s: %s" % (label, status.get("message", "aguardando ciclo"))
+                # Keep each radio's status visible; GPS errors never overwrite it.
+                color = COLOR_MUTED if status.get("ok", True) else COLOR_RED
+                display.draw_text(202, y, text[:40], color, 1)
+                display.draw_text(202, y + 9, text[40:80], color, 1)
             gps = "GPS recente" if time.time() - summary.get("gps_at", 0) <= 15 else "GPS ausente/antigo"
-            display.draw_text(202, 154, gps, COLOR_YELLOW, 1)
+            display.draw_text(202, 156, gps, COLOR_YELLOW, 1)
             display.draw_text(202, 173, "A inicia/pausa  ESQ encerra", COLOR_TEXT, 1)
         display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
         display.draw_text_centered(212, "DIR: escolher alvo autorizado  B: voltar", COLOR_TEXT, 1)

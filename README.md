@@ -24,7 +24,9 @@ This incremental release contains:
 - full expedition CSV synchronization in small resumable WDGWars batches, account
   validation, local receipts/history, cancellation and explicit uncertain-upload recovery.
 - an original Hackomon Field Companion overlay for the stock 2.0 Wargames theme,
-  a double-click Windows installer and read-only `--doctor` diagnostics (0.8.2).
+  a double-click Windows installer and read-only `--doctor` diagnostics;
+- native Recon AP fallback, independent Wi-Fi/BLE status and a double-click
+  read-only radio support report (0.8.3; hardware confirmation still pending).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -46,7 +48,7 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters remain **experimental in 0.8.2**: desktop tests use fixtures
+Network and lab adapters remain **experimental in 0.8.3**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
@@ -66,13 +68,16 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.8.2.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.8.3.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`
 and checks a temporary diagnostic launch before reporting installation success.
 Users seeing a PAGERCTL prompt after an earlier successful setup should reapply
 the current installer; no separate PAGERCTL demo payload is needed.
+If the app starts but discovers nothing, 0.8.3 adds native Recon fallback and
+persistent per-radio status. `DIAGNOSTICAR.cmd` generates a read-only support
+report without SSIDs, device addresses, GPS coordinates or account credentials.
 The full setup archive also
 creates a locally derived stock theme, preserving firmware-specific menus.
 The original overlay contains no copied Hak5 assets; the assembled on-device
