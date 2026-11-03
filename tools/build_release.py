@@ -8,8 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "hackomon-pager-0.10.0.zip"
-SETUP = DIST / "hackomon-instalar-0.10.0.zip"
+OUTPUT = DIST / "hackomon-pager-0.10.1.zip"
+SETUP = DIST / "hackomon-instalar-0.10.1.zip"
 
 
 def main():
@@ -34,6 +34,7 @@ def main():
         archive.write(ROOT / "docs" / "MISSIONS.md", "MISSIONS.md")
         archive.write(ROOT / "docs" / "PROGRESSION.md", "PROGRESSION.md")
         archive.write(ROOT / "docs" / "GENERATIONS.md", "GENERATIONS.md")
+        archive.write(ROOT / "docs" / "GPS.md", "GPS.md")
         archive.write(ROOT / "docs" / "ROADMAP.md", "ROADMAP.md")
         archive.write(ROOT / "docs" / "TESTE_RAPIDO.txt", "LEIA_PRIMEIRO.txt")
     print("built %s" % OUTPUT)
@@ -48,6 +49,7 @@ def main():
             archive.write(path, "docs/" + path.name)
         guide = (ROOT / "docs" / "INSTALAR_2_0.md").read_text(encoding="utf-8")
         guide = guide.replace("(NETWORKS.md)", "(docs/NETWORKS.md)").replace("(EXPEDITIONS.md)", "(docs/EXPEDITIONS.md)")
+        guide = guide.replace("(GPS.md)", "(docs/GPS.md)")
         archive.writestr("COMECE_AQUI.md", guide)
         # Batch entry point must be directly usable by Windows after extracting the ZIP.
         archive.writestr("INSTALAR.cmd", (ROOT / "INSTALAR.cmd").read_text().replace("\r\n", "\n").replace("\n", "\r\n"))

@@ -54,49 +54,160 @@ def bluetooth_scan_error(line):
     return ""
 
 
+GPS_MESSAGES = {
+    "valid": "posicao recente", "no_receiver": "GPSd sem receptor USB",
+    "unavailable": "GPSd indisponivel", "no_reports": "aguardando dados do receptor",
+    "no_fix": "receptor sem fix", "missing_time": "horario GPS indisponivel",
+    "invalid_time": "horario GPS invalido", "stale_time": "horario GPS/Pager divergente",
+    "missing_position": "posicao incompleta", "bad_position": "posicao invalida",
+    "missing_accuracy": "precisao indisponivel", "bad_accuracy": "precisao insuficiente (>100m)",
+    "bad_altitude": "altitude invalida", "invalid_report": "dados GPS invalidos",
+}
+
+
+def _gps_number(value):
+    try:
+        return float(value) if type(value) in (int, float) and math.isfinite(value) else None
+    except OverflowError:
+        return None
+
+
+def sanitize_gps_health(value):
+    value = value if isinstance(value, dict) else {}
+    code = value.get("code", "invalid_report")
+    code = code if isinstance(code, str) and code in GPS_MESSAGES else "invalid_report"
+    health = dict(code=code, message=GPS_MESSAGES[code])
+    for key in ("mode", "time_offset_s", "accuracy_m", "receiver_count"):
+        number = _gps_number(value.get(key))
+        if number is not None:
+            health[key] = number
+    if value.get("accuracy_source") in ("epx_epy", "eph", "combined"):
+        health["accuracy_source"] = value["accuracy_source"]
+    return health
+
+
+class GPSFixError(RuntimeError):
+    def __init__(self, health):
+        self.health = sanitize_gps_health(health)
+        super().__init__(self.health["message"])
+
+
+def evaluate_gps_report(report, now):
+    health = {}
+    def reject(code):
+        return None, sanitize_gps_health(dict(health, code=code))
+    if not isinstance(report, dict) or report.get("class") != "TPV":
+        return reject("invalid_report")
+    mode = _gps_number(report.get("mode"))
+    if mode is not None:
+        health["mode"] = mode
+    if mode not in (2, 3):
+        return reject("no_fix")
+    if not isinstance(report.get("time"), str):
+        return reject("missing_time")
+    try:
+        stamp = datetime.datetime.fromisoformat(report["time"].replace("Z", "+00:00"))
+        if stamp.tzinfo is None:
+            return reject("invalid_time")
+        delta = stamp.timestamp() - now
+    except (ValueError, TypeError, OverflowError, OSError):
+        return reject("invalid_time")
+    health["time_offset_s"] = round(delta, 2)
+    if abs(delta) > 15:
+        return reject("stale_time")
+    if "lat" not in report or "lon" not in report:
+        return reject("missing_position")
+    lat, lon = _gps_number(report["lat"]), _gps_number(report["lon"])
+    if lat is None or lon is None or not -90 <= lat <= 90 or not -180 <= lon <= 180:
+        return reject("bad_position")
+    # GPSd may supply horizontal error (eph) instead of both axis errors.
+    keys = [key for key in ("epx", "epy", "eph") if key in report]
+    errors = [_gps_number(report[key]) for key in keys]
+    if not ("eph" in report or "epx" in report and "epy" in report):
+        return reject("missing_accuracy")
+    if any(value is None or value <= 0 for value in errors):
+        return reject("bad_accuracy")
+    accuracy = max(errors)
+    health["accuracy_m"] = accuracy
+    health["accuracy_source"] = "combined" if "eph" in keys and len(keys) > 1 else "eph" if "eph" in keys else "epx_epy"
+    if accuracy > 100:
+        return reject("bad_accuracy")
+    altitude = _gps_number(report.get("altMSL", 0))
+    if altitude is None:
+        return reject("bad_altitude")
+    return dict(lat=lat, lon=lon, accuracy=accuracy, altitude=altitude,
+                fix_time=stamp.timestamp()), sanitize_gps_health(dict(health, code="valid"))
+
+
+class GPSReports:
+    """Join optional fields only within exactly the same device and GPS epoch."""
+    def __init__(self):
+        self.epochs = {}
+        self.health = sanitize_gps_health(dict(code="no_reports"))
+
+    def consume(self, report, now):
+        if not isinstance(report, dict):
+            return None
+        if report.get("class") == "DEVICES" and isinstance(report.get("devices"), list):
+            if not report["devices"]:
+                self.epochs.clear()
+                self.health = sanitize_gps_health(dict(code="no_receiver", receiver_count=0))
+            return None
+        if report.get("class") != "TPV":
+            return None
+        if report.get("mode") not in (2, 3):
+            self.epochs.clear()
+        elif (isinstance(report.get("time"), str) and isinstance(report.get("device"), str)
+              and report["device"]):
+            key = (report["device"], report["time"])
+            merged = dict(self.epochs.get(key, {}), **report)
+            if key not in self.epochs and len(self.epochs) >= 8:
+                self.epochs.pop(next(iter(self.epochs)))
+            self.epochs[key] = merged
+            report = merged
+        fix, self.health = evaluate_gps_report(report, now)
+        return fix
+
+
 def gps_fix(now=None):
-    now = time.time() if now is None else now
+    reports = GPSReports()
+    connected = False
     try:
         with socket.create_connection(("127.0.0.1", 2947), timeout=2) as connection:
+            connected = True
             connection.settimeout(2)
             connection.sendall(b'?WATCH={"enable":true,"json":true};\n')
-            with connection.makefile("rb") as lines:
-                deadline = time.monotonic() + 4
-                while time.monotonic() < deadline:
-                    line = lines.readline(10241)
-                    if not line or len(line) > 10240:
-                        break
+            deadline, buffer = time.monotonic() + 4, b""
+            while time.monotonic() < deadline:
+                try:
+                    block = connection.recv(8192)
+                except socket.timeout:
+                    continue
+                if not block:
+                    break
+                buffer += block
+                if len(buffer) > 20480:
+                    buffer = b""
+                    continue
+                while b"\n" in buffer:
+                    line, buffer = buffer.split(b"\n", 1)
+                    if len(line) > 10240:
+                        continue
                     try:
-                        fix = parse_gps_report(json.loads(line), now)
+                        fix = reports.consume(json.loads(line), time.time() if now is None else now)
                     except (ValueError, TypeError, KeyError, OverflowError):
                         continue
                     if fix is not None:
+                        fix["gps_health"] = reports.health
                         return fix
     except OSError:
-        pass
-    raise RuntimeError("GPS sem fix recente; confira gpsd e o GPS externo")
+        if not connected:
+            reports.health = dict(code="unavailable")
+    raise GPSFixError(reports.health)
 
 
 def parse_gps_report(report, now):
-    if not isinstance(report, dict) or not isinstance(report.get("time"), str):
-        return None
-    if report.get("class") != "TPV" or report.get("mode", 0) < 2:
-        return None
-    stamp = datetime.datetime.fromisoformat(report["time"].replace("Z", "+00:00"))
-    if stamp.tzinfo is None or abs(now - stamp.timestamp()) > 15:
-        return None
-    lat, lon = float(report["lat"]), float(report["lon"])
-    x_error, y_error = float(report["epx"]), float(report["epy"])
-    if not (0 < x_error <= 100 and 0 < y_error <= 100):
-        return None
-    accuracy = max(x_error, y_error)
-    if not (-90 <= lat <= 90 and -180 <= lon <= 180 and 0 < accuracy <= 100):
-        return None
-    altitude = float(report.get("altMSL", 0))
-    if not math.isfinite(altitude):
-        return None
-    return dict(lat=lat, lon=lon, accuracy=accuracy, altitude=altitude,
-                fix_time=stamp.timestamp())
+    return evaluate_gps_report(report, now)[0]
 
 
 def wifi_observations(text, now):

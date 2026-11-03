@@ -23,6 +23,20 @@ def run(args):
 
 
 def gps_status():
+    # Prefer the installed reader so support sees the same acceptance decision.
+    app = Path("/root/payloads/user/games/hackomon")
+    if app.is_dir():
+        sys.path.insert(0, str(app))
+        try:
+            from hackomon import radio
+            if hasattr(radio, "sanitize_gps_health"):
+                try:
+                    health = radio.gps_fix()["gps_health"]
+                except radio.GPSFixError as error:
+                    health = error.health
+                return json.dumps(radio.sanitize_gps_health(health), ensure_ascii=False)
+        except ImportError:
+            pass
     try:
         with socket.create_connection(("127.0.0.1", 2947), timeout=2) as connection:
             connection.settimeout(2)
@@ -171,6 +185,12 @@ def report(db_path=Path("/root/recon/recon.db"), state_root=Path("/mmc/root/hack
         try:
             value = json.loads(summary.read_text(encoding="utf-8"))
             lines.append("Expedicao: estado=%s wifi=%s ble=%s" % (value.get("status"), value.get("wifi"), value.get("ble")))
+            try:
+                from hackomon.radio import sanitize_gps_health
+                for health in value.get("gps_recent", [])[-8:]:
+                    lines.append("  GPS registrado: " + json.dumps(sanitize_gps_health(health), ensure_ascii=False))
+            except (ImportError, TypeError):
+                pass
             for key in ("wifi", "ble"):
                 message = str(value.get("radios", {}).get(key, {}).get("message", "sem estado registrado"))
                 message = re.sub(r"(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}", "[endereco omitido]", message)

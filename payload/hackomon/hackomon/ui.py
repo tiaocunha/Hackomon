@@ -200,7 +200,7 @@ class HackomonUI:
                 display.draw_text(202, y, text[:40], color, 1)
                 display.draw_text(202, y + 9, text[40:80], color, 1)
             gps_status, gps = sensor_status(summary, "gps", now)
-            display.draw_text(202, 156, "GPS: " + gps, COLOR_GREEN if gps_status == "ok" else COLOR_YELLOW, 1)
+            display.draw_text(202, 156, ("GPS: " + gps)[:43], COLOR_GREEN if gps_status == "ok" else COLOR_YELLOW, 1)
             display.draw_text(202, 173, "A inicia/pausa  ESQ encerra", COLOR_TEXT, 1)
         display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
         display.draw_text_centered(212, "DIR alvo  CIMA/BAIXO telas  B voltar", COLOR_TEXT, 1)

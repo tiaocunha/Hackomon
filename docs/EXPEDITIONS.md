@@ -1,5 +1,13 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## GPSd e motivos de recusa — 0.10.1
+
+O leitor aceita erro horizontal `eph` ou `epx`/`epy` e mensagens TPV parciais do
+mesmo receptor/instante. A linha GPS agora mostra o motivo especifico da recusa;
+o diario preserva oito mudancas de motivo sem coordenadas nesses campos.
+Limites de precisao, idade e associacao continuam. Veja [GPS](GPS.md).
+Compatibilidade testada no computador; estabilidade em movimento ainda pendente.
+
 ## Ciclos de vida e sucessores — 0.10.0
 
 Coleta valida agora alimenta idade, preparacao do ovo e incubacao. A vida adulta

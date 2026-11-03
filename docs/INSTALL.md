@@ -1,5 +1,9 @@
 # Install on a WiFi Pineapple Pager
 
+0.10.1 accepts GPSd horizontal error eph and same-epoch incremental TPV reports,
+and exposes private rejection diagnostics. Existing freshness/accuracy limits
+remain. A moving-device field test is pending; see [GPS](GPS.md).
+
 0.10.0 adds active lifetimes, trainer/pet progression, memorials, eggs and
 explicit evolution choices. The current pet is retained with zero active age.
 First save loading creates a private pre-generation backup. See GENERATIONS.md.
@@ -27,7 +31,7 @@ Old saves migrate their previous rewards; close the app before reinstalling.
 
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.10.0.zip`: extract everything and double-click `INSTALAR.cmd`
+`hackomon-instalar-0.10.1.zip`: extract everything and double-click `INSTALAR.cmd`
 (app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not

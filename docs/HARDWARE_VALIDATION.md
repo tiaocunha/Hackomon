@@ -1,5 +1,27 @@
 # Hardware validation checklist
 
+## GPSd compatibility and rejection evidence — 0.10.1
+
+The user reports that stock Hak5 retained a GPSd fix while Hackomon lost it.
+The exact rejected outdoor TPV has not been captured. Earlier no-fix/empty-device
+diagnostics do not establish that cause. Native Quality percent is not metres.
+
+All 212 desktop tests pass. GPS regressions cover eph-only and axis errors, conservative combinations,
+incremental TPV reports from the same device/epoch, no cross-epoch/device reuse,
+USB/fix loss, bounded caches, malformed and oversized input, timeouts, fragmented
+lines, UTC freshness, invalid numbers, filtered diagnostics, and health recovery.
+The 15-second/100-metre/3-second association limits remain. See [GPS](GPS.md).
+
+- [ ] Install 0.10.1; preserve the save and GPSd mode/configuration.
+- [ ] Compare the app GPS message against native fix while walking outdoors.
+- [ ] Capture the filtered reason if native fix remains but app rejects a fix.
+- [ ] Confirm located observations and sane distance without bridging GPS gaps.
+- [ ] Check reconnect recovery, display fit, memory and battery on hardware.
+
+These are compatibility fixes and better evidence, not proof of the field cause
+or a confirmed hardware resolution. The office PC clock is intentionally ahead;
+GPS freshness compares GPS timestamps against the Pager clock only.
+
 ## Generations, successor eggs and branches — 0.10.0
 
 Desktop tests simulate juvenile/adult aging, veteran/death boundaries, one-time

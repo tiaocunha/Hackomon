@@ -62,8 +62,9 @@ below does not require GPS and never queues client evidence for the map.
 - Wi-Fi: `iw dev <interface> scan passive`, bounded to 20 seconds.
 - BLE: `bluetoothctl --timeout 8 scan le`, without pairing/connecting. LE
   discovery may send scan requests; it is not radio-silent capture.
-- GPS: mode >= 2, UTC fix within 15 seconds, both horizontal error estimates
-  present and <= 100 metres, before and after each scan. Missing fix rejects
+- GPS: mode 2 or 3, UTC fix within 15 seconds, horizontal error `eph` or both
+  axis errors `epx`/`epy`, positive and <= 100 metres (largest supplied value),
+  before and after each scan. Missing fix rejects
   the batch. Movement over 30 metres rejects it. These are stationary snapshots,
   not continuous route mapping: the final fix approximates positions during the
   scan, and its reported accuracy does not include all movement/time error.

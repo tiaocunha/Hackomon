@@ -1,5 +1,9 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.10.1: GPSd aceita eph e mensagens parciais da mesma medicao. A linha GPS
+explica a recusa e guarda historico filtrado. Feche o app antes de atualizar.
+Teste em movimento ainda pendente. Detalhes: docs/GPS.md.
+
 0.10.0: novo menu Geracoes / Ovos. Seu pet atual e preservado, sem idade retroativa.
 Coleta valida: 60 min prepara ovo, 20 min incuba apos escolher. Nascimento so apos
 fim da vida atual. Adulto tem 10h de coleta; ultimas 2h como veterano.

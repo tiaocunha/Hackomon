@@ -1,4 +1,8 @@
-HACKOMON 0.10.0 - TESTE DE CAMPO
+HACKOMON 0.10.1 - TESTE DE CAMPO
+
+GPS: na Expedicao confira a linha do sensor durante uma caminhada curta.
+Se a Hak5 mantiver fix e o app nao, anote o motivo mostrado. O diagnostico
+usa o mesmo leitor e filtra os dados. Veja GPS.md; validacao fisica pendente.
 
 Esta e uma versao experimental. Testes automatizados usam simulacoes; radios,
 GPS, consumo e comportamento no firmware original ainda precisam do teste fisico.

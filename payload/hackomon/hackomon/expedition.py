@@ -46,6 +46,12 @@ def sensor_status(summary, key, now):
     if summary.get("status") != "running":
         return "pausado", "Coleta parada"
     if key == "gps":
+        health = summary.get("gps_health", {})
+        checked = health.get("at")
+        if isinstance(checked, (int, float)) and 0 <= now - checked <= 15:
+            health = radio.sanitize_gps_health(health)
+            if health["code"] != "valid":
+                return "waiting", health["message"]
         stamp = summary.get("gps_at")
         if stamp is not None and 0 <= now - stamp <= 15:
             return "ok", "posicao recente (%ds)" % (now - stamp)
@@ -168,6 +174,19 @@ class Journal:
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(str(temporary), str(path))
+
+    def gps_health(self, value, now):
+        health = dict(radio.sanitize_gps_health(value), at=int(now))
+        previous = self.summary.get("gps_health", {})
+        changed = previous.get("code") != health["code"]
+        self.summary["gps_health"] = health
+        if changed:
+            recent = self.summary.setdefault("gps_recent", [])
+            recent.append(dict(health))
+            del recent[:-8]
+        if changed or now - getattr(self, "gps_health_saved_at", 0) >= 30:
+            self.checkpoint()
+            self.gps_health_saved_at = now
 
     def gps(self, fix):
         stamp = float(fix["fix_time"])
@@ -326,10 +345,13 @@ class Pump:
                 with self.fix_lock:
                     self.fixes.append(fix)
                 if self.active.is_set() and not self.stop_event.is_set():
+                    self.emit("gps_health", fix.get("gps_health", dict(code="valid")))
                     self.emit("gps", fix)
-            except (RuntimeError, OSError, ValueError, KeyError):
+            except (RuntimeError, OSError, ValueError, KeyError) as error:
                 if self.active.is_set():
-                    self.emit("gps_error", "GPS sem posicao recente")
+                    health = error.health if isinstance(error, radio.GPSFixError) else dict(code="unavailable")
+                    self.emit("gps_health", health)
+                    self.emit("gps_error", radio.sanitize_gps_health(health)["message"])
             self.stop_event.wait(1)
 
     def _ble(self):

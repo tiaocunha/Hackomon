@@ -89,6 +89,8 @@ class HackomonApp:
             self.expedition_details = False
             self.expedition_page = 0
             self.journal.summary.pop("gps_at", None)
+            self.journal.summary.pop("gps_health", None)
+            self.journal.summary.pop("gps_error", None)
             self.journal.status("running")
             generations.begin_field(self.state, self.journal.summary)
             if self.pump is None:
@@ -258,6 +260,8 @@ class HackomonApp:
                     self.store.save(self.state)
                 elif kind == "radio_status" and value.get("radio") in ("wifi", "ble"):
                     self.journal.summary.setdefault("radios", {})[value["radio"]] = dict(value, at=int(self.clock()))
+                elif kind == "gps_health":
+                    self.journal.gps_health(value, self.clock())
                 elif kind == "gps_error":
                     if not self.journal.summary.get("gps_error"):
                         self._companion_say("gps_lost")
