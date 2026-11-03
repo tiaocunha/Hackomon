@@ -12,7 +12,10 @@ USB/fix loss, bounded caches, malformed and oversized input, timeouts, fragmente
 lines, UTC freshness, invalid numbers, filtered diagnostics, and health recovery.
 The 15-second/100-metre/3-second association limits remain. See [GPS](GPS.md).
 
-- [ ] Install 0.10.1; preserve the save and GPSd mode/configuration.
+- [x] Install 0.10.1: installer exited 0 on 2026-11-03, backed up the previous
+  payload and reported save/config preserved; theme was skipped. It read 24
+  recent Recon APs and 2 Blue5 LE observations and reached local GPSd. The user
+  also confirmed "PRONTO! App instalado". No fix or movement was validated.
 - [ ] Compare the app GPS message against native fix while walking outdoors.
 - [ ] Capture the filtered reason if native fix remains but app rejects a fix.
 - [ ] Confirm located observations and sane distance without bridging GPS gaps.
