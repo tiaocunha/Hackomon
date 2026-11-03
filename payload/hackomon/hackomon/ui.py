@@ -18,6 +18,8 @@ from .constants import (
 )
 from .evolution import gate_status
 from .expedition import sensor_status
+from .sync import guidance
+from .missions import cards as mission_cards
 from .backgrounds import draw_background
 from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
@@ -126,7 +128,8 @@ class HackomonUI:
         display.draw_text_centered(205, "ESQ/DIR 1  CIMA/BAIXO 5  A/B volta", COLOR_TEXT, 1)
         display.flip()
 
-    def expedition(self, state, summary, message, frame_index=0, pose="idle", details=False, now=None):
+    def expedition(self, state, summary, message, frame_index=0, pose="idle", details=False, now=None,
+                   mission_page=False, companion=""):
         now = time.time() if now is None else now
         display = self.display
         creature = self.catalog.creature(state.creature_id)
@@ -138,13 +141,23 @@ class HackomonUI:
             pose = "sad"
         draw_sprite(display, creature, 31, 39, scale=4, pose=pose, frame_index=frame_index)
         name = creature["name"][:24]
-        display.draw_text(8 + max(0, (174 - display.text_width(name)) // 2), 174, name, COLOR_TEXT, 1)
+        display.draw_text(8 + max(0, (174 - display.text_width(name)) // 2), 170, name, COLOR_TEXT, 1)
+        if companion:
+            display.draw_text(14, 182, companion[:27], COLOR_YELLOW, 1)
         _panel(display, 190, 27, 282, 164)
         if summary is None:
             display.draw_text(202, 43, "Vamos explorar?", COLOR_CYAN, 2)
             display.draw_text(202, 78, "A inicia  Wi-Fi + BLE", COLOR_TEXT, 1)
             display.draw_text(202, 98, "GPS externo do Pager", COLOR_MUTED, 1)
             display.draw_text(202, 122, "Offline; sincronize depois", COLOR_MUTED, 1)
+        elif mission_page:
+            display.draw_text(202, 39, "MISSOES DE EXPLORACAO", COLOR_CYAN, 1)
+            for index, card in enumerate(mission_cards(state, summary)):
+                y = 61 + index * 36
+                display.draw_text(202, y, card["title"], COLOR_GREEN if card["earned"] else COLOR_TEXT, 1)
+                text = "MEDALHA CONQUISTADA" if card["earned"] else "%d/%d | %s" % (card["value"], card["target"], card["detail"])
+                display.draw_text(202, y + 13, text[:43], COLOR_MUTED, 1)
+            display.draw_text(202, 172, "Medalhas salvas; XP sem repeticao", COLOR_YELLOW, 1)
         elif details:
             seconds = summary.get("active_seconds", 0)
             if summary["status"] == "running":
@@ -181,7 +194,7 @@ class HackomonUI:
             display.draw_text(202, 156, "GPS: " + gps, COLOR_GREEN if gps_status == "ok" else COLOR_YELLOW, 1)
             display.draw_text(202, 173, "A inicia/pausa  ESQ encerra", COLOR_TEXT, 1)
         display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
-        display.draw_text_centered(212, "DIR alvo  BAIXO resumo/sensores  B voltar", COLOR_TEXT, 1)
+        display.draw_text_centered(212, "DIR alvo  CIMA/BAIXO telas  B voltar", COLOR_TEXT, 1)
         display.flip()
 
     def help(self, state):
@@ -262,7 +275,26 @@ class HackomonUI:
         display.clear(COLOR_BG)
         self._header("WDGWARS", state)
         _panel(display, 8, 28, 464, 164)
-        if screen == "wdgwars_confirm":
+        if screen == "wdgwars_overview":
+            overview = status.get("overview", {})
+            display.draw_text(20, 39, "TODAS AS EXPEDICOES + FILA AVULSA", COLOR_CYAN, 1)
+            total = overview.get("pending")
+            display.draw_text(20, 58, "Prontos para enviar: %s" % (total if total is not None else "desconhecido"), COLOR_YELLOW, 1)
+            display.draw_text(20, 75, "CSV: %s  Fila extra: %s  Saidas: %s" % (
+                overview.get("csv_records", "?"), overview.get("queue_records", "?"),
+                overview.get("pending_expeditions", "?")), COLOR_TEXT, 1)
+            last = overview.get("last_confirmed")
+            stamp = time.strftime("%d/%m/%Y %H:%M UTC", time.gmtime(last["at"])) if last else "sem recibo local" if overview else "nao consultado"
+            display.draw_text(20, 94, "Ultimo lote aceito: " + stamp, COLOR_GREEN if last else COLOR_MUTED, 1)
+            display.draw_text(20, 111, "Invalidos:%s Incompletos:%s Erros:%s" % (
+                overview.get("skipped", "?"), overview.get("incomplete", "?"), overview.get("source_errors", "?")), COLOR_MUTED, 1)
+            tips = overview.get("guidance", guidance(status.get("status", "ready")))
+            for row, tip in enumerate(tips):
+                display.draw_text(20, 135 + row * 17, tip[:72], COLOR_TEXT, 1)
+            if overview.get("at"):
+                stamp = time.strftime("%H:%M:%S UTC", time.gmtime(overview["at"]))
+                display.draw_text(20, 176, "Consulta local: " + stamp, COLOR_MUTED, 1)
+        elif screen == "wdgwars_confirm":
             source = "Expedicoes completas + fila" if mode == "expeditions" else "Fila rapida" if mode == "queue" else "Guardar lote e liberar fila" if mode == "archive" else "Repetir somente o lote pendente"
             display.draw_text(20, 42, source, COLOR_CYAN, 1)
             if mode == "archive":
@@ -314,7 +346,11 @@ class HackomonUI:
                 display.draw_text(20, 175, "Importados:%s SemGPS:%d Invalidos:%d" % (
                     counts.get("imported", "n/d"), counts.get("no_gps", 0), counts.get("bad_rows", 0)), COLOR_MUTED, 1)
         display.draw_text_centered(198, status.get("message", "")[:72], COLOR_YELLOW, 1)
-        footer = "B cancela apos a resposta atual" if busy else "CIMA/BAIXO pagina  B volta" if screen == "wdgwars_history" else "A confirma  CIMA/BAIXO escolhe  B volta"
+        footer = ("B interrompe apos a etapa atual" if busy else
+                  "A envia  ESQ atualiza  B menu" if screen == "wdgwars_overview" else
+                  "CIMA/BAIXO pagina  B volta" if screen == "wdgwars_history" else
+                  "A confirma  B cancela" if screen == "wdgwars_confirm" else
+                  "A confirma  CIMA/BAIXO escolhe  DIR painel  B volta")
         display.draw_text_centered(212, footer, COLOR_TEXT, 1)
         display.flip()
 

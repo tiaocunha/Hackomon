@@ -1,5 +1,23 @@
 # Hardware validation checklist
 
+## Upload dashboard and field missions — 0.8.8
+
+Desktop tests cover all-source/queue overlap counts, over 500 sources, durable
+receipts, GET versus POST failures, cancellation, medal persistence/migration,
+GPS distance filtering and screen bounds. HTTP/radio data is simulated.
+
+- [ ] Install on stock 2.0.0-stable while preserving save/config/previous receipts.
+- [ ] Check WDGWars DIR dashboard and ESQ refresh without stopping discovery.
+- [ ] Compare ready counts/last receipt with a manually initiated real upload.
+- [ ] Confirm guidance and resume after a network interruption.
+- [ ] Measure dashboard latency/memory with long CSVs on the Pager.
+- [ ] Check three Expedition pages, companion speech and saved medals.
+- [ ] Confirm battery consumption and distance against a field route.
+
+The previous 0.8.7 installation is confirmed below. No 0.8.8 device or live
+WDGWars validation is inferred from it. Optional aircrack-ng was absent then;
+these changes neither install it nor alter capture/dictionary-test behavior.
+
 ## Expedition companion — 0.8.7
 
 Desktop regression tests cover outings above 500 discoveries with a full old

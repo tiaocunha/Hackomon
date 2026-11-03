@@ -1,5 +1,10 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.8.8: DIR no WDGWars abre o painel de todas as saidas e ultimo lote aceito.
+ESQ atualiza localmente, sem enviar dados. Expedicao: CIMA/BAIXO percorre
+sensores, resumo e tres missoes com medalhas salvas e reacoes do companheiro.
+Missoes nao repetem XP nem iniciam testes. Esta versao requer teste no Pager.
+
 0.8.7: Expedicao sem preencher a fila avulsa, mensagens claras de XP e sensores.
 CIMA/BAIXO abre o resumo; ESQ encerra. Para enviar toda a saida, escolha
 WDGWars > Sincronizar expedicoes + fila. O GPS usa o servico nativo do Pager.

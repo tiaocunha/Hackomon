@@ -1,4 +1,9 @@
-# Hackomon 0.8.7: instalacao facil no Windows
+# Hackomon 0.8.8: instalacao facil no Windows
+
+0.8.8: no menu WDGWars, DIR abre pendencias de todas as saidas e ultimo recibo;
+ESQ atualiza sem enviar dados. Na Expedicao, CIMA/BAIXO percorre sensores,
+resumo e tres missoes com medalhas persistentes e reacoes do companheiro.
+Enviar continua exigindo confirmacao. Esta versao requer validacao fisica.
 
 Novidades: a Expedicao grava no CSV sem preencher a fila avulsa, explica XP
 novo/ja premiado e mostra estados dos sensores. CIMA/BAIXO abre o resumo;
@@ -26,7 +31,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.8.7.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.8.8.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -44,7 +49,7 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.7` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.8` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - tenta instalar python3-sqlite3 no MMC se faltar o modulo para leitura do Recon;
@@ -232,7 +237,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.8.7/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.8.8/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,

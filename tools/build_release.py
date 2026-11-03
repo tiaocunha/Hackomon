@@ -8,8 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "hackomon-pager-0.8.7.zip"
-SETUP = DIST / "hackomon-instalar-0.8.7.zip"
+OUTPUT = DIST / "hackomon-pager-0.8.8.zip"
+SETUP = DIST / "hackomon-instalar-0.8.8.zip"
 
 
 def main():
@@ -31,6 +31,8 @@ def main():
         archive.write(ROOT / "docs" / "NETWORKS.md", "NETWORKS.md")
         archive.write(ROOT / "docs" / "EXPEDITIONS.md", "EXPEDITIONS.md")
         archive.write(ROOT / "docs" / "WDGWARS.md", "WDGWARS.md")
+        archive.write(ROOT / "docs" / "MISSIONS.md", "MISSIONS.md")
+        archive.write(ROOT / "docs" / "ROADMAP.md", "ROADMAP.md")
         archive.write(ROOT / "docs" / "TESTE_RAPIDO.txt", "LEIA_PRIMEIRO.txt")
     print("built %s" % OUTPUT)
     with zipfile.ZipFile(SETUP, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:

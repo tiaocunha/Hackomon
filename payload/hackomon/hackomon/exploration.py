@@ -58,6 +58,7 @@ def reward_discoveries(state, observations, now):
         state.exploration_day = day
         state.exploration_daily_xp = 0
     awarded = new = invalid = excluded = known = blocked = 0
+    new_by_type = {"WIFI": 0, "BLE": 0}
     for raw in observations:
         try:
             item = normalize_discovery(raw)
@@ -82,9 +83,11 @@ def reward_discoveries(state, observations, now):
         state.exploration_xp += reward
         awarded += reward
         new += 1
+        new_by_type[item["type"]] += 1
     state.xp += awarded
     state.level = min(99, 1 + state.xp // 30)
     return dict(xp=awarded, new=new, invalid=invalid, excluded=excluded, known=known, blocked=blocked,
+                new_by_type=new_by_type,
                 full=len(state.discovery_rewarded) >= MAX_KNOWN)
 
 

@@ -1,4 +1,4 @@
-HACKOMON 0.8.7 - TESTE DE CAMPO
+HACKOMON 0.8.8 - TESTE DE CAMPO
 
 Esta e uma versao experimental. Testes automatizados usam simulacoes; radios,
 GPS, consumo e comportamento no firmware original ainda precisam do teste fisico.
@@ -7,7 +7,7 @@ GPS, consumo e comportamento no firmware original ainda precisam do teste fisico
    (/root/payloads/user/games/hackomon). Preserve /mmc/root/hackomon, onde fica o save.
 2. No menu inicial, escolha Expedicao. A inicia ou pausa. ESQ encerra e salva
    o resumo. B volta ao pet mantendo a expedicao; sair do app a deixa pausada.
-   CIMA/BAIXO alterna sensores e resumo com XP, distancia e pendencias WDGWars.
+   CIMA/BAIXO percorre sensores, resumo e missoes. Medalhas e progresso sao salvos.
 3. DIR mostra os APs vistos na expedicao. Escolha SOMENTE um alvo autorizado
    e pressione A para a avaliacao/captura/teste. A coleta pausa e retoma ao terminar.
    Volte do relatorio com B. Nenhuma rede entra automaticamente em testes.
@@ -50,6 +50,8 @@ completo le os CSVs em lotes e salva o progresso confirmado. Abra Redes -> WDGWa
   - Validar chave e consultar conta: confirma a conta antes do primeiro envio.
   - Sincronizar expedicoes + fila: envia os dados pendentes completos, em lotes.
   - Historico local: mostra lotes aceitos e contadores informados pelo servidor.
+  - DIR no menu WDGWars: painel local de todas as expedicoes + fila avulsa.
+    ESQ atualiza; A abre a confirmacao de envio. Abrir o painel nao envia dados.
   - B durante o envio: cancela depois da resposta atual; preserva o progresso.
 Use Internet e chave local no config.json ou HACKOMON_WDGWARS_API_KEY.
 Sem confirmacao apos uma queda, o lote fica pendente. Repetir envio incerto exige

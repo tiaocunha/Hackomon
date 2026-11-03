@@ -1,5 +1,16 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Missoes e envio global — 0.8.8
+
+CIMA/BAIXO percorre sensores, resumo e missoes. As tres primeiras medalhas
+reconhecem 10 novos enderecos, 5 Wi-Fi + 5 BLE novos e 1 km com GPS na mesma
+expedicao. Sao salvas no pet sem pagar XP novamente ou dispensar cuidados.
+Cada familia tem uma reacao curta a descobertas novas. Veja [MISSIOES](MISSIONS.md).
+
+O resumo continua contando somente a saida atual. Para consultar todas as
+expedicoes e o ultimo recibo, abra WDGWars e pressione DIR; ESQ atualiza o painel.
+Essa consulta e local e pode ser interrompida com B. Veja [WDGWARS](WDGWARS.md).
+
 ## Companheiro de campo — 0.8.7
 
 A coleta da Expedicao grava as descobertas localizadas diretamente em

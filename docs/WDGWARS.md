@@ -1,5 +1,37 @@
 # Sincronizacao WDGWars — 0.7.0 experimental
 
+## Painel de todas as saidas — 0.8.8
+
+Em **Redes / Laboratorio -> WDGWars**, pressione **DIR** para abrir o painel.
+**ESQ** atualiza a consulta local, **A** abre a confirmacao de envio completo,
+**B** volta ao menu. Abrir/atualizar o painel nao consulta a conta nem envia dados.
+O trabalho ocorre em segundo plano, sem segurar o bloqueio dos radios.
+
+O painel mostra registros validos prontos para enviar em **todas** as expedicoes
+e na fila avulsa da chave configurada. Correspondencias exatas entre linhas dos
+CSVs pendentes e a fila avulsa contam uma vez; linhas iguais em duas expedicoes
+continuam sendo duas amostras, como no envio. A consulta nao e limitada as 500
+expedicoes de uma execucao de upload. Cada arquivo e lido em lotes pequenos;
+nao carrega todos os CSVs na memoria. A leitura de muitos arquivos pode demorar.
+
+Linhas invalidas e finais incompletos aparecem separadamente, pois nao estao
+prontos para envio. Com origem ausente/alterada, erro local ou interrupcao, o
+total fica desconhecido. Sem chave configurada, a consulta tambem fica indisponivel.
+Nunca interpreta esses casos como zero pendencias. Dados coletados depois de
+um snapshot aparecem na proxima atualizacao; o horario da consulta e visivel.
+
+O ultimo lote aceito vem de recibo local salvo atomicamente, mantido mesmo quando
+o historico de 100 eventos gira. Saves de sincronizacao antigos usam o ultimo
+evento `confirmed` disponivel. Validar conta, resposta HTTP 202, recusa ou timeout
+nao atualizam esse recibo. Aceite continua diferente de importacao/pontuacao;
+descartes informados pelo servidor permanecem no historico.
+
+Orientacoes distinguem chave/permissao, consulta de conta sem resposta, espera
+429, lote incerto, processamento remoto e problema de arquivo. Uma falha no GET
+de conta nao e classificada como POST possivelmente recebido. `Retry-After` de
+consulta de conta tambem fica salvo. Sem acesso real ao servico nesta validacao:
+os novos testes usam respostas simuladas, sem compartilhar descobertas reais.
+
 ## Ajustes 0.8.7
 
 A Expedicao deixa de ocupar a fila avulsa. Seus CSVs continuam sendo enviados

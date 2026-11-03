@@ -8,6 +8,7 @@ from dataclasses import asdict, dataclass, field
 
 from .constants import STATE_SCHEMA_VERSION
 from .exploration import MAX_KNOWN, MAX_QUEUE, normalize_observation
+from .missions import MEDAL_IDS
 
 
 ACTION_RULES = {
@@ -67,6 +68,7 @@ class GameState:
     exploration_counts: dict = field(default_factory=lambda: {"WIFI": 0, "BLE": 0})
     network_queue: list = field(default_factory=list)
     lab_rewards: list = field(default_factory=list)
+    field_badges: list = field(default_factory=list)
 
     @classmethod
     def new(cls, catalog, line_id=None, now=None, rng=None):
@@ -99,6 +101,10 @@ class GameState:
         known_fields = {field_info.name for field_info in cls.__dataclass_fields__.values()}
         clean = {key: item for key, item in value.items() if key in known_fields}
         state = cls(**clean)
+        if (not isinstance(state.field_badges, list) or len(state.field_badges) > len(MEDAL_IDS)
+                or any(not isinstance(value, str) or value not in MEDAL_IDS for value in state.field_badges)
+                or len(set(state.field_badges)) != len(state.field_badges)):
+            raise ValueError("invalid field medals")
         if "discovery_rewarded" not in value and isinstance(state.exploration_known, dict):
             state.discovery_rewarded = dict(state.exploration_known)
         if (not isinstance(state.exploration_known, dict)

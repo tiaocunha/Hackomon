@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 
-from . import radio, visit, recon
+from . import missions, radio, visit, recon
 from .exploration import MAC, export_csv, normalize_observation
 
 
@@ -83,6 +83,7 @@ class Journal:
                 raise ValueError("invalid expedition counter")
         if not math.isfinite(float(self.summary["distance_m"])) or self.summary["distance_m"] < 0:
             raise ValueError("invalid expedition distance")
+        missions.progress(self.summary)
         self.folder = self.root / self.summary["id"]
         self.folder.mkdir(parents=True, exist_ok=True)
         self.seen = set()
@@ -148,6 +149,9 @@ class Journal:
                         self.summary["distance_m"] / 1000, self.summary["xp"], self.summary["audits"], self.summary["recoveries"]))
         text += "Novas descobertas premiadas desde 0.8.7: %d\n" % self.summary.get("rewarded_discoveries", 0)
         text += "Tempo ativo registrado: %d s\n" % self.summary.get("active_seconds", 0)
+        medals = [title for identity, title, _key, _target in missions.RULES
+                  if identity in self.summary.get("mission_medals", [])]
+        text += "Medalhas nesta saida: %s\n" % (", ".join(medals) or "nenhuma")
         text += "Registros desta expedicao aguardando envio: %s\n" % (count if count is not None else "desconhecido")
         text += "WDGWars: %s\n" % pending.get("message", "nao consultado")
         path = self.folder / "summary.txt"

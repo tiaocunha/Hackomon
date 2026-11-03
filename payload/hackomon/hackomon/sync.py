@@ -4,6 +4,7 @@ import csv
 import datetime
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -17,6 +18,27 @@ from . import wdgwars
 
 
 BATCH_SIZE = 500
+
+
+def guidance(status, retry_seconds=0):
+    """Short next actions; distinguish failed GETs from uncertain uploads."""
+    if status == "rate_limited":
+        return ("Aguarde %ds antes de retomar." % retry_seconds,
+                "Depois escolha Sincronizar expedicoes + fila.")
+    return {
+        "loading": ("Consultando apenas os arquivos locais.", "B interrompe a consulta."),
+        "credentials": ("Confira a chave e a permissao da conta.", "A chave fica no config.json local."),
+        "connection_error": ("Confira Internet e data/hora do Pager.", "Depois valide a conta e retome o envio."),
+        "uncertain": ("Confira se o lote chegou ao WDGWars.", "Repetir envio incerto pode duplicar registros."),
+        "sending": ("O ultimo envio ficou sem recibo local.", "Confira o servico antes de repetir o lote."),
+        "pending_remote": ("O servidor ainda pode estar processando.", "Confira no WDGWars antes de repetir."),
+        "needs_confirmation": ("Confira o lote no WDGWars antes de repetir.", "Use Repetir envio incerto se necessario."),
+        "rejected": ("Confira os descartes e o historico de envios.", "CSV original preservado; corrija a causa."),
+        "error": ("Confira armazenamento e historico local.", "Originais preservados; nao apague recibos."),
+        "cancelled": ("Consulta/envio interrompido; dados preservados.", "Retome quando quiser pelo menu WDGWars."),
+        "done_with_warnings": ("O servidor informou descartes.", "Confira o historico; aceite nao garante pontos."),
+        "archived": ("Lote guardado sem confirmar recebimento.", "Um novo envio pode repetir registros."),
+    }.get(status, ("A sincroniza expedicoes e fila avulsa.", "Nenhum dado sai durante esta consulta local."))
 
 
 def token(item):
@@ -65,6 +87,7 @@ class Manager:
                     raise ValueError("invalid manifest")
                 if (not isinstance(self.state.get("account", {}), dict)
                         or type(self.state.get("retry_at", 0)) not in (int, float)
+                        or not math.isfinite(self.state.get("retry_at", 0))
                         or len(self.state["history"]) > 100
                         or len(self.state["queue_receipts"]) > 500):
                     raise ValueError("invalid metadata")
@@ -84,6 +107,11 @@ class Manager:
                     raise ValueError("invalid queue receipt")
                 if self.state.get("inflight") is not None and not isinstance(self.state["inflight"], dict):
                     raise ValueError("invalid in-flight record")
+                confirmed = self.state.get("last_confirmed")
+                if confirmed is not None and (not isinstance(confirmed, dict)
+                        or type(confirmed.get("at")) is not int or not 0 <= confirmed["at"] <= 4102444800
+                        or type(confirmed.get("records")) is not int or confirmed["records"] <= 0):
+                    raise ValueError("invalid confirmation")
             except (ValueError, TypeError, OSError, AttributeError):
                 raise RuntimeError("Historico WDGWars invalido; arquivo preservado") from None
         self.report = dict(status="ready", sent=0, batches=0, skipped=0, counters={},
@@ -150,6 +178,93 @@ class Manager:
         else:
             message = "Sincronize no menu WDGWars" if pending else "CSV processado; confira historico"
         return dict(pending=pending, skipped=skipped, message=message, at=int(self.clock()))
+
+    def overview(self, observations=(), status=None):
+        """Stream all local expeditions in bounded batches, with no HTTP requests."""
+        remaining = {token(item) for item in observations}.difference(self.state["queue_receipts"])
+        missing = set(self.state["files"])
+        result = dict(csv_records=0, queue_records=0, pending_expeditions=0,
+                      skipped=0, incomplete=0, source_errors=0, scanned=0,
+                      complete=True, at=int(self.clock()))
+        root = self.data_dir / "expeditions"
+        try:
+            if root.exists():
+                with os.scandir(root) as folders:
+                    for folder in folders:
+                        if self.cancel.is_set():
+                            result["complete"] = False
+                            break
+                        if not re.fullmatch(r"[0-9a-f]{32}", folder.name):
+                            continue
+                        try:
+                            if not folder.is_dir(follow_symlinks=False):
+                                if folder.is_symlink() or folder.name in missing:
+                                    result["source_errors"] += 1
+                                    missing.discard(folder.name)
+                                continue
+                            missing.discard(folder.name)
+                            path = Path(folder.path) / "discoveries.csv"
+                            if not path.exists():
+                                summary_path = Path(folder.path) / "summary.json"
+                                if summary_path.is_file():
+                                    if summary_path.is_symlink() or summary_path.stat().st_size > 16384:
+                                        raise ValueError("invalid summary")
+                                    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+                                    if not isinstance(summary, dict):
+                                        raise ValueError("invalid summary")
+                                    if summary.get("located", 0):
+                                        raise ValueError("missing discoveries")
+                                if folder.name in self.state["files"]:
+                                    raise ValueError("missing processed source")
+                                continue
+                            path = self.source(folder.name)
+                            limit = path.stat().st_size
+                            count = 0
+                            for batch in self.batches(folder.name, limit):
+                                if self.cancel.is_set():
+                                    result["complete"] = False
+                                    break
+                                count += len(batch["rows"])
+                                result["csv_records"] += len(batch["rows"])
+                                result["skipped"] += batch["skipped"]
+                                if remaining:
+                                    remaining.difference_update(token(item) for item in batch["rows"])
+                            result["pending_expeditions"] += bool(count)
+                            result["scanned"] += 1
+                            if limit:
+                                with path.open("rb") as stream:
+                                    stream.seek(limit - 1)
+                                    result["incomplete"] += stream.read(1) != b"\n"
+                        except (RuntimeError, OSError, ValueError, KeyError, TypeError, csv.Error):
+                            result["source_errors"] += 1
+        except OSError:
+            result["source_errors"] += 1
+        if not self.cancel.is_set():
+            result["source_errors"] += len(missing)
+        result["complete"] = result["complete"] and not result["source_errors"]
+        result["queue_records"] = len(remaining)
+        result["known_pending"] = result["csv_records"] + result["queue_records"]
+        result["pending"] = result["known_pending"] if result["complete"] else None
+        last = self.state.get("last_confirmed")
+        if last is None:
+            last = next((dict(at=entry["at"], records=entry["records"])
+                         for entry in reversed(self.state["history"])
+                         if entry.get("status") == "confirmed" and type(entry.get("at")) is int
+                         and 0 <= entry["at"] <= 4102444800
+                         and type(entry.get("records")) is int and entry["records"] > 0), None)
+        result["last_confirmed"] = last
+        delay = max(0, int(self.state.get("retry_at", 0) - self.clock()))
+        pending = self.state.get("inflight") or {}
+        fallback = "done_with_warnings" if last and last.get("warnings") else "ready"
+        kind = ("rate_limited" if delay else status if status in (
+            "credentials", "connection_error", "error", "cancelled") else
+            pending.get("kind") or status or fallback)
+        if result["source_errors"]:
+            kind = "error"
+        elif not result["complete"]:
+            kind = "cancelled"
+        result["guidance"] = guidance(kind, delay)
+        return result
 
     def batches(self, identity, limit):
         path = self.source(identity)
@@ -240,6 +355,10 @@ class Manager:
         self.state = next_state
         self.note("confirmed" if pending["records"] else "skipped_local",
                   source=source, records=pending["records"], skipped=pending.get("skipped", 0), counters=counters)
+        if pending["records"]:
+            self.state["last_confirmed"] = dict(at=int(self.clock()), records=pending["records"],
+                                                warnings=bool(pending.get("skipped", 0) or any(
+                                                    counters.get(key, 0) for key in ("bad_rows", "no_gps"))))
         self.state["inflight"] = None
         self.state["retry_at"] = 0
         try:
@@ -406,10 +525,22 @@ class Manager:
                 self.update("Envio concluido com descartes; confira o historico")
             else:
                 self.update("Concluido: %d registros, %d lotes confirmados" % (self.report["sent"], self.report["batches"]))
+        except wdgwars.UploadError as error:
+            # This exception is from account validation, before any new POST.
+            self.report["status"] = "connection_error" if error.kind == "uncertain" else error.kind
+            self.update("Conta nao validada; confira Internet e chave" if error.kind == "uncertain" else str(error))
+            if error.retry_after:
+                self.state["retry_at"] = int(self.clock()) + error.retry_after
+                try:
+                    self.save()
+                except OSError:
+                    self.report["status"] = "error"
+                    self.update("Falha ao salvar espera; confira armazenamento")
         except (RuntimeError, ValueError, KeyError, TypeError, OSError, csv.Error) as error:
             self.report["status"] = "error"
             self.update(str(error) if isinstance(error, RuntimeError) else "Falha local na sincronizacao; arquivos preservados")
         finally:
             self.report["cleared_tokens"] = list(self.watched.intersection(self.state["queue_receipts"]))
             self.report["history"] = self.state["history"][-8:]
+            self.report["overview"] = self.overview(observations, status=self.report["status"])
         return self.report
