@@ -27,9 +27,11 @@ and live server acceptance were not independently verified.
 The diagnostic read 22 recent Recon AP observations and 2 Blue5 LE observations.
 GPSd's port responded, but the strict GPS reader found no acceptable fresh fix
 in that sample. The Pager-reported start timestamp was 293 seconds behind the
-PC's report-reception timestamp; transport/execution latency is included, so
-this suggests clock skew rather than measuring its exact size. Clock skew as
-the cause of the missing GPS fix has not been established.
+PC's report-reception timestamp; transport/execution latency is included. The
+user clarified that the office PC's clock runs ahead, so this comparison does
+not establish an incorrect Pager clock and must not be used to diagnose its
+GPS freshness. GPS fix availability remains a separate observation; neither
+GPS-to-Pager time synchronization nor the cause of the missing fix was validated.
 
 The local WDGWars key failed format validation, so no account lookup, upload or
 global pending count was attempted. Optional aircrack-ng remains absent. The
