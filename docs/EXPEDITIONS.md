@@ -1,5 +1,21 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Recompensas independentes de GPS — 0.8.5
+
+Na Expedicao, descobertas recentes e validas rendem XP mesmo sem fix: 2 XP por
+endereco Wi-Fi novo e 1 XP por endereco BLE novo. Mantem o limite de 120 XP por
+dia UTC e um registro persistente de ate 10.000 hashes, separado da fila de
+mapa. Esse registro impede repetir XP ao reiniciar, iniciar outra expedicao ou
+obter GPS depois. Enderecos ja vistos ao atingir o limite diario nao se tornam
+novos por trocar de dia. Bluetooth com endereco aleatorio pode representar o
+mesmo aparelho varias vezes; nao ha tentativa de desfazer essa privacidade.
+
+Idade da amostra <=60s, RSSI/endereco/tipo validos e exclusoes _nomap/_optout
+continuam obrigatorios. XP nao acrescenta pontos de cuidado. Os saves antigos
+migram os enderecos anteriormente registrados para impedir recompensas repetidas.
+Mapa/CSV/envio ainda exigem GPS valido. XP sem GPS nao inventa posicoes, e obter
+coordenadas depois libera o registro de mapa sem pagar novamente.
+
 ## Leitores nativos 2.0 — 0.8.4
 
 O diagnostico real identificou frequencias decimais no iw, BSSIDs BLOB ASCII
@@ -89,7 +105,7 @@ e processamento podem introduzir erro adicional. O CSV usa a precisao reportada
 pelo GPS e nao expressa todo esse erro de sincronizacao.
 
 Sem idade Wi-Fi ou fix proximo, a descoberta permanece local como sem GPS e
-fica fora do CSV/XP de mapeamento. O modo antigo de busca pontual com GPS mantem
+fica fora do CSV de mapa; desde 0.8.5 pode render XP de descoberta. O modo antigo de busca pontual com GPS mantem
 seu proprio limite estacionario; a expedicao usa o buffer temporal e aceita
 movimento. Saltos com velocidade media > 70m/s ou lacunas > 15s nao contribuem
 para distancia. Pequenos movimentos abaixo da margem do GPS sao filtrados.
@@ -117,7 +133,7 @@ pode exceder um pouco o limite de observacoes. A fila de eventos entre threads
 e limitada a 128; o resumo encerrado registra eventos descartados se houver
 sobrecarga. O diario e limitado; nao representa armazenamento infinito.
 
-XP usa as regras atuais: novos enderecos localizados valem 2 XP Wi-Fi/1 XP BLE,
+XP usa as regras atuais: novos enderecos, mesmo sem GPS, valem 2 XP Wi-Fi/1 XP BLE,
 com teto global de 120 XP de descoberta por dia. O pet reage com felicidade ao
 ganhar XP e mostra pose triste sem GPS recente quando estiver ocioso. Formas,
 cuidados e evolucoes existentes continuam. Afinidades, novos ovos por expedição,

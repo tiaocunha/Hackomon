@@ -29,6 +29,8 @@ This incremental release contains:
   read-only radio support report;
 - compatibility with decimal iw frequencies, BLOB Wi-Fi addresses and native
   Blue5 LE records observed on firmware 2.0.0-stable (0.8.4).
+- discovery XP without GPS in Expeditions, with persistent duplicate protection;
+  map uploads still require valid location (0.8.5).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -50,7 +52,7 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters remain **experimental in 0.8.4**. Automated tests use
+Network and lab adapters remain **experimental in 0.8.5**. Automated tests use
 fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
 also checked on one physical 2.0.0-stable Pager and returned recent observations.
 The user also confirmed both Expedition discovery counters increment on that
@@ -74,7 +76,7 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.8.4.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.8.5.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`
@@ -87,6 +89,10 @@ report without SSIDs, device addresses, GPS coordinates or account credentials.
 The 0.8.4 readers target the native Recon/Blue5 schema observed on a real
 2.0.0-stable unit; old/classic-only/unknown records are not fresh BLE discoveries.
 The app does not start a competing Bluetooth daemon or retune native collectors.
+In 0.8.5, new fresh discoveries in Expeditions grant 2 XP per Wi-Fi address and
+1 XP per BLE address without requiring GPS, once per address/type with a shared
+120-XP UTC daily cap. A separate persisted hash ledger prevents repeat rewards.
+Unlocated sightings stay local; later GPS mapping does not award the same XP twice.
 The full setup archive also
 creates a locally derived stock theme, preserving firmware-specific menus.
 The original overlay contains no copied Hak5 assets; the assembled on-device

@@ -60,6 +60,7 @@ class GameState:
     discovered: list = field(default_factory=list)
     action_counts: dict = field(default_factory=lambda: {"feed": 0, "play": 0, "rest": 0})
     exploration_known: dict = field(default_factory=dict)
+    discovery_rewarded: dict = field(default_factory=dict)
     exploration_day: str = ""
     exploration_daily_xp: int = 0
     exploration_xp: int = 0
@@ -98,15 +99,19 @@ class GameState:
         known_fields = {field_info.name for field_info in cls.__dataclass_fields__.values()}
         clean = {key: item for key, item in value.items() if key in known_fields}
         state = cls(**clean)
+        if "discovery_rewarded" not in value and isinstance(state.exploration_known, dict):
+            state.discovery_rewarded = dict(state.exploration_known)
         if (not isinstance(state.exploration_known, dict)
                 or len(state.exploration_known) > MAX_KNOWN
+                or not isinstance(state.discovery_rewarded, dict)
+                or len(state.discovery_rewarded) > MAX_KNOWN
                 or not isinstance(state.network_queue, list)
                 or len(state.network_queue) > MAX_QUEUE
                 or not isinstance(state.exploration_counts, dict)
                 or not isinstance(state.lab_rewards, list)
                 or len(state.lab_rewards) > MAX_KNOWN):
             raise ValueError("invalid discovery ledger")
-        for identity, day in state.exploration_known.items():
+        for identity, day in list(state.exploration_known.items()) + list(state.discovery_rewarded.items()):
             if (not re.fullmatch(r"[0-9a-f]{64}", identity)
                     or not isinstance(day, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day)):
                 raise ValueError("invalid discovery identity")

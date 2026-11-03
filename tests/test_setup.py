@@ -5,11 +5,20 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tests import support
-from tools.setup_pager import deploy
+from tools.setup_pager import deploy, app_is_running
 from hackomon import doctor
 
 
 class SetupTests(unittest.TestCase):
+    def test_active_app_blocks_install_but_other_processes_do_not(self):
+        with support.temporary_directory() as directory:
+            root = Path(directory)
+            (root / "123").mkdir()
+            (root / "123/cmdline").write_bytes(b"python3\0/root/payloads/user/games/hackomon/run_hackomon.py\0")
+            self.assertTrue(app_is_running(root))
+            (root / "123/cmdline").write_bytes(b"python3\0/mmc/root/setup/tools/setup_pager.py\0")
+            self.assertFalse(app_is_running(root))
+
     def files(self, root):
         source = root / "bundle/payload/hackomon"
         source.mkdir(parents=True)

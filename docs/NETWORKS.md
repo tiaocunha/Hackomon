@@ -1,5 +1,10 @@
 # Networks and office laboratory — 0.7.0
 
+0.8.5 update: Expedition discovery XP no longer requires GPS. Fresh valid
+addresses earn 2 XP Wi-Fi/1 XP BLE once, capped at 120 per UTC day, with a
+separate persisted reward ledger. GPS is still required for map/upload rows.
+Legacy saves migrate already-rewarded addresses without replaying XP.
+
 Current 0.8.4 note: the native Recon Wi-Fi and Blue5 LE readers were checked
 on one physical 2.0.0-stable Pager and returned recent records. This supersedes
 the original statement of no physical reader validation below. Full GPS/field

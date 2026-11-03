@@ -1,5 +1,13 @@
 # Hardware validation checklist
 
+## Offline discovery XP — 0.8.5
+
+- [ ] Confirm Expedition gains XP with fresh Wi-Fi/BLE observations and GPSd unavailable.
+- [ ] Exit/restart and reobserve the same address without earning twice.
+- [ ] Confirm located points can enter the map later without a second reward.
+- [ ] Confirm unlocated observations stay out of CSV/WDGWars.
+- [ ] Confirm migration preserves the pet, previous XP and located reward history.
+
 ## Native reader check — 0.8.4, 2026-11-03
 
 - [x] Loaded the corrected native Recon reader on one stock 2.0.0-stable Pager;

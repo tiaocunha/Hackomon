@@ -1,8 +1,12 @@
 # Install on a WiFi Pineapple Pager
 
+0.8.5 separates Expedition discovery XP from GPS/map eligibility: fresh new
+Wi-Fi/BLE addresses can earn XP without creating unlocated upload rows.
+Old saves migrate their previous rewards; close the app before reinstalling.
+
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.8.4.zip`: extract everything and double-click `INSTALAR.cmd`
+`hackomon-instalar-0.8.5.zip`: extract everything and double-click `INSTALAR.cmd`
 (app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not

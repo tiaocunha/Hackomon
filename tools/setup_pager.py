@@ -17,6 +17,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def app_is_running(proc_root=Path("/proc")):
+    for path in Path(proc_root).glob("[0-9]*/cmdline"):
+        try:
+            if any(arg.rsplit(b"/", 1)[-1] == b"run_hackomon.py" for arg in path.read_bytes().split(b"\0")):
+                return True
+        except OSError:
+            continue
+    return False
+
+
 def deploy(source, payload_root, backup_root, library, manifest):
     source, parent, backups = Path(source).resolve(), Path(payload_root).resolve(), Path(backup_root).resolve()
     library = Path(library)
@@ -98,6 +108,8 @@ def main(argv=None):
     parser.add_argument("--theme-base", type=Path)
     parser.add_argument("--skip-theme", action="store_true")
     args = parser.parse_args(argv)
+    if app_is_running():
+        parser.exit(2, "Feche o Hackomon ate voltar ao menu Hak5 e execute INSTALAR.cmd novamente.\nO app aberto nao foi alterado.\n")
     library = ROOT / "dependencies" / "libpagerctl.so"
     manifest = ROOT / "tools" / "pagerctl-dependency.json"
     # Validate imports and the pinned library load before deploying anything.

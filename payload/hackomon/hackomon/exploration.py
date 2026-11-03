@@ -19,7 +19,7 @@ COLUMNS = ("MAC", "SSID", "AuthMode", "FirstSeen", "Channel", "Frequency", "RSSI
            "RCOIs", "MfgrId", "Type")
 
 
-def normalize_observation(value):
+def normalize_discovery(value):
     kind = str(value["type"]).upper()
     address = str(value["mac"]).upper()
     if kind not in ("WIFI", "BLE") or not MAC.fullmatch(address):
@@ -27,13 +27,6 @@ def normalize_observation(value):
     if (kind == "WIFI" and int(address[:2], 16) & 1
             or address in ("00:00:00:00:00:00", "FF:FF:FF:FF:FF:FF")):
         raise ValueError("invalid device address")
-    lat, lon = float(value["lat"]), float(value["lon"])
-    accuracy = float(value["accuracy"])
-    if not (-90 <= lat <= 90 and -180 <= lon <= 180 and 0 < accuracy <= 100):
-        raise ValueError("invalid GPS fix")
-    altitude = float(value.get("altitude", 0))
-    if not math.isfinite(altitude):
-        raise ValueError("invalid altitude")
     rssi = int(value["rssi"])
     if not -127 <= rssi <= 0:
         raise ValueError("invalid signal")
@@ -44,17 +37,65 @@ def normalize_observation(value):
                 auth=clean(value.get("auth", "[BLE]" if kind == "BLE" else "")),
                 channel=max(0, min(233, int(value.get("channel", 0)))),
                 frequency=max(0, min(7200, int(value.get("frequency", 0)))),
-                rssi=rssi, lat=lat, lon=lon, altitude=altitude,
-                accuracy=accuracy, timestamp=timestamp)
+                rssi=rssi, timestamp=timestamp)
 
 
-def record_observations(state, observations, now):
+def normalize_observation(value):
+    item = normalize_discovery(value)
+    lat, lon, accuracy = float(value["lat"]), float(value["lon"]), float(value["accuracy"])
+    if not (-90 <= lat <= 90 and -180 <= lon <= 180 and 0 < accuracy <= 100):
+        raise ValueError("invalid GPS fix")
+    altitude = float(value.get("altitude", 0))
+    if not math.isfinite(altitude):
+        raise ValueError("invalid altitude")
+    item.update(lat=lat, lon=lon, altitude=altitude, accuracy=accuracy)
+    return item
+
+
+def reward_discoveries(state, observations, now):
+    """One-time radio discovery XP, independent of GPS/map upload eligibility."""
+    day = datetime.datetime.fromtimestamp(now, datetime.timezone.utc).date().isoformat()
+    if state.exploration_day != day:
+        state.exploration_day = day
+        state.exploration_daily_xp = 0
+    awarded = new = invalid = excluded = 0
+    for raw in observations:
+        try:
+            item = normalize_discovery(raw)
+            if not 0 <= now - item["timestamp"] <= 60:
+                raise ValueError("stale discovery")
+        except (KeyError, ValueError, TypeError, OverflowError, OSError):
+            invalid += 1
+            continue
+        if item["name"].lower().endswith(("_nomap", "_optout")):
+            excluded += 1
+            continue
+        identity = hashlib.sha256((item["type"] + ":" + item["mac"]).encode()).hexdigest()
+        if identity in state.discovery_rewarded or identity in state.exploration_known:
+            continue
+        if len(state.discovery_rewarded) >= MAX_KNOWN:
+            continue
+        reward = min(2 if item["type"] == "WIFI" else 1,
+                     max(0, DAILY_XP_LIMIT - state.exploration_daily_xp))
+        state.discovery_rewarded[identity] = day
+        state.exploration_daily_xp += reward
+        state.exploration_xp += reward
+        awarded += reward
+        new += 1
+    state.xp += awarded
+    state.level = min(99, 1 + state.xp // 30)
+    return dict(xp=awarded, new=new, invalid=invalid, excluded=excluded,
+                full=len(state.discovery_rewarded) >= MAX_KNOWN)
+
+
+def record_observations(state, observations, now, award_xp=True):
     day = datetime.datetime.fromtimestamp(now, datetime.timezone.utc).date().isoformat()
     if state.exploration_day != day:
         state.exploration_day = day
         state.exploration_daily_xp = 0
     queued = {item["identity"] for item in state.network_queue}
-    added = awarded = invalid = excluded = 0
+    added = invalid = excluded = 0
+    valid = []
     for raw in observations:
         try:
             item = normalize_observation(raw)
@@ -66,6 +107,9 @@ def record_observations(state, observations, now):
         if item["name"].lower().endswith(("_nomap", "_optout")):
             excluded += 1
             continue
+        valid.append(item)
+    awarded = reward_discoveries(state, valid, now)["xp"] if award_xp else 0
+    for item in valid:
         identity = hashlib.sha256((item["type"] + ":" + item["mac"]).encode()).hexdigest()
         previous_day = state.exploration_known.get(identity)
         if identity in queued or previous_day == day:
@@ -74,21 +118,12 @@ def record_observations(state, observations, now):
             break
         if previous_day is None and len(state.exploration_known) >= MAX_KNOWN:
             break
-        reward = 0
-        if previous_day is None:
-            reward = min(2 if item["type"] == "WIFI" else 1,
-                         max(0, DAILY_XP_LIMIT - state.exploration_daily_xp))
         state.exploration_known[identity] = day
         item["identity"] = identity
         state.network_queue.append(item)
         queued.add(identity)
-        state.exploration_daily_xp += reward
-        state.exploration_xp += reward
         state.exploration_counts[item["type"]] = state.exploration_counts.get(item["type"], 0) + 1
-        awarded += reward
         added += 1
-    state.xp += awarded
-    state.level = min(99, 1 + state.xp // 30)
     return dict(added=added, xp=awarded, invalid=invalid, excluded=excluded,
                 full=len(state.network_queue) >= MAX_QUEUE)
 

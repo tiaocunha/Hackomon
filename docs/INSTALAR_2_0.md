@@ -1,4 +1,4 @@
-# Hackomon 0.8.4: instalacao facil no Windows
+# Hackomon 0.8.5: instalacao facil no Windows
 
 Preparado para o seu **WiFi Pineapple Pager com Hak5 2.0.0-stable**.
 App separado + tema Hackomon Field Companion. O firmware nao e substituido.
@@ -21,7 +21,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.8.4.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.8.5.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -39,7 +39,7 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.4` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.5` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - tenta instalar python3-sqlite3 no MMC se faltar o modulo para leitura do Recon;
@@ -104,6 +104,19 @@ Guarde a mensagem de erro e consulte `/tmp/hackomon.log`. Esse log e temporario
 e desaparece no reboot. Nao publique config, capturas ou chaves junto do log.
 
 ## 5. GPS, expedicoes e Bluetooth
+
+**0.8.5: XP de descoberta sem exigir GPS na Expedicao.** Cada endereco Wi-Fi
+novo rende 2 XP; cada endereco BLE novo rende 1 XP. O limite compartilhado e
+120 XP por dia UTC. O mesmo endereco/tipo nao paga novamente, mesmo apos
+reiniciar, criar outra expedicao ou conseguir GPS. Descobertas antigas, sem
+sinal valido, invalidas ou com sufixos _nomap/_optout nao pagam XP.
+
+O save guarda hashes/datas para controlar essas recompensas, separado da fila
+de mapa. Saves antigos preservam progresso e recompensas anteriores. Uma
+descoberta sem GPS pode ser mapeada depois com fix valido, sem XP em dobro.
+Sem GPS nao ha coordenadas, trilha ou registros enviados ao WDGWars.
+Para atualizar, feche o Hackomon ate voltar ao menu Hak5; o instalador recusa
+alterar o app aberto para preservar o progresso.
 
 **0.8.4: compatibilidade com os dados observados no firmware 2.0.0-stable.**
 O leitor aceita frequencias como `2437.0` no iw e BSSIDs BLOB ASCII no Recon.
@@ -214,7 +227,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.8.4/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.8.5/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,

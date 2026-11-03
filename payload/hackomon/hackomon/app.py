@@ -11,7 +11,7 @@ from .evolution import advance_one_if_ready
 from .pager_backend import PagerDisplay
 from .storage import StateStore
 from .ui import HackomonUI, NETWORK_MENU
-from .exploration import export_csv, record_observations
+from .exploration import export_csv, record_observations, reward_discoveries
 from .network_config import load_config
 from . import bluetooth_lab, expedition, lab, radio, visit, wdgwars
 from . import sync as wdg_sync
@@ -134,7 +134,9 @@ class HackomonApp:
                     self.expedition_targets = value
                 elif kind == "observations":
                     located = self.journal.observations(value)
-                    result = record_observations(self.state, located, int(self.clock()))
+                    reward = reward_discoveries(self.state, value, int(self.clock()))
+                    result = record_observations(self.state, located, int(self.clock()), award_xp=False)
+                    result["xp"] = reward["xp"]
                     self.journal.summary["xp"] += result["xp"]
                     self.journal.checkpoint()
                     evolved = advance_one_if_ready(self.state, self.catalog)
