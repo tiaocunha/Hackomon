@@ -44,6 +44,14 @@ Network and lab adapters in **0.5.0 are experimental**: desktop tests use fixtur
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 
+## Product direction
+
+The approved future direction combines a wardriving companion, expeditions and
+an authorized pentesting assistant. The proposed hybrid workflow queues
+target-selected capture/offline password tests during expeditions. See the
+[wardriving and hybrid-mode design](docs/WARDRIVING_DESIGN.md) (Portuguese).
+It is a specification, not a new feature in the current executable release.
+
 ## Install
 
 The short version:
