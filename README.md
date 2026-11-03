@@ -53,8 +53,10 @@ remaining device checks.
 Network and lab adapters remain **experimental in 0.8.4**. Automated tests use
 fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
 also checked on one physical 2.0.0-stable Pager and returned recent observations.
-Full expedition UI, GPS association, battery, actual password recovery and live
-WDGWars acceptance remain separate validation. See [network setup and limits](docs/NETWORKS.md).
+The user also confirmed both Expedition discovery counters increment on that
+device. Long-run expedition behavior, GPS association, battery, actual password
+recovery and live WDGWars acceptance remain separate validation.
+See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
 and [expedition behavior and limits](docs/EXPEDITIONS.md).
 The [WDGWars synchronization guide](docs/WDGWARS.md) explains checkpoints,

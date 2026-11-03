@@ -115,7 +115,8 @@ Blue5/logging precisam estar ativos; dados antigos nao viram descobertas atuais.
 Sem Blue5, permanece a alternativa legada via bluetoothctl. O doctor mostra
 quantos registros nativos conseguiu ler, sem nova busca ou localizacao inventada.
 Esses leitores ja retornaram registros recentes em um Pager fisico 2.0.0-stable;
-o percurso completo com GPS, consumo e sincronizacao continua pendente.
+o usuario confirmou que os contadores Wi-Fi e BLE da Expedicao aumentaram.
+O percurso completo com GPS, consumo e sincronizacao continua pendente.
 
 **A coleta nao precisa de Internet.** Nas versoes anteriores, o Wi-Fi automatico
 dependia de uma interface cliente livre, que pode desaparecer quando o Client

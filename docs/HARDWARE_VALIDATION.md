@@ -8,7 +8,8 @@
   without starting bluetoothd or modifying controller/service configuration.
 - [x] Reinstalled the payload with a backup; installer preserved save/config
   and recognized the existing valid theme. Temporary-launch verification passed.
-- [ ] Confirm the running Expedition screen increments Wi-Fi and BLE counters.
+- [x] User confirmed the running Expedition screen increments both Wi-Fi and BLE
+  counters after installing 0.8.4 on that 2.0.0-stable Pager.
 - [ ] Validate real GPS fixes and timestamp/location association; GPSd was not
   reachable during this reader check.
 - [ ] Validate full field duration, power use, WDGWars reception and selected lab tests.
