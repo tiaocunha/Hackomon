@@ -23,6 +23,16 @@ O teste nao demonstrou vantagem de uma conexao continua sobre a atual. Esta
 atualizacao corrige a inconsistência confirmada da tela; estabilidade e eventuais
 interrupcoes de dados durante movimento ainda precisam de teste fisico.
 
+Apos o usuario reconectar o GPS, o instalador ainda recebeu lista vazia do
+GPSd. Uma recuperacao separada verificou porta serial presente, GPSd habilitado
+e modo direto desativado antes de reiniciar apenas o servico nativo existente.
+O reinicio terminou com codigo zero. Em 15 s reapareceram um receptor, 30 TPV
+e 15 SKY; todos os TPV estavam em modo 1, sem fix. Isso confirma a volta da
+comunicacao, nao uma posicao utilizavel nem estabilidade durante movimento.
+Se ocorrer "GPSd sem receptor" apos tirar/recolocar o GPS, com ele conectado
+use Settings > GPS > Restart GPSd no modo GPSd. O app nao reinicia servicos
+automaticamente nem muda para outro modo de leitura.
+
 O Hackomon consulta o GPSd local da Hak5 em `127.0.0.1:2947`. Nao abre a porta
 serial, nao muda baud rate, nao reinicia servicos e nao troca o modo escolhido
 em Settings > GPS. O modo Native direto do pineapd ainda nao tem adaptador no

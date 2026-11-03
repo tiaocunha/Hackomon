@@ -20,8 +20,17 @@ or TPV; the serial link had a missing target. The user then confirmed the GPS
 had been removed on return. USB reconnection logs and that sample cannot prove
 a disconnect during movement. No service or USB configuration was changed.
 
-- [ ] Install 0.10.2 and read its actual GPS acceptance/rejection check.
-- [ ] Confirm the reconnected receiver supplies TPV with usable position.
+- [x] Install 0.10.2: installer exited 0 on 2026-11-03; user confirmed PRONTO.
+  Save/config were reported preserved, prior payload backed up and theme skipped.
+  Read-only checks accepted 22 recent Recon APs and 3 Blue5 LE observations.
+  The new GPS check reported no receiver after reconnection, so this is not
+  evidence of a working fix or of movement stability.
+- [x] Recover GPSd delivery after reconnection: configured serial node existed,
+  GPSd was enabled and direct native mode was disabled. One restart of the
+  existing GPSd service exited 0 without configuration changes. A 15-second
+  read saw one receiver, 30 TPV and 15 SKY reports; the node remained present.
+  All TPV were mode 1 (no fix), so no positions were accepted.
+- [ ] Obtain and confirm a usable fix after recovery.
 - [ ] Compare stock/app GPS during movement, including a small GPS clock lead.
 - [ ] Investigate any remaining data interruptions while the GPS stays plugged in.
 
