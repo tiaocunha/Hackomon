@@ -14,11 +14,29 @@ an independently installed `libpagerctl.so` at runtime. This keeps the release
 small, makes the dependency explicit and avoids redistributing an unverified
 MIPS binary.
 
+The optional Windows fresh-install helper downloads the upstream binary from
+commit `30ef1028500ba1d0303d24ea5d62497407bac77d` directly to the user's machine,
+checks SHA-256 `f0f5d3213c77e360fa4cf912c5a122d2dd1b39713ae2cdf7c6ba6dc7ead5e4e5`,
+then installs it separately on the Pager. This download is not a reproducible
+source build or evidence of firmware-2.0 ABI compatibility. The bundled archives
+and Git repository still contain no PAGERCTL binary/source.
+
 ## Hak5 payload format
 
 The `payload.sh` entry point follows the public WiFi Pineapple Pager payload
 layout documented by Hak5. No Hak5 firmware, trademarks, DuckyScript source or
 proprietary assets are included.
+
+## Hackomon Field Companion theme
+
+Only the original wallpaper, palette, prompt and overlay installer are included.
+The wallpaper was created with OpenAI's built-in image generator and resized
+to 480x222. The installer copies the user's licensed Wargames base locally,
+preserves its firmware components and adds Hackomon branding. The resulting
+on-device derivative contains Hak5 material, remains subject to
+[Hak5 licensing](https://hak5.org/license), and is not wholly MIT. Do not
+redistribute it as original Hackomon art. Stock icons and other screen art are
+inherited locally, not embedded in these release archives.
 
 ## Optional network tools and service protocols
 

@@ -8,7 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "payload" / "hackomon"
 DIST = ROOT / "dist"
-OUTPUT = DIST / "hackomon-pager-0.7.0.zip"
+OUTPUT = DIST / "hackomon-pager-0.8.0.zip"
+SETUP = DIST / "hackomon-instalar-0.8.0.zip"
 
 
 def main():
@@ -32,6 +33,21 @@ def main():
         archive.write(ROOT / "docs" / "WDGWARS.md", "WDGWARS.md")
         archive.write(ROOT / "docs" / "TESTE_RAPIDO.txt", "LEIA_PRIMEIRO.txt")
     print("built %s" % OUTPUT)
+    with zipfile.ZipFile(SETUP, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for folder in ("payload", "themes"):
+            for path in sorted((ROOT / folder).rglob("*")):
+                if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc":
+                    archive.write(path, path.relative_to(ROOT).as_posix())
+        for name in ("install_theme.py", "setup_pager.py", "setup_pager.sh", "Instalar-Hackomon.ps1", "pagerctl-dependency.json"):
+            archive.write(ROOT / "tools" / name, "tools/" + name)
+        for path in sorted((ROOT / "docs").glob("*.md")):
+            archive.write(path, "docs/" + path.name)
+        guide = (ROOT / "docs" / "INSTALAR_2_0.md").read_text(encoding="utf-8")
+        guide = guide.replace("(NETWORKS.md)", "(docs/NETWORKS.md)").replace("(EXPEDITIONS.md)", "(docs/EXPEDITIONS.md)")
+        archive.writestr("COMECE_AQUI.md", guide)
+        for name in ("LICENSE", "THIRD_PARTY.md"):
+            archive.write(ROOT / name, name)
+    print("built %s" % SETUP)
 
 
 if __name__ == "__main__":

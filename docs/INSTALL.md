@@ -1,13 +1,20 @@
 # Install on a WiFi Pineapple Pager
 
-For 0.7.0 field tests, see [TESTE_RAPIDO.txt](TESTE_RAPIDO.txt) in the repository
+For a fresh-reset Pager running **2.0.0-stable**, use the complete
+[Portuguese install and test guide](INSTALAR_2_0.md) and
+`hackomon-instalar-0.8.0.zip` (app + original stock-theme overlay + Windows setup).
+That installer explicitly provisions missing base dependencies; the app itself
+does not install packages. Its theme validation is a file/layout check, not
+physical firmware validation.
+
+For the existing network field flow, see [TESTE_RAPIDO.txt](TESTE_RAPIDO.txt) in the repository
 or `LEIA_PRIMEIRO.txt` at the root of the release ZIP. Expeditions use the same
 installed dependencies; no firmware is replaced and the existing pet save remains.
 
 ## Prerequisites
 
 - Stock Hak5 Pager firmware with SSH access.
-- A microSD/MMC installation available at `/mmc`.
+- The Pager's internal eMMC storage mounted at `/mmc`.
 - `python3` and `python3-ctypes` installed to MMC.
 - The MIT-licensed PAGERCTL utility, including `libpagerctl.so`.
 

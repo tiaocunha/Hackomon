@@ -23,6 +23,8 @@ This incremental release contains:
   pause/resume, local trails/CSV, pet reactions and a scoped hybrid assessment flow.
 - full expedition CSV synchronization in small resumable WDGWars batches, account
   validation, local receipts/history, cancellation and explicit uncertain-upload recovery.
+- an original Hackomon Field Companion overlay for the stock 2.0 Wargames theme,
+  a Windows fresh-install helper and read-only `--doctor` diagnostics (0.8.0).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -44,7 +46,7 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters in **0.7.0 are experimental**: desktop tests use fixtures
+Network and lab adapters remain **experimental in 0.8.0**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
@@ -61,6 +63,12 @@ remain future work. See the
 [wardriving and hybrid-mode design](docs/WARDRIVING_DESIGN.md) (Portuguese).
 
 ## Install
+
+For **Hak5 2.0.0-stable after a factory reset**, start with
+[the Portuguese setup guide](docs/INSTALAR_2_0.md). The full setup archive also
+creates a locally derived stock theme, preserving firmware-specific menus.
+The original overlay contains no copied Hak5 assets; the assembled on-device
+theme remains subject to Hak5 licensing. No physical 2.0 compatibility claim is made.
 
 The short version:
 

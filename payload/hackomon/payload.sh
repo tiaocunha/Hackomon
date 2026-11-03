@@ -2,7 +2,7 @@
 # Title: Hackomon
 # Description: Virtual creatures, GPS discoveries, WDGWars sync and scoped office lab
 # Author: tiaocunha
-# Version: 0.7.0
+# Version: 0.8.0
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 
@@ -47,8 +47,12 @@ if [ -z "$PAGERCTL_LIB" ]; then
     exit 2
 fi
 
+UI_STOPPED=0
 restore_stock_ui() {
-    /etc/init.d/pineapplepager start >/dev/null 2>&1
+    if [ "$UI_STOPPED" -eq 1 ]; then
+        /etc/init.d/pineapplepager start >/dev/null 2>&1
+        UI_STOPPED=0
+    fi
 }
 
 trap restore_stock_ui EXIT
@@ -57,13 +61,19 @@ trap 'exit 143' TERM HUP
 
 mkdir -p "$DATA_DIR" 2>/dev/null
 SPINNER_ID="$(START_SPINNER "Abrindo Hackomon...")"
-/etc/init.d/pineapplepager stop >/dev/null 2>&1
 STOP_SPINNER "$SPINNER_ID" >/dev/null 2>&1
+UI_STOPPED=1
+if ! /etc/init.d/pineapplepager stop >/dev/null 2>&1; then
+    restore_stock_ui
+    LOG "Hackomon: nao foi possivel liberar a tela original."
+    exit 2
+fi
 
 "$PYTHON_BIN" "$PAYLOAD_DIR/run_hackomon.py" \
     --pagerctl-lib "$PAGERCTL_LIB" \
     --data-dir "$DATA_DIR" >"$LOG_FILE" 2>&1
 EXIT_CODE=$?
+restore_stock_ui
 
 if [ "$EXIT_CODE" -ne 0 ] && [ "$EXIT_CODE" -ne 130 ]; then
     LOG "Hackomon encerrou com codigo $EXIT_CODE."

@@ -1,5 +1,17 @@
 # Hardware validation checklist
 
+## Firmware 2.0.0-stable / 0.8.0 first installation
+
+- [ ] Complete Windows setup after a factory reset; record actual installed package versions.
+- [ ] Pinned MIPS library loads and renders correctly on firmware 2.0 (not just API symbol check).
+- [ ] Wargames local base passes overlay schema, reference and six-icon layout checks.
+- [ ] Hackomon theme appears in Settings > General > Theme; stock Wargames stays selectable.
+- [ ] Check dashboard/status bar, lock/unlock, warnings, all menu destinations and legibility.
+- [ ] Confirm the new background does not obscure status indicators or selected menu labels.
+- [ ] Missing-library/startup error restores the stock UI before displaying its message.
+- [ ] Read-only doctor does not initialize framebuffer, scan, pair or upload.
+- [ ] Capture real device screenshots and record CPU/RAM/battery before claiming hardware validation.
+
 Desktop validation cannot prove framebuffer orientation, physical button
 mapping or service handoff on a specific firmware build. Before calling this a
 hardware-validated release, run the following checks on a stock Pager:

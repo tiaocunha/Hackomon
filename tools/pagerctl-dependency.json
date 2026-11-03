@@ -1,0 +1,9 @@
+{
+  "name": "PAGERCTL",
+  "author": "brAinphreAk",
+  "license": "MIT (upstream README)",
+  "repository": "https://github.com/pineapple-pager-projects/pineapple_pager_pagerctl",
+  "revision": "30ef1028500ba1d0303d24ea5d62497407bac77d",
+  "url": "https://raw.githubusercontent.com/pineapple-pager-projects/pineapple_pager_pagerctl/30ef1028500ba1d0303d24ea5d62497407bac77d/payloads/user/utilities/PAGERCTL/libpagerctl.so",
+  "sha256": "f0f5d3213c77e360fa4cf912c5a122d2dd1b39713ae2cdf7c6ba6dc7ead5e4e5"
+}
