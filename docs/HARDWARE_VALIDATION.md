@@ -6,17 +6,36 @@ Desktop tests cover all-source/queue overlap counts, over 500 sources, durable
 receipts, GET versus POST failures, cancellation, medal persistence/migration,
 GPS distance filtering and screen bounds. HTTP/radio data is simulated.
 
-- [ ] Install on stock 2.0.0-stable while preserving save/config/previous receipts.
+- [x] Confirm 0.8.8 is present on the user's stock Pager: all 23 installed
+  Python modules match the published payload and the existing save loads.
+- [ ] Independently compare config/previous upload receipts across installation.
 - [ ] Check WDGWars DIR dashboard and ESQ refresh without stopping discovery.
 - [ ] Compare ready counts/last receipt with a manually initiated real upload.
 - [ ] Confirm guidance and resume after a network interruption.
 - [ ] Measure dashboard latency/memory with long CSVs on the Pager.
-- [ ] Check three Expedition pages, companion speech and saved medals.
+- [x] Read a valid saved expedition with all three persistent field medals.
+- [ ] Independently check three Expedition pages and companion speech on screen.
 - [ ] Confirm battery consumption and distance against a field route.
 
-The previous 0.8.7 installation is confirmed below. No 0.8.8 device or live
-WDGWars validation is inferred from it. Optional aircrack-ng was absent then;
-these changes neither install it nor alter capture/dictionary-test behavior.
+On 2026-11-03, the user reported further field tests appeared successful. A
+separate SSH diagnostic confirmed 0.8.8 source consistency, loadable Python/
+libpagerctl dependencies, a valid save above the former 120-XP ceiling, valid
+mission counters and all three saved medals. The ended expedition contained
+996 located records and about 9.63 km of recorded travel. Route accuracy, battery
+and live server acceptance were not independently verified.
+
+The diagnostic read 22 recent Recon AP observations and 2 Blue5 LE observations.
+GPSd's port responded, but the strict GPS reader found no acceptable fresh fix
+in that sample. The Pager-reported start timestamp was 293 seconds behind the
+PC's report-reception timestamp; transport/execution latency is included, so
+this suggests clock skew rather than measuring its exact size. Clock skew as
+the cause of the missing GPS fix has not been established.
+
+The local WDGWars key failed format validation, so no account lookup, upload or
+global pending count was attempted. Optional aircrack-ng remains absent. The
+startup log was empty. No Hackomon process was running during the diagnostic;
+the check did not initialize the screen, start discovery/capture, modify saves,
+or send data. These findings do not validate the optional dictionary test.
 
 ## Expedition companion — 0.8.7
 
