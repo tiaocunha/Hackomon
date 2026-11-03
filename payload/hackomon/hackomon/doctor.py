@@ -36,6 +36,14 @@ def check(library=None):
                              ("bluetoothctl", "descoberta BLE"), ("sdptool", "inventario Bluetooth classico"),
                              ("tcpdump", "captura selecionada no laboratorio"), ("aircrack-ng", "teste local de dicionario")):
         rows.append(("OK" if shutil.which(command) else "OPCIONAL AUSENTE", "%s: %s" % (purpose, command)))
+    from . import recon
+    for database, reader, label in ((recon.DATABASE, recon.read_wifi, "Recon Wi-Fi"),
+                                    (recon.BLUETOOTH_DATABASE, recon.read_bluetooth, "Blue5 LE")):
+        if database.is_file():
+            try:
+                rows.append(("INFO", "%s: %d observacoes recentes lidas, sem nova busca" % (label, len(reader()))))
+            except RuntimeError as error:
+                rows.append(("OPCIONAL INDISPONIVEL", str(error)))
     try:
         # A connect proves only a listening service, not GPS fix/accuracy.
         with socket.create_connection(("127.0.0.1", 2947), timeout=1):

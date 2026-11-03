@@ -58,3 +58,9 @@ captured credentials or firmware source is distributed. Unknown schema/freshness
 fails explicitly; this public example does not prove the exact on-device schema.
 Bluetooth readiness checks follow BlueZ's public bluetoothctl controller properties.
 
+The 0.8.4 Blue5 adapter and decimal/BLOB compatibility were developed from
+identifier-free diagnostic metadata on a stock 2.0.0-stable unit. The native
+database column/transport contract is specific to the observed firmware; no
+Blue5 executable, firmware source or collected device records are distributed.
+Compatibility with other Blue5 versions is not implied.
+

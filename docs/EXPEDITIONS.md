@@ -1,5 +1,20 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Leitores nativos 2.0 — 0.8.4
+
+O diagnostico real identificou frequencias decimais no iw, BSSIDs BLOB ASCII
+no Recon, e coleta Bluetooth pelo servico nativo Blue5 em vez de bluetoothd.
+A 0.8.4 aceita esses formatos e prioriza os registros nativos Wi-Fi e LE.
+Nao muda servicos, interfaces, canais ou energia do controlador para coleta.
+Blue5 usa bt_device(mac,name,rssi,last_seen,transports); o leitor seleciona
+transports 1/3 (LE/inclui LE) no formato observado. Classic-only (2), valores
+desconhecidos, RSSI ausente/invalido e last_seen fora de 30 segundos sao ignorados.
+O timestamp original e mantido e recebe GPS apenas com fix proximo em ate 3s.
+Sem banco Blue5, permanece a busca LE legada com bluetoothctl.
+
+O doctor mostra as contagens aceitas dos leitores sem nova busca. Esse teste
+de integracao nao valida os testes de senha, sincronizacao remota ou bateria.
+
 ## Ajustes de descoberta — 0.8.3
 
 O modo automatico agora tenta ler APs recentes do banco local do Recon quando

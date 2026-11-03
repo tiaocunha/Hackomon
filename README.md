@@ -26,7 +26,9 @@ This incremental release contains:
 - an original Hackomon Field Companion overlay for the stock 2.0 Wargames theme,
   a double-click Windows installer and read-only `--doctor` diagnostics;
 - native Recon AP fallback, independent Wi-Fi/BLE status and a double-click
-  read-only radio support report (0.8.3; hardware confirmation still pending).
+  read-only radio support report;
+- compatibility with decimal iw frequencies, BLOB Wi-Fi addresses and native
+  Blue5 LE records observed on firmware 2.0.0-stable (0.8.4).
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -48,9 +50,11 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters remain **experimental in 0.8.3**: desktop tests use fixtures
-and mocked commands, not physical radios, actual password recovery or a live
-WDGWars account. See [network setup and limits](docs/NETWORKS.md).
+Network and lab adapters remain **experimental in 0.8.4**. Automated tests use
+fixtures and mocked commands. Native Recon Wi-Fi and Blue5 LE readers were
+also checked on one physical 2.0.0-stable Pager and returned recent observations.
+Full expedition UI, GPS association, battery, actual password recovery and live
+WDGWars acceptance remain separate validation. See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
 and [expedition behavior and limits](docs/EXPEDITIONS.md).
 The [WDGWars synchronization guide](docs/WDGWARS.md) explains checkpoints,
@@ -68,7 +72,7 @@ remain future work. See the
 
 For **Hak5 2.0.0-stable after a factory reset**, start with
 [the Portuguese setup guide](docs/INSTALAR_2_0.md): extract
-`hackomon-instalar-0.8.3.zip`, double-click **INSTALAR.cmd**, then enter the Pager
+`hackomon-instalar-0.8.4.zip`, double-click **INSTALAR.cmd**, then enter the Pager
 system password when OpenSSH asks. No manual PowerShell or file copy is needed.
 The installer uses one SSH session and preserves a recognized existing theme.
 Version 0.8.2 fixes launch from the Hak5 temporary runner using `_PAYLOAD_HOME`
@@ -78,6 +82,9 @@ the current installer; no separate PAGERCTL demo payload is needed.
 If the app starts but discovers nothing, 0.8.3 adds native Recon fallback and
 persistent per-radio status. `DIAGNOSTICAR.cmd` generates a read-only support
 report without SSIDs, device addresses, GPS coordinates or account credentials.
+The 0.8.4 readers target the native Recon/Blue5 schema observed on a real
+2.0.0-stable unit; old/classic-only/unknown records are not fresh BLE discoveries.
+The app does not start a competing Bluetooth daemon or retune native collectors.
 The full setup archive also
 creates a locally derived stock theme, preserving firmware-specific menus.
 The original overlay contains no copied Hak5 assets; the assembled on-device

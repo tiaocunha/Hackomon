@@ -1,4 +1,4 @@
-# Hackomon 0.8.3: instalacao facil no Windows
+# Hackomon 0.8.4: instalacao facil no Windows
 
 Preparado para o seu **WiFi Pineapple Pager com Hak5 2.0.0-stable**.
 App separado + tema Hackomon Field Companion. O firmware nao e substituido.
@@ -21,7 +21,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.8.3.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.8.4.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -39,7 +39,7 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.3` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.8.4` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - tenta instalar python3-sqlite3 no MMC se faltar o modulo para leitura do Recon;
@@ -104,6 +104,18 @@ Guarde a mensagem de erro e consulte `/tmp/hackomon.log`. Esse log e temporario
 e desaparece no reboot. Nao publique config, capturas ou chaves junto do log.
 
 ## 5. GPS, expedicoes e Bluetooth
+
+**0.8.4: compatibilidade com os dados observados no firmware 2.0.0-stable.**
+O leitor aceita frequencias como `2437.0` no iw e BSSIDs BLOB ASCII no Recon.
+O Wi-Fi automatico prioriza registros recentes do Recon antes de tentar uma
+busca separada. Para Bluetooth, quando existe `/root/recon/blue5.db`, le os
+anuncios LE recentes do Blue5, sem iniciar bluetoothd nem disputar o controlador.
+Registros classicos/transportes desconhecidos nao sao classificados como BLE.
+Blue5/logging precisam estar ativos; dados antigos nao viram descobertas atuais.
+Sem Blue5, permanece a alternativa legada via bluetoothctl. O doctor mostra
+quantos registros nativos conseguiu ler, sem nova busca ou localizacao inventada.
+Esses leitores ja retornaram registros recentes em um Pager fisico 2.0.0-stable;
+o percurso completo com GPS, consumo e sincronizacao continua pendente.
 
 **A coleta nao precisa de Internet.** Nas versoes anteriores, o Wi-Fi automatico
 dependia de uma interface cliente livre, que pode desaparecer quando o Client
@@ -201,7 +213,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.8.3/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.8.4/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,

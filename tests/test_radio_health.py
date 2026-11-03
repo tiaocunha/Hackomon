@@ -25,7 +25,7 @@ def database(root, rows=None):
     with closing(sqlite3.connect(path)) as connection:
         with connection:
             connection.execute("CREATE TABLE ssid(type, bssid, ssid, freq, channel, signal, time)")
-            for row in rows or [(8, "020000000001", b"Home", 2437, 6, -42, NOW)]:
+            for row in rows or [(8, b"020000000001", b"Home", 2437, 6, -42, NOW)]:
                 connection.execute("INSERT INTO ssid VALUES(?,?,?,?,?,?,?)", row)
     return path
 
@@ -67,7 +67,7 @@ class NativeReconTests(unittest.TestCase):
         with patch("hackomon.visit.radio.command", return_value="Interface mon0\n type monitor\n") as command, \
                 patch("hackomon.visit.recon.read_wifi", return_value=found) as read:
             self.assertEqual(found, visit.find_networks({}))
-            command.assert_called_once_with(["iw", "dev"], timeout=3)
+            command.assert_not_called()
             read.assert_called_once_with(limit=100)
 
     def test_down_auto_interface_falls_back_but_explicit_choice_remains_explicit(self):
@@ -80,10 +80,67 @@ class NativeReconTests(unittest.TestCase):
         with patch("hackomon.visit.radio.command", side_effect=command), \
                 patch("hackomon.visit.recon.read_wifi", return_value=recon.NetworkScan()) as read:
             visit.find_networks({})
-            read.assert_called_once()
+            self.assertEqual(2, read.call_count)
             with self.assertRaises(RuntimeError):
                 visit.find_networks({"wifi_interface": "sta0"})
-            self.assertEqual(1, read.call_count)
+            self.assertEqual(2, read.call_count)
+
+    def test_address_formats_observed_on_device_and_raw_six_bytes(self):
+        for value in (b"020000000001", "020000000001", "02:00:00:00:00:01", bytes.fromhex("020000000001")):
+            self.assertEqual("02:00:00:00:00:01", recon.decode_address(value))
+        for value in (b"bad", "not a MAC", bytes.fromhex("00ff") * 5):
+            with self.assertRaises(ValueError):
+                recon.decode_address(value)
+
+    def test_native_blue5_filters_classic_unknown_stale_and_missing_signal(self):
+        with support.temporary_directory() as directory:
+            path = Path(directory) / "blue5.db"
+            with closing(sqlite3.connect(path)) as connection:
+                with connection:
+                    connection.execute("CREATE TABLE bt_device(mac, name, rssi, last_seen, transports)")
+                    connection.executemany("INSERT INTO bt_device VALUES(?,?,?,?,?)", [
+                        ("C30000000001", "LE", -42, NOW, 1),
+                        (b"C30000000002", "Both", -50, NOW, 3),
+                        ("C30000000003", "Classic", -40, NOW, 2),
+                        ("C30000000004", "Unknown", -40, NOW, 4),
+                        ("C30000000005", "Stale", -40, NOW - 31, 1),
+                        ("C30000000006", "No RSSI", 127, NOW, 1),
+                    ])
+            before = path.read_bytes()
+            values = recon.read_bluetooth(path, now=NOW)
+            self.assertEqual(["LE", "Both"], [v["name"] for v in values])
+            self.assertEqual("Blue5", values.source)
+            self.assertTrue(all(v["time_source"] == "hak5_blue5" and "lat" not in v for v in values))
+            self.assertEqual(before, path.read_bytes())
+
+    def test_pump_prefers_blue5_and_leaves_bluez_controller_untouched(self):
+        native = recon.NetworkScan([observation(kind="BLE")], "Blue5")
+        with patch("hackomon.expedition.recon.BLUETOOTH_DATABASE") as path, \
+                patch("hackomon.expedition.recon.read_bluetooth", return_value=native), \
+                patch("hackomon.expedition.radio.bluetooth_ready") as ready, \
+                patch("hackomon.expedition.subprocess.Popen") as process:
+            path.is_file.return_value = True
+            self.assertEqual(native, expedition.Pump({}, threading.Lock())._ble())
+            ready.assert_not_called()
+            process.assert_not_called()
+
+    def test_iw_decimal_frequency_and_one_malformed_record_do_not_break_others(self):
+        text = ("BSS 02:00:00:00:00:01\n freq: 2437.0\n signal: -42.50 dBm\n SSID: Home\n"
+                " DS Parameter set: channel 6 (in use)\n"
+                "BSS 02:00:00:00:00:02\n freq: invalid\n signal: nan\n"
+                "BSS 02:00:00:00:00:03\n freq: 5180.0\n signal: -55.0 dBm\n")
+        found = radio.wifi_observations(text, NOW)
+        self.assertEqual([2437, 5180], [v["frequency"] for v in found])
+        self.assertEqual([6, 0], [v["channel"] for v in found])
+
+    def test_blue5_uses_original_observation_time_for_gps(self):
+        pump = expedition.Pump({}, threading.Lock())
+        pump.fixes.append(dict(fix_time=NOW, lat=-23.5, lon=-46.6, accuracy=8, altitude=700))
+        item = dict(observation(kind="BLE"), time_source="hak5_blue5", timestamp=NOW - 10)
+        for field in ("lat", "lon", "accuracy", "altitude"):
+            item.pop(field)
+        self.assertNotIn("lat", pump.locate(item))
+        self.assertIn("lat", pump.locate(dict(item, timestamp=NOW)))
 
     def test_native_observations_count_without_gps_and_never_enter_map_queue(self):
         with support.temporary_directory() as directory:

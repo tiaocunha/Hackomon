@@ -81,6 +81,15 @@ def monitor_for(frequency, cleanup):
 
 def find_networks(config, limit=100):
     interface = str(config.get("wifi_interface", ""))
+    if not interface:
+        # Prefer the running native collector. A free managed interface is
+        # only a fallback; do not delay native results behind a second scan.
+        try:
+            native = recon.read_wifi(limit=limit)
+            if native:
+                return native
+        except RuntimeError:
+            pass
     if interface:
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,32}", interface):
             raise RuntimeError("Interface Wi-Fi invalida")

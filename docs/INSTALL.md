@@ -2,7 +2,7 @@
 
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.8.3.zip`: extract everything and double-click `INSTALAR.cmd`
+`hackomon-instalar-0.8.4.zip`: extract everything and double-click `INSTALAR.cmd`
 (app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not
@@ -18,6 +18,12 @@ managed interface, fails or returns no APs. Only a recognized local database
 and observations <=30 seconds old are accepted. `python3-sqlite3` may be needed.
 Radio errors remain visible separately from GPS. Double-click `DIAGNOSTICAR.cmd`
 to collect a read-only, identifier-free support report if counters remain zero.
+
+Version 0.8.4 accepts decimal iw frequencies and native BLOB-encoded addresses,
+prioritizes native Wi-Fi observations, and reads recent LE records from the
+native Blue5 database when present. It does not enable a competing bluetoothd
+or reconfigure the Bluetooth controller. Native database compatibility was
+based on a real 2.0.0-stable device report; full expedition validation is separate.
 
 For the existing network field flow, see [TESTE_RAPIDO.txt](TESTE_RAPIDO.txt) in the repository
 or `LEIA_PRIMEIRO.txt` at the root of the release ZIP. Expeditions use the same

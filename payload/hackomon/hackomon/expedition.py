@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 
-from . import radio, visit
+from . import radio, visit, recon
 from .exploration import MAC, export_csv, normalize_observation
 
 
@@ -257,7 +257,7 @@ class Pump:
 
     def locate(self, observation):
         item = dict(observation)
-        if item.get("time_source") not in ("iw_age", "ble_receipt", "hak5_recon"):
+        if item.get("time_source") not in ("iw_age", "ble_receipt", "hak5_recon", "hak5_blue5"):
             return item
         with self.fix_lock:
             fixes = list(self.fixes)
@@ -281,6 +281,8 @@ class Pump:
             self.stop_event.wait(1)
 
     def _ble(self):
+        if recon.BLUETOOTH_DATABASE.is_file():
+            return recon.read_bluetooth()
         values = {}
         names = {}
         radio.bluetooth_ready()
@@ -339,8 +341,9 @@ class Pump:
                     continue
                 if turn % 2 and self.config.get("expedition_ble", True):
                     values = self._ble()
-                    self.emit("observations", values)
-                    self.emit("radio_status", dict(radio="ble", ok=True, message="%d anuncios LE com sinal" % len(values)))
+                    self.emit("observations", [self.locate(item) for item in values])
+                    source = getattr(values, "source", "BLE")
+                    self.emit("radio_status", dict(radio="ble", ok=True, message="%s: %d anuncios LE" % (source, len(values))))
                 else:
                     observations = visit.find_networks(self.config, limit=500)
                     self.emit("targets", observations[:100])
@@ -348,7 +351,7 @@ class Pump:
                     source = getattr(observations, "source", "iw")
                     self.emit("radio_status", dict(radio="wifi", ok=True, message="%s: %d APs recentes" % (source, len(observations))))
             except (RuntimeError, OSError, ValueError) as error:
-                message = str(error) if isinstance(error, RuntimeError) else "Falha ao ler o radio"
+                message = str(error) if isinstance(error, RuntimeError) else "Falha ao ler o radio (%s)" % type(error).__name__
                 self.emit("radio_status", dict(radio="ble" if turn % 2 and self.config.get("expedition_ble", True) else "wifi", ok=False, message=message))
             finally:
                 self.radio_lock.release()

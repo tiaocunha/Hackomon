@@ -121,16 +121,26 @@ def wifi_observations(text, now):
             if line.startswith("SSID:"):
                 current["name"] = line[5:].strip()
             elif line.startswith("freq:"):
-                current["frequency"] = int(line.split()[1])
+                match = re.match(r"freq:\s*(\d+(?:\.\d+)?)(?:\s|$)", line)
+                if match:
+                    frequency = float(match.group(1))
+                    if math.isfinite(frequency) and frequency.is_integer() and 2400 <= frequency <= 7125:
+                        current["frequency"] = int(frequency)
             elif line.startswith("signal:"):
-                current["rssi"] = int(float(line.split()[1]))
+                match = re.match(r"signal:\s*(-?\d+(?:\.\d+)?)(?:\s|$)", line)
+                if match:
+                    signal = float(match.group(1))
+                    if math.isfinite(signal) and -127 <= signal <= 0:
+                        current["rssi"] = int(signal)
             elif line.startswith("last seen:"):
                 age = re.search(r"last seen:\s+(\d+) ms ago", line)
                 if age:
                     current["timestamp"] = int(now - int(age.group(1)) / 1000)
                     current["time_source"] = "iw_age"
             elif "DS Parameter set: channel " in line:
-                current["channel"] = int(line.rsplit(" ", 1)[1])
+                match = re.search(r"DS Parameter set: channel (\d+)", line)
+                if match and 0 <= int(match.group(1)) <= 233:
+                    current["channel"] = int(match.group(1))
             elif line.startswith("RSN:"):
                 current["security"]["rsn"] = True
             elif "Authentication suites:" in line:

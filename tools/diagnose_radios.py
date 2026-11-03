@@ -9,6 +9,8 @@ import shutil
 import socket
 import subprocess
 import time
+import traceback
+import sys
 
 
 def run(args):
@@ -44,6 +46,71 @@ def gps_status():
         return "porta acessivel, sem TPV valido na amostra"
     except OSError:
         return "GPSd inacessivel/sem resposta"
+
+
+def runtime_checks(interfaces):
+    lines = ["", "Integracao do app (leitura de cache; sem nova busca):"]
+    app = Path("/root/payloads/user/games/hackomon")
+    if app.is_dir():
+        try:
+            sys.path.insert(0, str(app))
+            from hackomon import radio, recon
+            try:
+                values = recon.read_wifi(limit=500)
+                lines.append("  Leitor Recon instalado: %s APs aceitos" % len(values))
+                if hasattr(recon, "read_bluetooth") and recon.BLUETOOTH_DATABASE.is_file():
+                    lines.append("  Leitor Blue5 instalado: %s LE aceitos" % len(recon.read_bluetooth()))
+            except Exception as error:
+                frames = traceback.extract_tb(error.__traceback__)
+                lines.append("  Leitor Recon: %s em %s" % (type(error).__name__, ";".join("%s:%s:%s" % (Path(f.filename).name, f.lineno, f.name) for f in frames[-4:])))
+            for item in [v for v in interfaces if v["type"] == "managed"][:2]:
+                code, cached = run(["iw", "dev", item["name"], "scan", "dump"])
+                lines.append("  Cache iw %s: codigo=%s BSS=%s" % (item["name"], code, len(re.findall(r"(?m)^BSS ", cached))))
+                if code == 0:
+                    frequencies = re.findall(r"(?m)^\s*freq:\s*([0-9.]+)\s*$", cached)
+                    lines.append("  Formato de frequencia iw: decimal=%s inteiro=%s" % (sum("." in v for v in frequencies), sum("." not in v for v in frequencies)))
+                    try:
+                        lines.append("  Parser iw: %s APs aceitos" % len(radio.wifi_observations(cached, time.time())))
+                    except Exception as error:
+                        frames = traceback.extract_tb(error.__traceback__)
+                        lines.append("  Parser iw: %s em %s" % (type(error).__name__, ";".join("%s:%s:%s" % (Path(f.filename).name, f.lineno, f.name) for f in frames[-4:])))
+        except Exception as error:
+            lines.append("  App nao consultado: %s" % type(error).__name__)
+    lines.append("  HCI no kernel: " + ",".join(p.name for p in Path("/sys/class/bluetooth").glob("hci*")))
+    for name in ("bluetoothd", "blue5", "dbus-daemon", "pineapd", "pineapple"):
+        code, text = run(["pidof", name])
+        lines.append("  Processo %s ativo=%s" % (name, code == 0 and bool(text.strip())))
+    for name in ("btmgmt", "hciconfig"):
+        lines.append("  Ferramenta %s=%s" % (name, bool(shutil.which(name))))
+    lines.append("  Servicos disponiveis: " + ",".join(p.name for p in Path("/etc/init.d").glob("*") if re.search(r"blue|bluetooth|dbus|gps|pineap", p.name)))
+    try:
+        import sqlite3
+        for path in sorted(Path("/root/recon").glob("*.db"))[:12]:
+            connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True, timeout=0.2)
+            try:
+                connection.execute("PRAGMA query_only=ON")
+                tables = [row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'") if re.fullmatch(r"[A-Za-z0-9_]+", row[0])]
+                lines.append("  Banco %s: tabelas=%s" % (path.name, ",".join(tables)))
+                for table in [t for t in tables if re.search(r"blue|^bt_|ble", t, re.I)]:
+                    fields = [row[1] for row in connection.execute('PRAGMA table_info("' + table + '")')]
+                    lines.append("    %s: campos=%s" % (table, ",".join(fields)))
+                    if table == "bt_device" and {"last_seen", "transports", "le_random", "mac"}.issubset(fields):
+                        count, stamp = connection.execute("SELECT count(*),max(last_seen) FROM bt_device").fetchone()
+                        age = int(time.time() - float(stamp)) if stamp is not None else "sem aparelhos"
+                        lines.append("    BT total=%s idade_ultimo_seg=%s" % (count, age))
+                        rows = connection.execute("SELECT typeof(transports),transports,le_random,typeof(mac),length(mac),count(*) FROM bt_device GROUP BY 1,2,3,4,5 LIMIT 16")
+                        for kind, transport, random, mac_type, mac_length, count in rows:
+                            transport = transport if isinstance(transport, (int, float)) or str(transport).lower() in ("le", "bredr", "le,bredr", "bredr,le") else "texto/valor omitido"
+                            lines.append("    BT tipos transporte=%s valor=%s randomLE=%s mac=%s tamanho=%s count=%s" % (kind, transport, random, mac_type, mac_length, count))
+                if "ssid" in tables:
+                    rows = connection.execute("SELECT typeof(bssid),length(bssid),typeof(freq),typeof(channel),typeof(signal),typeof(time),count(*) FROM ssid WHERE type=8 GROUP BY 1,2,3,4,5,6 LIMIT 10")
+                    for row in rows:
+                        lines.append("    Tipos BSSID/tamanho/freq/canal/sinal/tempo/contagem: " + "/".join(str(v) for v in row))
+            finally:
+                connection.close()
+    except Exception as error:
+        lines.append("  Esquemas adicionais: %s" % type(error).__name__)
+    return lines
 
 
 def report(db_path=Path("/root/recon/recon.db"), state_root=Path("/mmc/root/hackomon")):
@@ -110,6 +177,7 @@ def report(db_path=Path("/root/recon/recon.db"), state_root=Path("/mmc/root/hack
                 lines.append("  %s: %s" % (key, "".join(c for c in message if c.isprintable())[:180]))
         except (ValueError, OSError, TypeError, AttributeError):
             lines.append("Expedicao: resumo nao consultado")
+    lines.extend(runtime_checks(interfaces))
     lines.append("Fim. Nao inclui nomes de redes, MACs, coordenadas, config ou senhas.")
     return "\n".join(lines) + "\n"
 

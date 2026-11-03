@@ -1,5 +1,21 @@
 # Hardware validation checklist
 
+## Native reader check — 0.8.4, 2026-11-03
+
+- [x] Loaded the corrected native Recon reader on one stock 2.0.0-stable Pager;
+  BLOB ASCII addresses decoded and recent AP rows were accepted.
+- [x] Loaded the Blue5 LE reader on that Pager; recent LE rows were accepted
+  without starting bluetoothd or modifying controller/service configuration.
+- [x] Reinstalled the payload with a backup; installer preserved save/config
+  and recognized the existing valid theme. Temporary-launch verification passed.
+- [ ] Confirm the running Expedition screen increments Wi-Fi and BLE counters.
+- [ ] Validate real GPS fixes and timestamp/location association; GPSd was not
+  reachable during this reader check.
+- [ ] Validate full field duration, power use, WDGWars reception and selected lab tests.
+
+This establishes native database reader compatibility on that device, not full
+hardware validation of the complete product or other firmware versions.
+
 ## Radio discovery 0.8.3
 
 - [ ] Test native Recon fallback with Client Mode off and with its interface connected.

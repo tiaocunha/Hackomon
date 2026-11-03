@@ -4,6 +4,8 @@ HACKOMON - INSTALACAO FACIL NO WINDOWS
 Para reparar, siga os mesmos passos abaixo. Seu save e preservado.
 0.8.3: alternativa de leitura do Recon nativo, estados WiFi/BLE separados e
 DIAGNOSTICAR.cmd para gerar um relatorio quando os contadores ficarem zerados.
+0.8.4: aceita os formatos reais do Wi-Fi da 2.0 e usa o banco Bluetooth Blue5
+nativo. Nao precisa iniciar outro servico Bluetooth nem conectar a um roteador.
 
 1. Conecte seu Pager ao PC por USB-C DE DADOS ou pelo Wi-Fi de gerenciamento.
    No Pager, ative Settings > System > SSH e conecte-o a Internet.

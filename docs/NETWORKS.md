@@ -1,5 +1,11 @@
 # Networks and office laboratory — 0.7.0
 
+Current 0.8.4 note: the native Recon Wi-Fi and Blue5 LE readers were checked
+on one physical 2.0.0-stable Pager and returned recent records. This supersedes
+the original statement of no physical reader validation below. Full GPS/field
+workflow, battery, actual password recovery and WDGWars reception remain unvalidated.
+See [the installation guide](INSTALAR_2_0.md) and [hardware checks](HARDWARE_VALIDATION.md).
+
 Version 0.7.0 replaces the on-device upload flow with resumable expedition and
 quick-queue synchronization. See [WDGWARS.md](WDGWARS.md) for the current UI,
 receipt handling and recovery rules; the legacy single-request contract below
