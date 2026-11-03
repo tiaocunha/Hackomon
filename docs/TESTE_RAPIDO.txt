@@ -1,0 +1,52 @@
+HACKOMON 0.6.0 - PRIMEIRO TESTE DE CAMPO
+
+Esta e uma versao experimental. Testes automatizados usam simulacoes; radios,
+GPS, consumo e comportamento no firmware original ainda precisam do teste fisico.
+
+1. Extraia o ZIP e copie a pasta hackomon para o mesmo local do payload anterior
+   (/root/payloads/user/games/hackomon). Preserve /mmc/root/hackomon, onde fica o save.
+2. No menu inicial, escolha Expedicao. A inicia ou pausa. ESQ encerra e salva
+   o resumo. B volta ao pet mantendo a expedicao; sair do app a deixa pausada.
+3. DIR mostra os APs vistos na expedicao. Escolha SOMENTE um alvo autorizado
+   e pressione A para a avaliacao/captura/teste. A coleta pausa e retoma ao terminar.
+   Volte do relatorio com B. Nenhuma rede entra automaticamente em testes.
+
+DEPENDENCIAS NO PAGER
+Python 3 completo + ctypes e libpagerctl.so continuam obrigatorios para a tela.
+Wi-Fi usa iw; BLE usa bluetoothctl (BlueZ); GPS externo deve estar funcionando
+no gpsd local, porta 2947. Se nao houver interface Wi-Fi livre, configure uma vez
+wifi_interface no config.json. expedition_ble=false desativa os ciclos BLE.
+Nao existe instalacao automatica de dependencias neste pacote.
+
+O teste selecionado usa ip, iw, tcpdump e aircrack-ng instalados. O dicionario,
+fornecido por voce, fica em /mmc/root/hackomon/lab/dictionary.txt (ate 256 KB).
+Sem dicionario/handshake/radio compativel, o relatorio informa que o teste nao
+rodou ou foi inconclusivo. Capturar EAPOL nao garante descobrir uma senha.
+
+ARQUIVOS E LIMITES IMPORTANTES
+Dados: /mmc/root/hackomon/expeditions/<id>/
+  summary.json e summary.txt: resumo (texto gerado ao encerrar)
+  track.jsonl: pontos GPS
+  observations.jsonl: descobertas locais, inclusive sem localizacao
+  discoveries.csv: somente descobertas com localizacao confiavel
+  audits.jsonl: estados dos testes, sem senhas/capturas no CSV
+Relatorios detalhados dos testes: /mmc/root/hackomon/visits/
+Capturas e resultados de senha: /mmc/root/hackomon/lab/ (permanecem locais).
+
+A coleta alterna buscas Wi-Fi e BLE; nao escuta todos os canais simultaneamente.
+O GPS e amostrado em paralelo. Wi-Fi precisa informar idade da observacao
+(last seen) para localizar registros; BLE usa o horario de recebimento no BlueZ.
+Sem horario/fix proximo, registra Sem GPS e nao inventa coordenadas nem XP de mapa.
+Distancia e aproximada. Pausar/encerrar aguarda o ciclo atual (ate cerca de 35s).
+Teste selecionado pode somar espera do ciclo e ate cerca de 90s de avaliacao.
+Nao ha cancelamento imediato de uma captura/teste ja iniciado nesta entrega.
+
+A fila global do WDGWars ainda comporta 500 registros. O CSV da expedicao
+continua no armazenamento mesmo se ela encher; exporte/importa esse arquivo no
+Wardrive Go para aproveitar o conjunto. Use Redes -> Enviar ao WDGWars para a
+fila global, com Internet e chave local configuradas. Nao ha envio automatico.
+CSV completo da expedicao ainda nao tem envio direto em lotes pelo Hackomon.
+
+Para relatar falhas, anote a mensagem da tela e a versao do firmware. O log de
+inicializacao fica em /tmp/hackomon.log. Nao compartilhe chaves de conta, senhas
+ou capturas privadas junto com um relato publico de erro.

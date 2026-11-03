@@ -1,5 +1,6 @@
 {
   "wifi_interface": "",
+  "expedition_ble": true,
   "wdgwars_api_key": "",
   "lab": {
     "bssid": "",

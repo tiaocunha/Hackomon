@@ -50,3 +50,17 @@ checklist above has been completed and the firmware version recorded.
 - [ ] Client report lists unsupported/unexecuted tests accurately and never enters upload queue.
 - [ ] Restart forgets the prior client target while keeping earned XP and private reports.
 
+## Expedition field test — 0.6.0
+
+- [ ] Start/pause/resume/end from the on-device Expedition screen; no automatic restart after relaunch.
+- [ ] GPS UTC fix history aligns with iw age/BlueZ receive times during actual movement.
+- [ ] A driver without last-seen metadata produces local unlocated records, not invented positions.
+- [ ] Wi-Fi and BLE cycles alternate without overlapping a selected assessment's radio use.
+- [ ] The selected authorized BSSID is frozen while the discovery list continues changing.
+- [ ] Assessment pauses collection, preserves separate evidence and resumes after cleanup.
+- [ ] Stop/exit waits for bounded commands, leaves a resumable journal and restores stock UI.
+- [ ] Full 500-record map queue preserves additional located observations in expedition CSV.
+- [ ] GPS loss, optical/physical button mapping, storage-full and missing dependencies are visible.
+- [ ] CSV imports in Wardrive Go; actual WDGWars reception is verified with the user's account.
+- [ ] Record CPU, memory and battery impact over at least one hour; check 4-FPS UI readability.
+

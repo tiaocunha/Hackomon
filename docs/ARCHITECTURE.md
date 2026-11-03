@@ -1,5 +1,15 @@
 # Architecture
 
+## Expeditions (0.6.0)
+
+`expedition.Pump` owns a GPS sampler and a serial radio scan thread. A shared
+radio lock coordinates discovery and manually selected network assessments.
+Workers emit bounded events; only the app loop updates game XP and the journal.
+The journal appends private route/observation records, writes a discovery-only
+CSV and atomically checkpoints a compact summary. It reconstructs deduplication
+from prior records and restores paused, without any active test target.
+See [EXPEDITIONS.md](EXPEDITIONS.md) for timestamp, storage and interruption limits.
+
 ## Optional network and lab adapters (0.4.0)
 
 The `radio` module invokes bounded installed Linux tools and consumes fresh GPSD

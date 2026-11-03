@@ -48,19 +48,25 @@ def gps_fix(now=None):
 
 
 def parse_gps_report(report, now):
+    if not isinstance(report, dict) or not isinstance(report.get("time"), str):
+        return None
     if report.get("class") != "TPV" or report.get("mode", 0) < 2:
         return None
     stamp = datetime.datetime.fromisoformat(report["time"].replace("Z", "+00:00"))
     if stamp.tzinfo is None or abs(now - stamp.timestamp()) > 15:
         return None
     lat, lon = float(report["lat"]), float(report["lon"])
-    accuracy = max(float(report["epx"]), float(report["epy"]))
+    x_error, y_error = float(report["epx"]), float(report["epy"])
+    if not (0 < x_error <= 100 and 0 < y_error <= 100):
+        return None
+    accuracy = max(x_error, y_error)
     if not (-90 <= lat <= 90 and -180 <= lon <= 180 and 0 < accuracy <= 100):
         return None
     altitude = float(report.get("altMSL", 0))
     if not math.isfinite(altitude):
         return None
-    return dict(lat=lat, lon=lon, accuracy=accuracy, altitude=altitude)
+    return dict(lat=lat, lon=lon, accuracy=accuracy, altitude=altitude,
+                fix_time=stamp.timestamp())
 
 
 def wifi_observations(text, now):
@@ -88,6 +94,11 @@ def wifi_observations(text, now):
                 current["frequency"] = int(line.split()[1])
             elif line.startswith("signal:"):
                 current["rssi"] = int(float(line.split()[1]))
+            elif line.startswith("last seen:"):
+                age = re.search(r"last seen:\s+(\d+) ms ago", line)
+                if age:
+                    current["timestamp"] = int(now - int(age.group(1)) / 1000)
+                    current["time_source"] = "iw_age"
             elif "DS Parameter set: channel " in line:
                 current["channel"] = int(line.rsplit(" ", 1)[1])
             elif line.startswith("RSN:"):

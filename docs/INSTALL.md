@@ -1,5 +1,9 @@
 # Install on a WiFi Pineapple Pager
 
+For 0.6.0 field tests, see [TESTE_RAPIDO.txt](TESTE_RAPIDO.txt) in the repository
+or `LEIA_PRIMEIRO.txt` at the root of the release ZIP. Expeditions use the same
+installed dependencies; no firmware is replaced and the existing pet save remains.
+
 ## Prerequisites
 
 - Stock Hak5 Pager firmware with SSH access.

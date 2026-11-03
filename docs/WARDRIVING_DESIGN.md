@@ -1,7 +1,8 @@
 # Hackomon: companheiro de wardriving e assistente de pentesting
 
-Status: conceito aprovado e especificacao futura. Este documento nao adiciona
-funcionalidades executaveis a versao 0.5.0. Data: 2026-11-03.
+Status: conceito aprovado, parcialmente implementado na 0.6.0 experimental.
+Este documento descreve a direcao completa; consulte EXPEDITIONS.md para a
+cobertura efetiva e os limites da entrega atual. Data: 2026-11-03.
 
 ## Identidade
 
@@ -121,6 +122,8 @@ teste offline delimitado de laboratorio, inventario Bluetooth e atendimento
 Wi-Fi com selecao dinamica. A suite tem 50 testes simulados; a validacao fisica
 permanece pendente.
 
-Expedicoes continuas, modo hibrido, coordenador de tarefas, aplicativo companheiro,
-IA e as novas regras de afinidade/colecao descritas aqui ainda nao foram
-implementados. Nao ha novo pacote executavel associado a este documento.
+Na 0.6.0 entram expedicoes com buscas repetidas e GPS paralelo, diario local,
+retomada pausada e o primeiro modo hibrido serial para um alvo escolhido.
+Fila persistente de varios testes, cancelamento imediato, radios simultaneos,
+aplicativo companheiro, IA e novas regras de afinidade/colecao continuam pendentes.
+As funcionalidades executaveis e limites estao descritos em EXPEDITIONS.md.

@@ -79,7 +79,7 @@ def monitor_for(frequency, cleanup):
                 cleanup["note"] = "Interface temporaria requer remocao: " + name
 
 
-def find_networks(config):
+def find_networks(config, limit=100):
     interface = str(config.get("wifi_interface", ""))
     if interface:
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,32}", interface):
@@ -99,7 +99,7 @@ def find_networks(config):
     values = radio.wifi_observations(text, int(time.time()))
     unique = {item["mac"]: item for item in values
               if not int(item["mac"][:2], 16) & 1 and item["mac"] != "00:00:00:00:00:00"}
-    return sorted(unique.values(), key=lambda item: item["rssi"], reverse=True)[:100]
+    return sorted(unique.values(), key=lambda item: item["rssi"], reverse=True)[:limit]
 
 
 def session_config(config, target, now=None):

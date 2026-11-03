@@ -13,7 +13,7 @@ from .storage import StateStore
 from .ui import HackomonUI, NETWORK_MENU
 from .exploration import export_csv, record_observations
 from .network_config import load_config
-from . import bluetooth_lab, lab, radio, visit, wdgwars
+from . import bluetooth_lab, expedition, lab, radio, visit, wdgwars
 
 
 ACTION_KEYS = ("feed", "play", "rest")
@@ -43,6 +43,113 @@ class HackomonApp:
         self.visit_selected = 0
         self.visit_message = "Escolha a rede do cliente para este atendimento"
         self.visit_report = None
+        self.radio_lock = threading.Lock()
+        self.pump = None
+        self.expedition_message = "A inicia uma expedicao"
+        self.expedition_targets = []
+        self.visit_origin = "network"
+        self.resume_expedition = False
+        try:
+            self.journal = expedition.Journal.restore(self.store.data_dir)
+        except (ValueError, OSError, KeyError, TypeError):
+            self.journal = None
+            self.expedition_message = "Diario anterior ilegivel; arquivos preservados"
+
+    def _start_expedition(self):
+        try:
+            config = load_config(self.store.data_dir)
+            if self.journal is None or self.journal.summary["status"] == "ended":
+                self.journal = expedition.Journal(self.store.data_dir, now=int(self.clock()))
+                self.expedition_targets = []
+            if self.journal.summary.get("full"):
+                self.expedition_message = "Diario cheio; encerre e inicie outra expedicao"
+                return
+            self.journal.summary.pop("storage_error", None)
+            self.journal.status("running")
+            if self.pump is None:
+                self.pump = expedition.Pump(config, self.radio_lock)
+                self.pump.start()
+            else:
+                self.pump.resume()
+            self.expedition_message = "Explorando... GPS e radios em verificacao"
+        except (RuntimeError, OSError, ValueError):
+            if self.pump is not None:
+                self.pump.stop(wait=True)
+                self.pump = None
+            if self.journal is not None:
+                self.journal.summary["status"] = "paused"
+            self.expedition_message = "Falha ao iniciar; confira config e armazenamento"
+
+    def _handle_expedition(self, pressed):
+        if self.worker is not None:
+            return True
+        if pressed & self.display.BTN_A:
+            if self.journal is not None and self.pump is not None and self.journal.summary["status"] == "running":
+                self.pump.pause()
+                self.journal.status("paused")
+                self.expedition_message = "Pausada; ciclo atual pode terminar"
+            elif self.journal is None or self.journal.summary["status"] != "ending":
+                self._start_expedition()
+        if pressed & self.display.BTN_LEFT and self.pump is not None:
+            self.journal.status("ending")
+            self.pump.stop()
+            self.expedition_message = "Encerrando o ciclo atual..."
+        if pressed & self.display.BTN_RIGHT:
+            if self.expedition_targets:
+                self.visit_networks = [dict(item) for item in self.expedition_targets]
+                self.visit_selected = 0
+                self.visit_origin = "expedition"
+                self.screen = "visit"
+                self.visit_message = "Escolha apenas um AP autorizado para testar"
+            else:
+                self.expedition_message = "Aguarde uma busca Wi-Fi para escolher o alvo"
+        if pressed & (self.display.BTN_B | self.display.BTN_POWER):
+            self.screen = "home"
+        return True
+
+    def _tick_expedition(self):
+        if self.pump is None or self.journal is None:
+            return
+        for _ in range(32):
+            try:
+                kind, value = self.pump.events.get_nowait()
+            except queue.Empty:
+                break
+            try:
+                if kind == "gps" and self.journal.summary["status"] == "running":
+                    self.journal.gps(value)
+                elif kind == "targets":
+                    self.expedition_targets = value
+                elif kind == "observations":
+                    located = self.journal.observations(value)
+                    result = record_observations(self.state, located, int(self.clock()))
+                    self.journal.summary["xp"] += result["xp"]
+                    self.journal.checkpoint()
+                    evolved = advance_one_if_ready(self.state, self.catalog)
+                    if result["xp"] or evolved.evolved:
+                        self.pose = "happy"
+                        self.pose_until = time.monotonic() + 2
+                    self.expedition_message = "%d registros; +%d XP%s" % (
+                        len(located), result["xp"], " (fila mapa cheia; CSV preservado)" if result["full"] else "")
+                    self.store.save(self.state)
+                elif kind in ("gps_error", "radio_error"):
+                    self.expedition_message = value
+                if self.journal.summary.get("full"):
+                    self.pump.pause()
+                    self.journal.status("paused")
+                    self.expedition_message = "Limite do diario; encerre e inicie outra expedicao"
+            except (ValueError, OSError, KeyError, TypeError):
+                self.pump.pause()
+                self.journal.summary["status"] = "paused"
+                self.journal.summary["storage_error"] = True
+                self.journal.last_fix = None
+                self.expedition_message = "Falha de armazenamento; coleta pausada"
+        if self.journal.summary["status"] == "ending" and not self.pump.alive() and self.pump.events.empty():
+            self.journal.summary["dropped_events"] = self.pump.dropped
+            self.journal.status("ended")
+            self.pump = None
+            self.expedition_targets = []
+            self.expedition_message = "Expedicao encerrada; diario e CSV salvos"
 
     def _network_job(self, action):
         if self.worker is not None:
@@ -51,12 +158,17 @@ class HackomonApp:
         visit_target = (dict(self.visit_networks[self.visit_selected])
                         if action == "visit_assess" and self.visit_networks else None)
         def work():
+            locked = False
             try:
+                if action not in ("upload", "export"):
+                    self.radio_lock.acquire()
+                    locked = True
                 config = load_config(self.store.data_dir)
                 if action in ("WIFI", "BLE"):
                     result = radio.discover(action, config.get("wifi_interface", ""))
                 elif action == "upload":
-                    result = wdgwars.upload(snapshot, config.get("wdgwars_api_key", ""))
+                    count = wdgwars.upload(snapshot, config.get("wdgwars_api_key", ""))
+                    result = (count, [item["identity"] for item in snapshot])
                 elif action == "export":
                     path = Path(self.store.data_dir) / "discoveries.csv"
                     path.parent.mkdir(parents=True, exist_ok=True)
@@ -80,6 +192,9 @@ class HackomonApp:
                 # Never put credentials, tool output or server response bodies on screen/log.
                 safe = str(error) if isinstance(error, RuntimeError) else "Falha local; confira configuracao"
                 self.results.put((action, None, safe))
+            finally:
+                if locked:
+                    self.radio_lock.release()
         self.network_message = "Trabalhando... aguarde (max. 90s)"
         if action.startswith("visit_"):
             self.visit_message = "Buscando redes..." if action == "visit_scan" else "Avaliando o alvo selecionado..."
@@ -97,6 +212,7 @@ class HackomonApp:
             self.network_message = error
             if action.startswith("visit_"):
                 self.visit_message = error
+            self._resume_after_audit()
             return
         if action == "visit_scan":
             self.visit_networks = result
@@ -107,13 +223,17 @@ class HackomonApp:
             self.visit_report = result["report"]
             self.visit_message = result["message"]
             self.screen = "visit_report"
+            if self.visit_origin == "expedition" and self.journal is not None:
+                self.journal.audit(result)
+            self._resume_after_audit()
         if action in ("WIFI", "BLE"):
             summary = record_observations(self.state, result, int(self.clock()))
             self.network_message = "%d registros, +%d XP%s" % (
                 summary["added"], summary["xp"], " (fila cheia)" if summary["full"] else "")
         elif action == "upload":
-            self.state.network_queue = []
-            self.network_message = "WDGWars confirmou o recebimento de %d registros" % result
+            uploaded = set(result[1])
+            self.state.network_queue = [item for item in self.state.network_queue if item["identity"] not in uploaded]
+            self.network_message = "WDGWars confirmou o recebimento de %d registros" % result[0]
         elif action == "export":
             self.network_message = result
         else:
@@ -140,6 +260,16 @@ class HackomonApp:
             self.display.vibrate(180)
         self.store.save(self.state)
 
+    def _resume_after_audit(self):
+        requested = self.resume_expedition
+        self.resume_expedition = False
+        if (requested and self.pump is not None and self.journal is not None
+                and self.journal.summary["status"] == "paused"
+                and not self.journal.summary.get("full")
+                and not self.journal.summary.get("storage_error")):
+            self.journal.status("running")
+            self.pump.resume()
+
     def _handle_network(self, pressed):
         if self.worker is not None:
             return True
@@ -160,6 +290,7 @@ class HackomonApp:
             if action == "upload":
                 self.screen = "upload_confirm"
             elif action == "visit_scan":
+                self.visit_origin = "network"
                 self.screen = "visit"
                 self.visit_networks = []
                 self.visit_report = None
@@ -173,15 +304,19 @@ class HackomonApp:
             return True
         if pressed & (self.display.BTN_B | self.display.BTN_POWER):
             if self.screen == "visit_report":
-                self.screen = "visit"
+                self.screen = "expedition" if self.visit_origin == "expedition" else "visit"
             else:
-                self.screen = "network"
+                self.screen = "expedition" if self.visit_origin == "expedition" else "network"
                 self.visit_networks = []
                 self.visit_report = None
             return True
         if self.screen == "visit_report":
             return True
         if pressed & self.display.BTN_LEFT:
+            if self.visit_origin == "expedition":
+                self.visit_networks = [dict(item) for item in self.expedition_targets]
+                self.visit_selected = 0
+                return True
             self.visit_networks = []
             self._network_job("visit_scan")
             return True
@@ -191,6 +326,10 @@ class HackomonApp:
             if pressed & self.display.BTN_DOWN:
                 self.visit_selected = (self.visit_selected + 1) % len(self.visit_networks)
             if pressed & self.display.BTN_A:
+                if self.visit_origin == "expedition" and self.pump is not None:
+                    self.resume_expedition = self.journal.summary["status"] == "running"
+                    self.pump.pause()
+                    self.journal.status("paused")
                 self._network_job("visit_assess")
         return True
 
@@ -226,9 +365,9 @@ class HackomonApp:
 
     def _handle_home(self, pressed):
         if pressed & self.display.BTN_UP:
-            self.selected = (self.selected - 1) % 6
+            self.selected = (self.selected - 1) % 7
         if pressed & self.display.BTN_DOWN:
-            self.selected = (self.selected + 1) % 6
+            self.selected = (self.selected + 1) % 7
         if pressed & self.display.BTN_A:
             if self.selected < 3:
                 self._care(ACTION_KEYS[self.selected])
@@ -237,6 +376,8 @@ class HackomonApp:
                 self.screen = "bestiary"
             elif self.selected == 4:
                 self.screen = "network"
+            elif self.selected == 5:
+                self.screen = "expedition"
             else:
                 self.screen = "help"
         if pressed & (self.display.BTN_B | self.display.BTN_POWER):
@@ -280,6 +421,9 @@ class HackomonApp:
             self.ui.visit(self.state, self.visit_networks, self.visit_selected,
                           self.visit_message, self.worker is not None,
                           self.visit_report if self.screen == "visit_report" else None)
+        elif self.screen == "expedition":
+            self.ui.expedition(self.state, self.journal.summary if self.journal else None,
+                               self.expedition_message, frame_index, self._current_pose())
         else:
             self.ui.help(self.state)
 
@@ -289,6 +433,7 @@ class HackomonApp:
         try:
             while running:
                 self._finish_network_job()
+                self._tick_expedition()
                 _current, pressed, _released = self.display.poll_input()
                 if self.screen == "home":
                     running = self._handle_home(pressed)
@@ -298,17 +443,27 @@ class HackomonApp:
                     running = self._handle_network(pressed)
                 elif self.screen in ("visit", "visit_report"):
                     running = self._handle_visit(pressed)
+                elif self.screen == "expedition":
+                    running = self._handle_expedition(pressed)
                 else:
                     running = self._handle_help(pressed)
-                self.render(frame)
+                if self.screen != "expedition" or frame % 2 == 0:
+                    self.render(frame // 2 if self.screen == "expedition" else frame)
                 frame += 1
                 if max_frames is not None and frame >= max_frames:
                     break
                 self.display.delay(125)
         finally:
+            if self.pump is not None:
+                self.pump.stop()
             if self.worker is not None:
                 self.worker.join()
                 self._finish_network_job()
+            if self.pump is not None:
+                self.pump.stop(wait=True)
+                self._tick_expedition()
+                if self.journal is not None and self.journal.summary["status"] != "ended":
+                    self.journal.status("paused")
             self.state.apply_elapsed_time(int(self.clock()))
             self.store.save(self.state)
 

@@ -1,5 +1,7 @@
 """480x222 layout and screens."""
 
+import time
+
 from .constants import (
     COLOR_BG,
     COLOR_CYAN,
@@ -19,7 +21,7 @@ from .backgrounds import draw_background
 from .sprites import draw_sprite, iter_color_runs, sprite_frame
 
 
-ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Ajuda")
+ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Expedicao", "Ajuda")
 NETWORK_MENU = (("visit_scan", "Atendimento: buscar redes do cliente"),
                 ("WIFI", "Descobrir Wi-Fi com GPS"), ("BLE", "Descobrir Bluetooth LE com GPS"),
                 ("export", "Exportar CSV"), ("upload", "Enviar ao WDGWars"),
@@ -81,9 +83,9 @@ class HackomonUI:
         display.draw_text(202, 83, "CUIDADO %02d  BEM-ESTAR %02d" % (state.care_points, state.wellness), COLOR_MUTED, 1)
 
         for index, label in enumerate(ACTIONS):
-            y = 101 + index * 14
+            y = 99 + index * 12
             if index == selected:
-                display.fill_rect(199, y - 3, 262, 14, COLOR_PANEL_ALT)
+                display.fill_rect(199, y - 2, 262, 12, COLOR_PANEL_ALT)
                 color = COLOR_CYAN
                 prefix = "> "
             else:
@@ -121,6 +123,38 @@ class HackomonUI:
         display.draw_text(204, 124, "Temperamento: %s" % creature["temperament"], COLOR_MUTED, 1)
         display.draw_text(204, 151, "Descobertos: %d / 250" % len(state.discovered), COLOR_CYAN, 1)
         display.draw_text_centered(205, "ESQ/DIR 1  CIMA/BAIXO 5  A/B volta", COLOR_TEXT, 1)
+        display.flip()
+
+    def expedition(self, state, summary, message, frame_index=0, pose="idle"):
+        display = self.display
+        creature = self.catalog.creature(state.creature_id)
+        display.clear(COLOR_BG)
+        self._header("EXPEDICAO HACKOMON", state)
+        _panel(display, 8, 27, 174, 164)
+        draw_background(display, creature, 9, 28, 172, 140, frame_index)
+        if summary and summary["status"] == "running" and time.time() - summary.get("gps_at", 0) > 15 and pose == "idle":
+            pose = "sad"
+        draw_sprite(display, creature, 31, 39, scale=4, pose=pose, frame_index=frame_index)
+        display.draw_text_centered(174, creature["name"][:24], COLOR_TEXT, 1)
+        _panel(display, 190, 27, 282, 164)
+        if summary is None:
+            display.draw_text(202, 43, "Vamos explorar?", COLOR_CYAN, 2)
+            display.draw_text(202, 78, "A inicia  Wi-Fi + BLE", COLOR_TEXT, 1)
+            display.draw_text(202, 98, "GPS externo via gpsd", COLOR_MUTED, 1)
+            display.draw_text(202, 122, "Offline; sincronize depois", COLOR_MUTED, 1)
+        else:
+            labels = {"running": "EXPLORANDO", "paused": "PAUSADA", "ending": "ENCERRANDO", "ended": "FINALIZADA"}
+            display.draw_text(202, 39, labels.get(summary["status"], "PAUSADA"), COLOR_CYAN, 1)
+            display.draw_text(202, 59, "Wi-Fi %d  BLE %d" % (summary["wifi"], summary["ble"]), COLOR_TEXT, 1)
+            display.draw_text(202, 77, "GPS %d  Sem GPS %d" % (summary["located"], summary["unlocated"]), COLOR_TEXT, 1)
+            display.draw_text(202, 95, "Percurso aprox. %.2f km" % (summary["distance_m"] / 1000), COLOR_TEXT, 1)
+            display.draw_text(202, 113, "XP da expedicao: %d" % summary["xp"], COLOR_GREEN, 1)
+            display.draw_text(202, 131, "Testes %d  Recuperacoes %d" % (summary["audits"], summary["recoveries"]), COLOR_MUTED, 1)
+            gps = "GPS recente" if time.time() - summary.get("gps_at", 0) <= 15 else "GPS ausente/antigo"
+            display.draw_text(202, 154, gps, COLOR_YELLOW, 1)
+            display.draw_text(202, 173, "A inicia/pausa  ESQ encerra", COLOR_TEXT, 1)
+        display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
+        display.draw_text_centered(212, "DIR: escolher alvo autorizado  B: voltar", COLOR_TEXT, 1)
         display.flip()
 
     def help(self, state):

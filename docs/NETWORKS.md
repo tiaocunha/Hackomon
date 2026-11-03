@@ -1,4 +1,9 @@
-# Networks and office laboratory — 0.5.0
+# Networks and office laboratory — 0.6.0
+
+The original network/visit adapters are documented below. Version 0.6.0 adds
+[expeditions and serial hybrid assessments](EXPEDITIONS.md), with separate
+movement-aware GPS association and private session journals. This release is
+experimental and has not been tested on physical Pager radios.
 
 ## Status
 

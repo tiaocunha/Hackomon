@@ -19,6 +19,8 @@ This incremental release contains:
 - target-scoped Bluetooth metadata and classic SDP service inventory, with local reports.
 - a client-visit workflow: discover, choose the client's AP on screen, assess and
   save local JSON/text reports without pre-registering a BSSID or requiring GPS.
+- offline expeditions with repeated Wi-Fi/BLE scan cycles, continuous GPS sampling,
+  pause/resume, local trails/CSV, pet reactions and a scoped hybrid assessment flow.
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -40,17 +42,19 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters in **0.5.0 are experimental**: desktop tests use fixtures
+Network and lab adapters in **0.6.0 are experimental**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
+For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
+and [expedition behavior and limits](docs/EXPEDITIONS.md).
 
 ## Product direction
 
-The approved future direction combines a wardriving companion, expeditions and
-an authorized pentesting assistant. The proposed hybrid workflow queues
-target-selected capture/offline password tests during expeditions. See the
+The product direction combines a wardriving companion, expeditions and
+an authorized pentesting assistant. Version 0.6.0 implements the first serial
+hybrid workflow; advanced scheduling, affinities and computer/AI integration
+remain future work. See the
 [wardriving and hybrid-mode design](docs/WARDRIVING_DESIGN.md) (Portuguese).
-It is a specification, not a new feature in the current executable release.
 
 ## Install
 
