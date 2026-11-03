@@ -1,13 +1,13 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
-## Recompensas independentes de GPS — 0.8.5
+## Recompensas independentes de GPS — 0.8.6
 
 Na Expedicao, descobertas recentes e validas rendem XP mesmo sem fix: 2 XP por
-endereco Wi-Fi novo e 1 XP por endereco BLE novo. Mantem o limite de 120 XP por
-dia UTC e um registro persistente de ate 10.000 hashes, separado da fila de
+endereco Wi-Fi novo e 1 XP por endereco BLE novo, sem teto diario de XP.
+Mantem um registro persistente de ate 10.000 hashes, separado da fila de
 mapa. Esse registro impede repetir XP ao reiniciar, iniciar outra expedicao ou
-obter GPS depois. Enderecos ja vistos ao atingir o limite diario nao se tornam
-novos por trocar de dia. Bluetooth com endereco aleatorio pode representar o
+obter GPS depois. Enderecos ja conhecidos nao se tornam novos por trocar de
+dia. Bluetooth com endereco aleatorio pode representar o
 mesmo aparelho varias vezes; nao ha tentativa de desfazer essa privacidade.
 
 Idade da amostra <=60s, RSSI/endereco/tipo validos e exclusoes _nomap/_optout
@@ -134,7 +134,7 @@ e limitada a 128; o resumo encerrado registra eventos descartados se houver
 sobrecarga. O diario e limitado; nao representa armazenamento infinito.
 
 XP usa as regras atuais: novos enderecos, mesmo sem GPS, valem 2 XP Wi-Fi/1 XP BLE,
-com teto global de 120 XP de descoberta por dia. O pet reage com felicidade ao
+sem teto diario de descoberta desde a 0.8.6. O pet reage com felicidade ao
 ganhar XP e mostra pose triste sem GPS recente quando estiver ocioso. Formas,
 cuidados e evolucoes existentes continuam. Afinidades, novos ovos por expedição,
 itens e ramificacoes evolutivas ainda sao propostas futuras.

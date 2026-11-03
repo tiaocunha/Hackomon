@@ -42,7 +42,7 @@ try {
     Write-Host '[3/3] Enviando e instalando...'
     Write-Host 'Quando solicitado, digite a senha do Pager. Os caracteres ficam invisiveis.'
     Write-Host 'Na primeira conexao, confira a identidade do seu Pager antes de aceitar.'
-    $result = Send-HackomonArchive -Archive $archive -PagerAddress $PagerAddress -Destination '/mmc/root/hackomon-setup-0.8.5' -SshPath $ssh.Source -SkipTheme:$SkipTheme
+    $result = Send-HackomonArchive -Archive $archive -PagerAddress $PagerAddress -Destination '/mmc/root/hackomon-setup-0.8.6' -SshPath $ssh.Source -SkipTheme:$SkipTheme
     if ($result -eq 3) {
         Write-Host 'APP INSTALADO. O tema ficou pendente; leia o motivo acima.' -ForegroundColor Yellow
         Write-Host 'Voce ja pode abrir Payloads > Games > Hackomon. Detalhes em COMECE_AQUI.md.'

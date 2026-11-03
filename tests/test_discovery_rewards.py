@@ -62,12 +62,25 @@ class DiscoveryRewardTests(unittest.TestCase):
         self.assertEqual(0, reward_discoveries(migrated, [unlocated(5)], NOW)["xp"])
         self.assertEqual(2, reward_discoveries(migrated, [unlocated(6)], NOW)["xp"])
 
-    def test_daily_cap_and_next_day_do_not_farm_existing_addresses(self):
+    def test_no_daily_cap_and_next_day_does_not_farm_existing_addresses(self):
         result = reward_discoveries(self.state, [unlocated(i) for i in range(100)], NOW)
-        self.assertEqual(120, result["xp"])
+        self.assertEqual(200, result["xp"])
+        self.assertEqual(2, reward_discoveries(self.state, [unlocated(200)], NOW)["xp"])
+        self.assertEqual(202, self.state.exploration_daily_xp)
         tomorrow = NOW + 86400
         self.assertEqual(0, reward_discoveries(self.state, [unlocated(1, stamp=tomorrow)], tomorrow)["xp"])
-        self.assertEqual(2, reward_discoveries(self.state, [unlocated(200, stamp=tomorrow)], tomorrow)["xp"])
+        self.assertEqual(2, reward_discoveries(self.state, [unlocated(300, stamp=tomorrow)], tomorrow)["xp"])
+
+    def test_an_old_save_at_120_can_earn_more_today_without_resetting_progress(self):
+        reward_discoveries(self.state, [], NOW)
+        self.state.xp = 147
+        self.state.exploration_daily_xp = 120
+        self.state.exploration_xp = 120
+        restored = GameState.from_dict(self.state.to_dict(), self.catalog)
+        result = reward_discoveries(restored, [unlocated(), unlocated(2, "BLE")], NOW)
+        self.assertEqual(3, result["xp"])
+        self.assertEqual((150, 123, 123), (restored.xp, restored.exploration_daily_xp, restored.exploration_xp))
+        self.assertEqual(0, reward_discoveries(restored, [unlocated(), unlocated(2, "BLE")], NOW)["xp"])
 
     def test_stale_future_invalid_signal_and_optout_never_earn(self):
         values = [unlocated(stamp=NOW - 61), unlocated(2, stamp=NOW + 10),

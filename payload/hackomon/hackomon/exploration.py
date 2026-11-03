@@ -13,7 +13,6 @@ from . import __version__
 MAC = re.compile(r"(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\Z")
 MAX_QUEUE = 500
 MAX_KNOWN = 10000
-DAILY_XP_LIMIT = 120
 COLUMNS = ("MAC", "SSID", "AuthMode", "FirstSeen", "Channel", "Frequency", "RSSI",
            "CurrentLatitude", "CurrentLongitude", "AltitudeMeters", "AccuracyMeters",
            "RCOIs", "MfgrId", "Type")
@@ -75,8 +74,7 @@ def reward_discoveries(state, observations, now):
             continue
         if len(state.discovery_rewarded) >= MAX_KNOWN:
             continue
-        reward = min(2 if item["type"] == "WIFI" else 1,
-                     max(0, DAILY_XP_LIMIT - state.exploration_daily_xp))
+        reward = 2 if item["type"] == "WIFI" else 1
         state.discovery_rewarded[identity] = day
         state.exploration_daily_xp += reward
         state.exploration_xp += reward

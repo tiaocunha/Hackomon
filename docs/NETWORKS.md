@@ -1,7 +1,7 @@
 # Networks and office laboratory — 0.7.0
 
-0.8.5 update: Expedition discovery XP no longer requires GPS. Fresh valid
-addresses earn 2 XP Wi-Fi/1 XP BLE once, capped at 120 per UTC day, with a
+0.8.6 update: Expedition discovery XP does not require GPS or a daily ceiling.
+Fresh valid addresses earn 2 XP Wi-Fi/1 XP BLE once, with a
 separate persisted reward ledger. GPS is still required for map/upload rows.
 Legacy saves migrate already-rewarded addresses without replaying XP.
 
@@ -63,10 +63,10 @@ below does not require GPS and never queues client evidence for the map.
   the batch. Movement over 30 metres rejects it. These are stationary snapshots,
   not continuous route mapping: the final fix approximates positions during the
   scan, and its reported accuracy does not include all movement/time error.
-- New Wi-Fi address: **2 XP**. New BLE address: **1 XP**. Maximum **120 discovery
-  XP per UTC day**. No care points: evolution still requires pet care.
+- New Wi-Fi address: **2 XP**. New BLE address: **1 XP**. No daily XP ceiling
+  since 0.8.6. No care points: evolution still requires pet care.
 - Reward identities use address hashes. BLE random addresses can represent one
-  device more than once; the daily cap limits the effect. No de-randomization.
+  device more than once. There is no de-randomization or daily XP ceiling.
 - Names ending `_nomap` or `_optout` are excluded. Privacy zones/blacklists are
   not implemented. Avoid collecting where you do not intend to share locations.
 - At most one queued sample per address. A later UTC day can queue the same

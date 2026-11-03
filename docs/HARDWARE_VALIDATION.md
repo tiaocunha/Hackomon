@@ -1,5 +1,14 @@
 # Hardware validation checklist
 
+## Daily XP ceiling removal — 0.8.6
+
+- [ ] Verify fresh new addresses can earn XP after today's counter exceeds 120.
+- [ ] Verify the same known addresses do not earn again after restart.
+- [ ] Preserve previous XP, care, evolution and located/map data through the upgrade.
+
+The daily counter remains a statistic, not a reward gate. Existing discoveries
+are not retroactively repaid, and the bounded duplicate-address ledger remains.
+
 ## Offline discovery XP — 0.8.5
 
 - [x] Installer applied 0.8.5 to the reconnected device after checking the app

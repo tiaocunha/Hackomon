@@ -32,9 +32,9 @@ class NetworksTests(unittest.TestCase):
         self.catalog = CreatureCatalog.load_default()
         self.state = GameState.new(self.catalog, now=1700000000)
 
-    def test_unique_rewards_survive_restart_and_daily_cap(self):
+    def test_unique_rewards_survive_restart_without_daily_cap(self):
         result = record_observations(self.state, [observation(i) for i in range(100)], 1700000000)
-        self.assertEqual(120, result["xp"])
+        self.assertEqual(200, result["xp"])
         self.assertEqual(100, result["added"])
         state = GameState.from_dict(self.state.to_dict(), self.catalog)
         self.assertEqual(0, record_observations(state, [observation()], 1700000000)["xp"])
