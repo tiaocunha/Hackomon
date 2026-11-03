@@ -2,11 +2,25 @@
 
 ## Offline discovery XP — 0.8.5
 
+- [x] Installer applied 0.8.5 to the reconnected device after checking the app
+  was closed; native readers and temporary-launch verification passed.
 - [ ] Confirm Expedition gains XP with fresh Wi-Fi/BLE observations and GPSd unavailable.
 - [ ] Exit/restart and reobserve the same address without earning twice.
 - [ ] Confirm located points can enter the map later without a second reward.
 - [ ] Confirm unlocated observations stay out of CSV/WDGWars.
 - [ ] Confirm migration preserves the pet, previous XP and located reward history.
+
+## Field screenshot — 0.8.4, 2026-11-03
+
+- [x] User screenshot showed increasing Wi-Fi/BLE counts, a recent GPS fix,
+  located records, an approximate track distance and the 120-XP daily discovery cap.
+- [x] Full quick queue was explicitly shown with expedition CSV preservation.
+- [ ] Compare recorded coordinates/timestamps/distance against an independent route.
+- [ ] Verify actual WDGWars reception from the field CSV, including records beyond the quick queue.
+
+The 0.8.5 upgrade occurred after that field test. Positive additional discovery
+XP cannot be inferred from the installation check: the device had already
+reached its daily cap, which this release intentionally preserves.
 
 ## Native reader check — 0.8.4, 2026-11-03
 
