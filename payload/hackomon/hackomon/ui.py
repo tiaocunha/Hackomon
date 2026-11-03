@@ -24,7 +24,7 @@ from .sprites import draw_sprite, iter_color_runs, sprite_frame
 ACTIONS = ("Alimentar", "Brincar", "Descansar", "Bestiario", "Redes / Laboratorio", "Expedicao", "Ajuda")
 NETWORK_MENU = (("visit_scan", "Atendimento: buscar redes do cliente"),
                 ("WIFI", "Descobrir Wi-Fi com GPS"), ("BLE", "Descobrir Bluetooth LE com GPS"),
-                ("export", "Exportar CSV"), ("upload", "Enviar ao WDGWars"),
+                ("export", "Exportar CSV"), ("upload", "WDGWars: sincronizacao e conta"),
                 ("capture", "Lab: capturar EAPOL (20s)"),
                 ("test", "Lab: testar dicionario (30s)"),
                 ("bluetooth_audit", "Lab: auditar Bluetooth"))
@@ -228,5 +228,66 @@ class HackomonUI:
             display.draw_text(20, 181, "GPS dispensado; vizinhos nao entram no atendimento", COLOR_MUTED, 1)
         display.draw_text_centered(198, message[:72], COLOR_YELLOW, 1)
         display.draw_text_centered(212, "Aguarde a operacao" if busy else "CIMA/BAIXO escolhe  ESQ atualiza  B volta", COLOR_TEXT, 1)
+        display.flip()
+
+    def wdgwars(self, state, selected, mode, status, busy=False, screen="wdgwars"):
+        display = self.display
+        display.clear(COLOR_BG)
+        self._header("WDGWARS", state)
+        _panel(display, 8, 28, 464, 164)
+        if screen == "wdgwars_confirm":
+            source = "Expedicoes completas + fila" if mode == "expeditions" else "Fila rapida" if mode == "queue" else "Guardar lote e liberar fila" if mode == "archive" else "Repetir somente o lote pendente"
+            display.draw_text(20, 42, source, COLOR_CYAN, 1)
+            if mode == "archive":
+                display.draw_text(20, 68, "Guarda o lote sem confirmar recebimento.", COLOR_YELLOW, 1)
+                display.draw_text(20, 88, "Arquivos originais permanecem intactos.", COLOR_TEXT, 1)
+                display.draw_text(20, 108, "Nao cancela processamento remoto.", COLOR_TEXT, 1)
+                display.draw_text(20, 134, "Futuro envio pode repetir registros.", COLOR_YELLOW, 1)
+            else:
+                display.draw_text(20, 68, "Enviar nomes, MACs, sinal e GPS?", COLOR_YELLOW, 1)
+                display.draw_text(20, 88, "Somente CSVs de descobertas do Hackomon.", COLOR_TEXT, 1)
+                display.draw_text(20, 108, "Capturas e senhas ficam no dispositivo.", COLOR_TEXT, 1)
+            if mode == "retry":
+                display.draw_text(20, 134, "Pode repetir registros ja recebidos pelo servidor.", COLOR_YELLOW, 1)
+            display.draw_text(20, 164, "A confirma  B cancela", COLOR_CYAN, 1)
+        elif screen == "wdgwars_history":
+            display.draw_text(20, 40, "ULTIMOS LOTES (historico local)", COLOR_CYAN, 1)
+            entries = list(reversed(status.get("history", [])))[selected:selected + 6]
+            if not entries:
+                display.draw_text(20, 71, "Nenhum recibo local disponivel", COLOR_MUTED, 1)
+            for row, entry in enumerate(entries):
+                stamp = time.strftime("%d/%m %H:%M", time.gmtime(entry.get("at", 0)))
+                labels = {"confirmed": "aceito", "uncertain": "sem confirmacao", "pending_remote": "enfileirado",
+                          "rate_limited": "aguardar", "rejected": "recusado", "skipped_local": "ignorado local"}
+                label = labels.get(entry.get("status"), str(entry.get("status", "")))
+                counts = entry.get("counters", {})
+                text = "%s UTC %s %s N%d I%s G%d B%d L%d" % (stamp, label[:12], str(entry.get("source", ""))[:6],
+                    entry.get("records", 0), counts.get("imported", "?"), counts.get("no_gps", 0),
+                    counts.get("bad_rows", 0), entry.get("skipped", 0))
+                display.draw_text(20, 65 + row * 18, text[:72], COLOR_TEXT, 1)
+            display.draw_text(20, 177, "N envio I importado G semGPS B invalido L local", COLOR_MUTED, 1)
+        else:
+            user = status.get("account", {}).get("username", "ainda nao validada")
+            display.draw_text(20, 39, "Conta: " + user[:40], COLOR_CYAN, 1)
+            options = ("Sincronizar expedicoes + fila", "Enviar somente fila rapida", "Validar chave e consultar conta",
+                       "Historico local de envios", "Repetir envio incerto", "Guardar lote pendente e liberar fila")
+            for index, label in enumerate(options):
+                y = 59 + index * 16
+                if index == selected:
+                    display.fill_rect(17, y - 3, 446, 15, COLOR_PANEL_ALT)
+                display.draw_text(22, y, ("> " if selected == index else "  ") + label,
+                                  COLOR_CYAN if selected == index else COLOR_TEXT, 1)
+            if status.get("status") == "account_ok":
+                account = status.get("account", {})
+                display.draw_text(20, 157, "Conta: Wi-Fi %s  BLE %s" % (account.get("wifi", "n/d"), account.get("ble", "n/d")), COLOR_GREEN, 1)
+                display.draw_text(20, 175, "Total informado: %s" % account.get("total", "n/d"), COLOR_MUTED, 1)
+            else:
+                display.draw_text(20, 157, "Envio aceito: %d itens / %d lotes" % (status.get("sent", 0), status.get("batches", 0)), COLOR_GREEN, 1)
+                counts = status.get("counters", {})
+                display.draw_text(20, 175, "Importados:%s SemGPS:%d Invalidos:%d" % (
+                    counts.get("imported", "n/d"), counts.get("no_gps", 0), counts.get("bad_rows", 0)), COLOR_MUTED, 1)
+        display.draw_text_centered(198, status.get("message", "")[:72], COLOR_YELLOW, 1)
+        footer = "B cancela apos a resposta atual" if busy else "CIMA/BAIXO pagina  B volta" if screen == "wdgwars_history" else "A confirma  CIMA/BAIXO escolhe  B volta"
+        display.draw_text_centered(212, footer, COLOR_TEXT, 1)
         display.flip()
 

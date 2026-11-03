@@ -64,3 +64,14 @@ checklist above has been completed and the firmware version recorded.
 - [ ] CSV imports in Wardrive Go; actual WDGWars reception is verified with the user's account.
 - [ ] Record CPU, memory and battery impact over at least one hour; check 4-FPS UI readability.
 
+## Resumable synchronization — 0.7.0
+
+- [ ] Validate a real account via /api/me without printing its key.
+- [ ] Import a real expedition above 500 records; compare local receipts with server counts.
+- [ ] Interrupt connectivity after a confirmed batch; restart and preserve the acknowledged cursor.
+- [ ] Ambiguous/202 responses never display completed import; repetition requires explicit confirmation.
+- [ ] Server Retry-After is enforced across restart and UI cancellation preserves confirmed progress.
+- [ ] Upload during collection leaves newly appended records pending for the next snapshot.
+- [ ] Packet captures, recovered keys and client reports do not appear in request bodies.
+- [ ] Check memory, TLS certificates and storage use while synchronizing a large expedition.
+

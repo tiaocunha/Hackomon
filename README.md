@@ -21,6 +21,8 @@ This incremental release contains:
   save local JSON/text reports without pre-registering a BSSID or requiring GPS.
 - offline expeditions with repeated Wi-Fi/BLE scan cycles, continuous GPS sampling,
   pause/resume, local trails/CSV, pet reactions and a scoped hybrid assessment flow.
+- full expedition CSV synchronization in small resumable WDGWars batches, account
+  validation, local receipts/history, cancellation and explicit uncertain-upload recovery.
 
 ![Bestiary preview](docs/images/bestiary-preview.png)
 
@@ -42,11 +44,13 @@ implemented and tested. The framebuffer/input adapter follows the public
 physical Pager. See [hardware validation](docs/HARDWARE_VALIDATION.md) for the
 remaining device checks.
 
-Network and lab adapters in **0.6.0 are experimental**: desktop tests use fixtures
+Network and lab adapters in **0.7.0 are experimental**: desktop tests use fixtures
 and mocked commands, not physical radios, actual password recovery or a live
 WDGWars account. See [network setup and limits](docs/NETWORKS.md).
 For the field-test release, start with [the short Portuguese guide](docs/TESTE_RAPIDO.txt)
 and [expedition behavior and limits](docs/EXPEDITIONS.md).
+The [WDGWars synchronization guide](docs/WDGWARS.md) explains checkpoints,
+server acceptance versus imported counts, and recovery from interrupted uploads.
 
 ## Product direction
 

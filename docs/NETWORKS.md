@@ -1,4 +1,9 @@
-# Networks and office laboratory — 0.6.0
+# Networks and office laboratory — 0.7.0
+
+Version 0.7.0 replaces the on-device upload flow with resumable expedition and
+quick-queue synchronization. See [WDGWARS.md](WDGWARS.md) for the current UI,
+receipt handling and recovery rules; the legacy single-request contract below
+describes the original adapter and remains available internally.
 
 The original network/visit adapters are documented below. Version 0.6.0 adds
 [expeditions and serial hybrid assessments](EXPEDITIONS.md), with separate
@@ -65,15 +70,13 @@ format, intended for Wardrive Go CSV import. This is file compatibility, not a
 live phone connection. Export snapshots the pending queue: export before sync
 if you also need the data in the phone app.
 
-**Enviar ao WDGWars** asks confirmation before sharing public names, addresses,
-signal, timestamps, advertised security and GPS. It sends HTTPS multipart `file`
-to the fixed `https://wdgwars.pl/api/upload-csv`, with `X-API-Key`. Redirects are
-refused. Batches are <= 1 MB and requests time out after 15 seconds. Only HTTP
-200 JSON with explicit `ok: true` or `success: true` clears the queue. Unknown
-responses, async/queued responses, rate limits, TLS errors and timeouts preserve
-it. There are no automatic retries. A timeout after server receipt can result in
-repeat observations on manual retry. Acceptance does not guarantee map points
-for every row; server-side rules still apply. Upload awards no additional XP.
+**WDGWars: sincronizacao e conta** opens the 0.7.0 panel. It offers full expedition
+CSV/quick-queue synchronization, account validation, local receipt history,
+cancellation and explicit recovery of uncertain uploads. Each data transfer asks
+confirmation before sharing names, addresses, signal, timestamps, advertised
+security and GPS. See [WDGWARS.md](WDGWARS.md) for the current response schemas,
+checkpoints and failure rules. Server acceptance does not guarantee map points
+for every row, and upload awards no additional XP.
 
 The CSV whitelists discovery fields: no PCAP, password, dictionary or account
 credential. Public contracts: [WDGWars developer API](https://wdgwars.pl/press),

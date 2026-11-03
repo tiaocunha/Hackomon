@@ -1,4 +1,4 @@
-# Expedicoes e modo hibrido — 0.6.0 experimental
+# Expedicoes e modo hibrido — 0.7.0 experimental
 
 ## Implementado nesta entrega
 
@@ -94,12 +94,13 @@ insuficiente sao resultados inconclusivos ou nao executados. Nao ha IA ou
 processamento remoto nesta versao. Os testes detalhados ficam em `visits/` e
 as capturas/resultados secretos em `lab/`, separados da descoberta exportada.
 
-A fila global de upload continua limitada a 500 observacoes. CSV local da
-expedicao preserva os registros adicionais e pode ser importado pelo Wardrive
-Go (compatibilidade ainda precisa de validacao no aplicativo real). O envio
-manual ao WDGWars usa a fila global e a chave local; nao envia automaticamente
-todo o CSV da expedicao, capturas, senhas, trilha ou relatorios do cliente.
-Envio em lotes do arquivo completo e sincronizacao movel ao vivo ficam pendentes.
+A fila rapida de upload continua limitada a 500 observacoes. Na 0.7.0, o modo
+**Sincronizar expedicoes + fila** tambem le os CSVs completos e envia lotes com
+progresso persistente, ultrapassando esse limite sem carregar todo o arquivo na
+memoria. Os originais continuam locais e podem ser importados no Wardrive Go
+(validacao no aplicativo real ainda pendente). Capturas, senhas, trilha e
+relatorios ficam fora do envio. Veja [WDGWARS.md](WDGWARS.md). Sincronizacao
+movel ao vivo e envio automatico continuam pendentes.
 
 ## Validacao
 

@@ -1,4 +1,4 @@
-HACKOMON 0.6.0 - PRIMEIRO TESTE DE CAMPO
+HACKOMON 0.7.0 - PRIMEIRO TESTE DE CAMPO
 
 Esta e uma versao experimental. Testes automatizados usam simulacoes; radios,
 GPS, consumo e comportamento no firmware original ainda precisam do teste fisico.
@@ -41,11 +41,18 @@ Distancia e aproximada. Pausar/encerrar aguarda o ciclo atual (ate cerca de 35s)
 Teste selecionado pode somar espera do ciclo e ate cerca de 90s de avaliacao.
 Nao ha cancelamento imediato de uma captura/teste ja iniciado nesta entrega.
 
-A fila global do WDGWars ainda comporta 500 registros. O CSV da expedicao
-continua no armazenamento mesmo se ela encher; exporte/importa esse arquivo no
-Wardrive Go para aproveitar o conjunto. Use Redes -> Enviar ao WDGWars para a
-fila global, com Internet e chave local configuradas. Nao ha envio automatico.
-CSV completo da expedicao ainda nao tem envio direto em lotes pelo Hackomon.
+A fila rapida continua com 500 registros, mas o envio completo agora le os CSVs
+das expedicoes em lotes e salva o progresso confirmado. Abra Redes -> WDGWars:
+  - Validar chave e consultar conta: confirma a conta antes do primeiro envio.
+  - Sincronizar expedicoes + fila: envia os dados pendentes completos, em lotes.
+  - Historico local: mostra lotes aceitos e contadores informados pelo servidor.
+  - B durante o envio: cancela depois da resposta atual; preserva o progresso.
+Use Internet e chave local no config.json ou HACKOMON_WDGWARS_API_KEY.
+Sem confirmacao apos uma queda, o lote fica pendente. Repetir envio incerto exige
+confirmacao e pode repetir registros ja recebidos. Guardar lote pendente libera
+a fila preservando os arquivos, mas nao confirma nem cancela nada no servidor.
+O CSV original permanece local e pode ser importado no Wardrive Go. Nao ha
+envio automatico, nem envio de capturas, senhas ou relatorios. Veja WDGWARS.md.
 
 Para relatar falhas, anote a mensagem da tela e a versao do firmware. O log de
 inicializacao fica em /tmp/hackomon.log. Nao compartilhe chaves de conta, senhas

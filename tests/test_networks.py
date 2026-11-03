@@ -191,9 +191,11 @@ class NetworksTests(unittest.TestCase):
             app.screen = "network"
             app.network_selected = 4
             app._handle_network(app.display.BTN_A)
-            self.assertEqual("upload_confirm", app.screen)
+            self.assertEqual("wdgwars", app.screen)
+            app._handle_wdgwars(app.display.BTN_A)
+            self.assertEqual("wdgwars_confirm", app.screen)
             self.assertIsNone(app.worker)
-            app.results.put(("upload", None, "offline"))
+            app.results.put(("sync", None, "offline"))
             with patch.object(app, "worker") as worker:
                 app._finish_network_job()
                 worker.join.assert_called_once()

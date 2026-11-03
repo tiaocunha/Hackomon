@@ -1,5 +1,19 @@
 # Architecture
 
+## Resumable WDGWars synchronization (0.7.0)
+
+`wdgwars` implements the fixed HTTPS account/upload endpoints, redirect refusal,
+bounded responses and typed failure outcomes. `sync.Manager` consumes only the
+owned expedition CSV paths and the explicit quick-queue snapshot. It validates
+and serializes discovery fields, stages bounded payloads privately, and atomically
+checkpoints byte offsets/prefix hashes together with queue receipts after server
+confirmation. A persisted `sending` state makes crash recovery conservative.
+
+Upload work does not acquire the radio lock. UI progress travels through a
+bounded queue; only the main app loop removes confirmed quick-queue records.
+Source files are never deleted. Acknowledged temporary payloads can be removed;
+archived ambiguous payloads remain private. See [WDGWARS.md](WDGWARS.md).
+
 ## Expeditions (0.6.0)
 
 `expedition.Pump` owns a GPS sampler and a serial radio scan thread. A shared

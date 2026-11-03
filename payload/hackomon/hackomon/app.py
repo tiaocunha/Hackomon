@@ -14,6 +14,7 @@ from .ui import HackomonUI, NETWORK_MENU
 from .exploration import export_csv, record_observations
 from .network_config import load_config
 from . import bluetooth_lab, expedition, lab, radio, visit, wdgwars
+from . import sync as wdg_sync
 
 
 ACTION_KEYS = ("feed", "play", "rest")
@@ -49,6 +50,13 @@ class HackomonApp:
         self.expedition_targets = []
         self.visit_origin = "network"
         self.resume_expedition = False
+        self.sync_selected = 0
+        self.sync_history_offset = 0
+        self.sync_mode = "expeditions"
+        self.sync_status = {"message": "Escolha o que sincronizar", "status": "ready"}
+        self.sync_cancel = threading.Event()
+        self.sync_events = queue.Queue(maxsize=64)
+        self.worker_action = ""
         try:
             self.journal = expedition.Journal.restore(self.store.data_dir)
         except (ValueError, OSError, KeyError, TypeError):
@@ -155,12 +163,15 @@ class HackomonApp:
         if self.worker is not None:
             return
         snapshot = list(self.state.network_queue)
+        sync_mode = self.sync_mode
+        if action.startswith("sync"):
+            self.sync_cancel.clear()
         visit_target = (dict(self.visit_networks[self.visit_selected])
                         if action == "visit_assess" and self.visit_networks else None)
         def work():
             locked = False
             try:
-                if action not in ("upload", "export"):
+                if action not in ("upload", "export", "sync", "sync_history"):
                     self.radio_lock.acquire()
                     locked = True
                 config = load_config(self.store.data_dir)
@@ -169,6 +180,14 @@ class HackomonApp:
                 elif action == "upload":
                     count = wdgwars.upload(snapshot, config.get("wdgwars_api_key", ""))
                     result = (count, [item["identity"] for item in snapshot])
+                elif action in ("sync", "sync_history"):
+                    manager = wdg_sync.Manager(self.store.data_dir, config.get("wdgwars_api_key", ""),
+                                               cancel=self.sync_cancel, progress=self._sync_progress)
+                    if action == "sync_history":
+                        result = dict(status="history", account=manager.state.get("account", {}),
+                                      history=manager.state["history"], cleared_tokens=[], message="Historico local")
+                    else:
+                        result = manager.run(sync_mode, snapshot, retry_uncertain=sync_mode == "retry")
                 elif action == "export":
                     path = Path(self.store.data_dir) / "discoveries.csv"
                     path.parent.mkdir(parents=True, exist_ok=True)
@@ -196,6 +215,7 @@ class HackomonApp:
                 if locked:
                     self.radio_lock.release()
         self.network_message = "Trabalhando... aguarde (max. 90s)"
+        self.worker_action = action
         if action.startswith("visit_"):
             self.visit_message = "Buscando redes..." if action == "visit_scan" else "Avaliando o alvo selecionado..."
         self.worker = threading.Thread(target=work, daemon=False)
@@ -208,11 +228,23 @@ class HackomonApp:
             return
         self.worker.join()
         self.worker = None
+        self.worker_action = ""
         if error:
             self.network_message = error
+            if action.startswith("sync"):
+                self.sync_status = dict(status="error", message=error)
             if action.startswith("visit_"):
                 self.visit_message = error
             self._resume_after_audit()
+            return
+        if action.startswith("sync"):
+            self.sync_status = result
+            acknowledged = set(result.get("cleared_tokens", []))
+            self.state.network_queue = [item for item in self.state.network_queue
+                                        if wdg_sync.token(item) not in acknowledged]
+            if result.get("status") == "cancelled":
+                self.sync_status["message"] = "Cancelado; lotes confirmados preservados"
+            self.store.save(self.state)
             return
         if action == "visit_scan":
             self.visit_networks = result
@@ -288,7 +320,7 @@ class HackomonApp:
         if pressed & self.display.BTN_A:
             action = NETWORK_ACTIONS[self.network_selected]
             if action == "upload":
-                self.screen = "upload_confirm"
+                self.screen = "wdgwars"
             elif action == "visit_scan":
                 self.visit_origin = "network"
                 self.screen = "visit"
@@ -297,6 +329,60 @@ class HackomonApp:
                 self._network_job(action)
             else:
                 self._network_job(action)
+        return True
+
+    def _sync_progress(self, value):
+        try:
+            self.sync_events.put_nowait(value)
+        except queue.Full:
+            try:
+                self.sync_events.get_nowait()
+            except queue.Empty:
+                pass
+            self.sync_events.put_nowait(value)
+
+    def _drain_sync_progress(self):
+        while True:
+            try:
+                self.sync_status = self.sync_events.get_nowait()
+            except queue.Empty:
+                return
+
+    def _handle_wdgwars(self, pressed):
+        if self.worker is not None:
+            if self.worker_action.startswith("sync") and pressed & (self.display.BTN_B | self.display.BTN_POWER):
+                self.sync_cancel.set()
+                self.sync_status["message"] = "Cancelando apos a resposta; timeout de rede 15s"
+            return True
+        if pressed & (self.display.BTN_B | self.display.BTN_POWER):
+            self.screen = "wdgwars" if self.screen != "wdgwars" else "network"
+            return True
+        if self.screen == "wdgwars_confirm":
+            if pressed & self.display.BTN_A:
+                self.screen = "wdgwars"
+                self._network_job("sync")
+            return True
+        if self.screen == "wdgwars_history":
+            size = len(self.sync_status.get("history", []))
+            if pressed & self.display.BTN_DOWN:
+                self.sync_history_offset = min(max(0, (size - 1) // 6 * 6), self.sync_history_offset + 6)
+            if pressed & self.display.BTN_UP:
+                self.sync_history_offset = max(0, self.sync_history_offset - 6)
+            return True
+        if pressed & self.display.BTN_UP:
+            self.sync_selected = (self.sync_selected - 1) % 6
+        if pressed & self.display.BTN_DOWN:
+            self.sync_selected = (self.sync_selected + 1) % 6
+        if pressed & self.display.BTN_A:
+            self.sync_mode = ("expeditions", "queue", "account", "history", "retry", "archive")[self.sync_selected]
+            if self.sync_mode == "account":
+                self._network_job("sync")
+            elif self.sync_mode == "history":
+                self.sync_history_offset = 0
+                self.screen = "wdgwars_history"
+                self._network_job("sync_history")
+            else:
+                self.screen = "wdgwars_confirm"
         return True
 
     def _handle_visit(self, pressed):
@@ -421,6 +507,10 @@ class HackomonApp:
             self.ui.visit(self.state, self.visit_networks, self.visit_selected,
                           self.visit_message, self.worker is not None,
                           self.visit_report if self.screen == "visit_report" else None)
+        elif self.screen in ("wdgwars", "wdgwars_confirm", "wdgwars_history"):
+            self.ui.wdgwars(self.state, self.sync_history_offset if self.screen == "wdgwars_history" else self.sync_selected,
+                           self.sync_mode, self.sync_status,
+                           self.worker is not None, self.screen)
         elif self.screen == "expedition":
             self.ui.expedition(self.state, self.journal.summary if self.journal else None,
                                self.expedition_message, frame_index, self._current_pose())
@@ -432,6 +522,7 @@ class HackomonApp:
         frame = 0
         try:
             while running:
+                self._drain_sync_progress()
                 self._finish_network_job()
                 self._tick_expedition()
                 _current, pressed, _released = self.display.poll_input()
@@ -443,6 +534,8 @@ class HackomonApp:
                     running = self._handle_network(pressed)
                 elif self.screen in ("visit", "visit_report"):
                     running = self._handle_visit(pressed)
+                elif self.screen in ("wdgwars", "wdgwars_confirm", "wdgwars_history"):
+                    running = self._handle_wdgwars(pressed)
                 elif self.screen == "expedition":
                     running = self._handle_expedition(pressed)
                 else:
@@ -454,6 +547,7 @@ class HackomonApp:
                     break
                 self.display.delay(125)
         finally:
+            self.sync_cancel.set()
             if self.pump is not None:
                 self.pump.stop()
             if self.worker is not None:
