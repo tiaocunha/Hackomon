@@ -1,5 +1,8 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.10.4: substitui a suspensao da tela da 0.10.3, que falhou no teste de saida.
+Libera/recria somente a interface visual, mantendo os backends nativos.
+
 0.10.3: passagem de tela sem parar o servico nativo PineAP/GPSd.
 Feche o app antes de atualizar. Teste tela, botoes, GPS e retorno ao menu Hak5.
 

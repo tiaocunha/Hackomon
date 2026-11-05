@@ -1,6 +1,28 @@
 # Hardware validation checklist
 
-## Preserve native backends during screen handover — 0.10.3
+## Visual-instance handover and bounded exit — 0.10.4
+
+The 0.10.3 opening test preserved PineAP/GPSd PIDs and delivered 64 TPV/33 SKY
+reports while the app was open, all no-fix. However, the app did not exit after
+buttons or a graceful signal. It was forcibly closed and only the visual
+procd instance was deleted/recreated, bypassing the backend-stopping shell hook.
+The stock menu returned and both backend PIDs remained unchanged. No usable
+fix or moving route was validated during this recovery.
+
+Version 0.10.4 uses that visual-instance mechanism for normal entry/exit instead
+of SIGSTOP/SIGCONT. It reestablishes Python interrupt handling after display
+initialization and bounds an unresponsive app shutdown. Desktop tests exercise
+instance isolation, UI replacement, failure cleanup, app crashes and ignored
+signals. Actual input and exit need a new physical test of this version.
+All 230 desktop tests pass for 0.10.4.
+
+- [ ] Install 0.10.4 and open the app with native services already running.
+- [ ] Check buttons and normal exit to a recreated stock interface.
+- [ ] Observe unchanged PineAP/GPSd PIDs and GPS reports through entry/exit.
+- [ ] Confirm valid fixes and mapping during a moving route.
+- [ ] Check long-run memory, battery and USB reconnect independently.
+
+## Superseded screen-suspension attempt — 0.10.3
 
 On 2026-11-05 a read-only sample found the configured USB node present, no
 GPSd process/listener, and stock GPS API disconnected. This differs from the
@@ -17,9 +39,15 @@ All 229 desktop tests pass, including simulated backend isolation, PID reuse,
 already-owned UI, partial failures, app crash/start failure, handled termination
 and the real Bash launch path. These are not physical screen/GPS validation.
 
-- [ ] Install 0.10.3 with the app closed; recognize the stock visual process.
-- [ ] Open the app; keep native PineAP/GPSd processes and verify GPS reports.
-- [ ] Check physical drawing/buttons and return to the original stock screen.
+- [x] Install 0.10.3 on 2026-11-05: installer exited 0, backed up the prior
+  payload, reported save/config preserved and skipped the existing theme.
+  The read-only check recognized one stock visual process, 7 recent Recon APs
+  and 3 Blue5 LE observations. GPSd was unavailable at this installation check;
+  installation alone does not validate GPS continuity or physical screen use.
+- [x] Observe unchanged PineAP/GPSd PIDs and 64 TPV/33 SKY reports with app open.
+- [ ] Return normally: failed physically; app needed forced closure. Superseded
+  by 0.10.4. Recreating only the visual instance recovered the stock menu while
+  keeping both backends alive.
 - [ ] Verify fresh radio data continues beyond the native cache freshness window.
 - [ ] Test a moving route with native/app GPS and no repeated service restarts.
 - [ ] Check reconnect behavior and long-run memory/battery separately.

@@ -1,4 +1,8 @@
-# Hackomon 0.10.3: instalacao facil no Windows
+# Hackomon 0.10.4: instalacao facil no Windows
+
+0.10.4 substitui a suspensao da interface da 0.10.3, que falhou ao sair no teste.
+Libera somente a instancia visual e a recria ao sair sem parar PineAP/GPSd.
+Testes fisicos de botoes, retorno ao menu e GPS em movimento continuam necessarios.
 
 0.10.3: nova passagem de tela preserva os servicos nativos PineAP/GPSd.
 Suspende somente o processo visual da Hak5 e o devolve ao sair, inclusive em
@@ -49,7 +53,7 @@ O IP de gerenciamento e a conta sao os documentados pela
 
 ## 2. Instale pelo Windows
 
-1. Baixe **hackomon-instalar-0.10.3.zip** e use **Extrair tudo** do Windows.
+1. Baixe **hackomon-instalar-0.10.4.zip** e use **Extrair tudo** do Windows.
 2. Na pasta extraida, abra **INSTALAR.cmd** com dois cliques.
 3. Confira a identidade do Pager se aparecer a pergunta da primeira conexao
    e informe sua senha quando solicitado.
@@ -67,7 +71,7 @@ O instalador:
 - baixa **libpagerctl.so** diretamente do projeto PAGERCTL, em revisao fixa,
   e compara seu SHA-256 antes de enviar; o binario nao vem dentro deste ZIP;
 - reutiliza a biblioteca ja baixada se o SHA-256 continuar correto;
-- transfere os arquivos para `/mmc/root/hackomon-setup-0.10.3` em um pacote;
+- transfere os arquivos para `/mmc/root/hackomon-setup-0.10.4` em um pacote;
 - instala Python 3 + ctypes **somente se faltarem**, pelos feeds que ja estao
   configurados no Pager, usando `opkg install -d mmc`;
 - tenta instalar python3-sqlite3 no MMC se faltar o modulo para leitura do Recon;
@@ -109,10 +113,9 @@ menus e icones sao herdados da sua base local. Isso preserva as funcoes da 2.0.
 Ele nao substitui o tema interno do jogo nem adiciona animacao aos menus Hak5.
 
 Abra **Payloads > Games > Hackomon** (algumas listas exibem tambem a categoria
-User). O app usa a tela e os botoes diretamente. Na 0.10.3, suspende somente
-o processo visual reconhecido da Hak5, preservando os servicos nativos, e
-retoma esse mesmo processo ao sair. Um processo separado devolve a tela
-tambem em falhas do app. Confira esse comportamento no firmware do aparelho.
+User). O app usa a tela e os botoes diretamente. Na 0.10.4, libera somente a
+instancia visual pelo supervisor, preserva os backends e recria a interface
+ao sair. Um processo separado protege o retorno, inclusive em falhas do app.
 
 ## 4. Teste primeiro o essencial
 
@@ -123,8 +126,8 @@ tambem em falhas do app. Confira esse comportamento no firmware do aparelho.
 5. Se algo ficar errado, volte a **Settings > General > Theme > wargames**.
 
 Se a interface nao voltar, guarde a mensagem e consulte `/tmp/hackomon.log`
-para recuperar o processo visual; iniciar o servico nao retoma um processo
-que ja esteja suspenso. Nao encerre a forca o processo de protecao da tela.
+para recuperar somente a interface visual. Nao encerre a forca o processo
+de protecao da tela enquanto o app estiver aberto.
 Esse log e temporario
 e desaparece no reboot. Nao publique config, capturas ou chaves junto do log.
 
@@ -252,7 +255,7 @@ O instalador informa essa diferenca e retorna codigo 3. Casos comuns:
 Para conferir uma base encontrada, sem alterar arquivos:
 
 ```sh
-python3 /mmc/root/hackomon-setup-0.10.3/tools/install_theme.py --base /caminho/real/wargames --dry-run
+python3 /mmc/root/hackomon-setup-0.10.4/tools/install_theme.py --base /caminho/real/wargames --dry-run
 ```
 
 Se a conferencia passar, repita sem `--dry-run`. Para uma segunda copia,

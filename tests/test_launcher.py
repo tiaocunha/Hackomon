@@ -41,16 +41,21 @@ class LauncherTests(unittest.TestCase):
             temp_script = root / "temporary runner.sh"
             shutil.copyfile(launcher, temp_script)
             driver = root / "driver.sh"
+            binary = root / "bin"
+            binary.mkdir()
+            fake_python = binary / "python3"
+            fake_python.write_text('''#!/bin/bash
+if [ "$1" = "-c" ]; then exit 0; fi
+printf '%s\\n' "$@" > "$HACKOMON_TEST_PY_ARGS"
+exit "$HACKOMON_TEST_APP_CODE"
+''', encoding="ascii")
+            fake_python.chmod(0o755)
             driver.write_text('''#!/bin/bash
-python3() {
-    if [ "$1" = "-c" ]; then return 0; fi
-    printf '%s\\n' "$@" > "$HACKOMON_TEST_PY_ARGS"
-    return "$HACKOMON_TEST_APP_CODE"
-}
 START_SPINNER() { printf fixture; }
 STOP_SPINNER() { :; }
 WAIT_FOR_INPUT() { :; }
-export -f python3 START_SPINNER STOP_SPINNER WAIT_FOR_INPUT
+export -f START_SPINNER STOP_SPINNER WAIT_FOR_INPUT
+export PATH="$HACKOMON_TEST_BIN:$PATH"
 export HACKOMON_CHECK_INSTALL="$HACKOMON_TEST_DOCTOR"
 case "$1" in
   runner) export _PAYLOAD_HOME="$3"; bash "$2" ;;
@@ -61,6 +66,7 @@ esac
             record = root / "python-args.txt"
             environment = os.environ.copy()
             environment["HACKOMON_TEST_PY_ARGS"] = bash_path(record)
+            environment["HACKOMON_TEST_BIN"] = bash_path(binary)
             environment["HACKOMON_TEST_DOCTOR"] = "1" if doctor else "0"
             environment["HACKOMON_TEST_APP_CODE"] = str(app_code)
             environment["HACKOMON_DATA_DIR"] = bash_path(root / "save")
@@ -104,7 +110,9 @@ esac
     def test_normal_launch_uses_guard_and_never_stops_a_native_service(self):
         result, args, installed = self.run_launcher(doctor=False)
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
-        self.assertEqual(["-m", "hackomon.stock_ui", "--", "python3", installed + "/run_hackomon.py"], args[:5])
+        self.assertEqual(["-m", "hackomon.stock_ui", "--"], args[:3])
+        self.assertTrue(args[3].endswith("/bin/python3"))
+        self.assertEqual(installed + "/run_hackomon.py", args[4])
         self.assertNotIn("--doctor", args)
 
     def test_normal_launch_preserves_app_failure_code(self):

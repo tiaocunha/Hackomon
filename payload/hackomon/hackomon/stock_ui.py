@@ -1,4 +1,4 @@
-"""Lend the framebuffer without stopping the stock UI service or radio backend."""
+"""Release only the procd visual instance, bypassing the backend-stopping hook."""
 
 import contextlib
 import os
@@ -38,43 +38,43 @@ class StockUI:
         return candidates
 
     def __enter__(self):
+        self.owned = [(pid, born) for pid, born, state in self.targets()]
+        self.restore_needed = False
         try:
-            candidates = self.targets()
-            # An already suspended UI may belong to another payload. Do not adopt it.
-            if any(state in ("T", "t") for _pid, _born, state in candidates):
+            if any(state in ("T", "t") for _pid, _born, state in self.targets()):
                 raise RuntimeError("A interface Hak5 ja esta suspensa por outro processo")
-            for pid, born, _state in candidates:
-                current = self.read(pid)
-                if current is None or current[0] != born:
-                    raise RuntimeError("A interface Hak5 mudou durante a abertura")
-                self.owned.append((pid, born))
-                os.kill(pid, signal.SIGSTOP)
-                deadline = time.monotonic() + 1
-                while True:
-                    current = self.read(pid)
-                    if current and current[0] == born and current[1] in ("T", "t"):
-                        break
-                    if current is None or current[0] != born or time.monotonic() >= deadline:
-                        raise RuntimeError("Nao foi possivel suspender apenas a tela Hak5")
-                    time.sleep(0.01)
+            if not self.owned:
+                return self
+            # Bypass pineapplepager's shell stop hook, which also stops PineAP.
+            with blocked([signal.SIGINT, signal.SIGTERM, signal.SIGHUP]):
+                self.restore_needed = True
+                result = subprocess.run(["ubus", "call", "service", "delete",
+                                         '{"name":"pineapplepager"}'],
+                                        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                        stderr=subprocess.DEVNULL, timeout=3)
+                if result.returncode:
+                    raise RuntimeError("Nao foi possivel liberar apenas a interface visual")
+                deadline = time.monotonic() + 10
+                while any(self.read(pid) and self.read(pid)[0] == born for pid, born in self.owned):
+                    if time.monotonic() >= deadline:
+                        raise RuntimeError("A interface visual nao encerrou no prazo")
+                    time.sleep(0.05)
             return self
         except BaseException:
             self.close()
             raise
 
     def close(self):
-        failures = False
-        for pid, born in reversed(self.owned):
-            current = self.read(pid)
-            if current and current[0] == born and current[1] in ("T", "t"):
-                try:
-                    os.kill(pid, signal.SIGCONT)
-                except ProcessLookupError:
-                    pass
-                except OSError:
-                    failures = True
-        self.owned.clear()
-        if failures:
+        if not getattr(self, "restore_needed", False):
+            return
+        self.restore_needed = False
+        # Another controller may already have recreated the UI. Leave it alone.
+        if self.targets():
+            return
+        result = subprocess.run(["/etc/init.d/pineapplepager", "start"],
+                                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL, timeout=8)
+        if result.returncode:
             raise RuntimeError("Nao foi possivel devolver a tela Hak5")
 
     def __exit__(self, *_args):
@@ -94,7 +94,7 @@ def blocked(signals):
 
 
 def run(command, proc_root="/proc"):
-    """A separate guard survives app crashes and resumes the original UI PID."""
+    """A separate guard survives app crashes and recreates only the native UI."""
     child = None
     requested = []
     signals = [signal.SIGINT, signal.SIGTERM, signal.SIGHUP]
@@ -103,7 +103,7 @@ def run(command, proc_root="/proc"):
     def interrupted(signum, _frame):
         if requested:
             return
-        requested.append(signum)
+        requested.append((signum, time.monotonic()))
         if child is None:
             raise SystemExit(128 + signum)
         try:
@@ -118,13 +118,26 @@ def run(command, proc_root="/proc"):
         with StockUI(proc_root):
             with blocked(signals):
                 child = subprocess.Popen(command, start_new_session=True)
+            terminated = killed = False
             try:
-                code = child.wait()
+                while True:
+                    code = child.poll()
+                    if code is not None:
+                        break
+                    if requested:
+                        elapsed = time.monotonic() - requested[0][1]
+                        if elapsed >= 10 and not terminated:
+                            os.killpg(child.pid, signal.SIGTERM)
+                            terminated = True
+                        if elapsed >= 13 and not killed:
+                            os.killpg(child.pid, signal.SIGKILL)
+                            killed = True
+                    time.sleep(0.1)
             finally:
                 if child.poll() is None:
-                    child.send_signal(signal.SIGINT)
+                    os.killpg(child.pid, signal.SIGKILL)
                     child.wait()
-        return 128 + requested[0] if requested else (128 - code if code < 0 else code)
+        return 128 + requested[0][0] if requested else (128 - code if code < 0 else code)
     finally:
         for signum, handler in handlers.items():
             signal.signal(signum, handler)
@@ -137,9 +150,12 @@ def main(argv=None):
     if not command:
         return 2
     try:
+        # Do not belong to the visual service's process group when deleting it.
+        if os.getpgrp() != os.getpid():
+            os.setsid()
         return run(command)
-    except (OSError, RuntimeError):
-        print("Hackomon: falha ao emprestar/devolver a tela Hak5; servicos nao alterados", file=sys.stderr)
+    except (OSError, RuntimeError, subprocess.SubprocessError):
+        print("Hackomon: falha ao liberar/devolver a tela Hak5; backends preservados", file=sys.stderr)
         return 2
 
 

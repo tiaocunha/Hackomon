@@ -51,18 +51,21 @@ advertised security facts but never treats them as proven vulnerabilities.
 
 ## Boundaries
 
-Hackomon is an ordinary payload under `/root/payloads/user/games`. Starting in
-0.10.3, `stock_ui` lends the framebuffer by suspending only the recognized
-`/pineapple/pineapple` visual process, leaving its service and native backends
-running. The stock 2.0.0 `pineapplepager stop` hook also stops/deletes PineAP;
-the older launcher incorrectly treated it as a UI-only stop.
+Hackomon is an ordinary payload under `/root/payloads/user/games`. In 0.10.4,
+`stock_ui` deletes only the `pineapplepager` visual instance through procd/ubus,
+bypassing the shell stop hook that also stops/deletes PineAP. This releases
+the native screen/input handles. A separate guard runs the app and recreates
+the visual instance through its start-only hook after app exit or failure.
+It never calls the stock stop hook or restarts GPSd/PineAP. The 0.10.3 attempt
+to suspend/resume the visual process was superseded after a physical exit failure.
 
-A separate guard owns the visual PID/starttime and resumes it on app exit,
-start failure, crash or handled termination. It refuses an already suspended
-UI and checks identity before resume. Linux signal numbers come from Python
-on the device, including MIPS. The app runs in its own process group, and the
-guard asks it to clean up on termination. Force-killing the guard itself cannot
-run cleanup. No firmware file, boot setting or GPS configuration is replaced.
+The guard moves out of the visual process group before handover and launches
+the app in its own group. Controlled shutdown first requests Python cleanup;
+after 10/13 seconds an unresponsive app group receives TERM/KILL. Previous
+atomic saves remain; the latest unsaved changes may be lost if force is needed.
+The app reestablishes Python interrupt handling after native display initialization.
+Force-killing the guard itself cannot run cleanup. No firmware file, boot
+setting or GPS configuration is replaced. The stock UI returns as a fresh process.
 
 The app is split into five small layers:
 

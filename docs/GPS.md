@@ -1,6 +1,27 @@
-# GPS no Hackomon — 0.10.3
+# GPS no Hackomon — 0.10.4
 
-## Servicos nativos durante o app — 0.10.3
+## Liberacao da interface e saida limitada — 0.10.4
+
+A 0.10.3 preservou PineAP/GPSd e recebeu 64 TPV e 33 SKY com o app aberto,
+mas nao passou no teste fisico de saida. Foi necessario encerrar o app preso
+e recriar somente a interface visual; o menu voltou com os mesmos processos
+GPSd/PineAP. Todos os TPV daquela amostra estavam sem fix de satelite.
+
+A 0.10.4 usa esse mecanismo desde a abertura: remove somente a instancia
+visual do supervisor procd, sem chamar o gancho `pineapplepager stop` que
+para PineAP. Assim os arquivos de tela/entrada sao liberados. Ao sair, um
+processo separado recria a interface por seu comando de inicio, sem reiniciar
+GPSd/PineAP. A interface retorna como um processo novo. A tentativa anterior
+de mante-la suspensa foi retirada.
+
+O tratamento Python de interrupcao e restabelecido apos inicializar a biblioteca
+de tela. Se o app nao responder a uma solicitacao de encerramento, o processo
+de protecao limita a espera antes de encerrar somente o grupo do app. Saves
+atomicos anteriores ficam preservados; uma saida forcada pode perder alteracoes
+ainda nao salvas. Teste fisico de botoes, saida e GPS em movimento permanece
+necessario para esta versao.
+
+## Tentativa anterior substituida — 0.10.3
 
 A leitura de 2026-11-05 confirmou o USB presente, GPSd sem processo/porta e a
 API GPS da Hak5 desconectada naquele instante. Isso nao reproduziu o fix que o
@@ -99,7 +120,7 @@ latitude, longitude, altitude e velocidade; o quarto campo nao e precisao.
 
 ## Teste minimo
 
-1. Feche o Hackomon, instale a 0.10.3 e mantenha o modo GPSd em Settings > GPS.
+1. Feche o Hackomon, instale a 0.10.4 e mantenha o modo GPSd em Settings > GPS.
 2. Com fix nativo, abra Expedicao e pressione A. Na pagina de sensores, confira
    a linha GPS durante uma caminhada curta.
 3. Se o nativo mantiver fix e o app recusar, anote a mensagem. `DIAGNOSTICAR.cmd`
@@ -115,5 +136,5 @@ O usuario confirmou em 2026-11-03 que a Hak5 manteve fix enquanto o Hackomon
 perdeu a posicao. Diagnosticos anteriores, feitos sem fix, mostraram GPSd com
 lista vazia de receptores; nao demonstram a causa da falha durante movimento.
 As mudancas de compatibilidade foram verificadas com mensagens simuladas.
-A estabilidade da 0.10.3 em movimento ainda precisa do teste no Pager; nao ha
+A estabilidade da 0.10.4 em movimento ainda precisa do teste no Pager; nao ha
 confirmacao de correcao fisica apenas pelos testes de bancada.

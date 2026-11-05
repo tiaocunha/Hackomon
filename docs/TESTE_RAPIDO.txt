@@ -1,4 +1,7 @@
-HACKOMON 0.10.3 - TESTE DE CAMPO
+HACKOMON 0.10.4 - TESTE DE CAMPO
+
+0.10.4: libera/recria somente a instancia visual, sem parar PineAP/GPSd.
+Confira botoes e saida com B; a tentativa de suspensao da 0.10.3 foi retirada.
 
 0.10.3: suspende somente a tela Hak5 e preserva os servicos nativos.
 Confira desenho/botoes, GPS enquanto aberto e retorno ao menu ao sair com B.

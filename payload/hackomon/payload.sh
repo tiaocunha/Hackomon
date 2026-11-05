@@ -2,7 +2,7 @@
 # Title: Hackomon
 # Description: Virtual creatures, GPS discoveries, WDGWars sync and scoped office lab
 # Author: tiaocunha
-# Version: 0.10.3
+# Version: 0.10.4
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 
@@ -68,34 +68,8 @@ mkdir -p "$DATA_DIR" 2>/dev/null
 SPINNER_ID="$(START_SPINNER "Abrindo Hackomon...")"
 STOP_SPINNER "$SPINNER_ID" >/dev/null 2>&1
 
-# Stopping pineapplepager also stops PineAP on stock 2.0.0. Suspend only its
-# visual process instead; a separate Python guard restores it even if the app dies.
-GUARD_PID=""
-stop_app() {
-    trap '' INT TERM HUP
-    if [ -n "$GUARD_PID" ]; then
-        kill -TERM "$GUARD_PID" 2>/dev/null
-        wait "$GUARD_PID" 2>/dev/null
-    fi
-    exit "$1"
-}
-trap 'stop_app 130' INT
-trap 'stop_app 143' TERM
-trap 'stop_app 129' HUP
-
-"$PYTHON_BIN" -m hackomon.stock_ui -- "$PYTHON_BIN" "$PAYLOAD_DIR/run_hackomon.py" \
+# Delete only the procd visual instance, bypassing its backend-stopping hook.
+# The detached guard recreates the native UI after the app exits or crashes.
+exec "$PYTHON_BIN" -m hackomon.stock_ui -- "$PYTHON_BIN" "$PAYLOAD_DIR/run_hackomon.py" \
     --pagerctl-lib "$PAGERCTL_LIB" \
-    --data-dir "$DATA_DIR" >"$LOG_FILE" 2>&1 &
-GUARD_PID=$!
-wait "$GUARD_PID"
-EXIT_CODE=$?
-GUARD_PID=""
-
-if [ "$EXIT_CODE" -ne 0 ] && [ "$EXIT_CODE" -ne 130 ]; then
-    LOG "Hackomon encerrou com codigo $EXIT_CODE."
-    LOG "Log: $LOG_FILE"
-    WAIT_FOR_INPUT >/dev/null 2>&1
-fi
-
-exit "$EXIT_CODE"
-
+    --data-dir "$DATA_DIR" >"$LOG_FILE" 2>&1

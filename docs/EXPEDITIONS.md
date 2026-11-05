@@ -1,5 +1,11 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Interface visual separada do backend — 0.10.4
+
+Substitui a suspensao da 0.10.3, cuja saida falhou no teste fisico. Libera apenas
+a instancia visual pelo supervisor e recria essa interface ao sair, preservando
+PineAP/GPSd. Ha um limite para encerramento de app sem resposta. Veja [GPS](GPS.md).
+
 ## Tela sem parar o backend nativo — 0.10.3
 
 Abrir o app agora suspende somente o processo visual da Hak5. O iniciador

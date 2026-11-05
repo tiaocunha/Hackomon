@@ -4,6 +4,7 @@ import copy
 import os
 from pathlib import Path
 import queue
+import signal
 import threading
 import time
 
@@ -812,5 +813,10 @@ def run_on_pager(library_path=None, data_dir=None):
     data_dir = data_dir or os.environ.get("HACKOMON_DATA_DIR", "/mmc/root/hackomon")
     store = StateStore(data_dir)
     with PagerDisplay(library_path) as display:
-        HackomonApp(display, catalog, store).run()
+        # Re-establish Python cleanup after the native display library initializes.
+        previous = signal.signal(signal.SIGINT, signal.default_int_handler)
+        try:
+            HackomonApp(display, catalog, store).run()
+        finally:
+            signal.signal(signal.SIGINT, previous)
 
