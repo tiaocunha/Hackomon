@@ -51,10 +51,18 @@ advertised security facts but never treats them as proven vulnerabilities.
 
 ## Boundaries
 
-Hackomon is an ordinary payload under `/root/payloads/user/games`. Its launcher
-temporarily stops only the stock `pineapplepager` UI service to obtain the
-framebuffer, then restores that service on every normal, error or signal exit.
-It does not replace firmware files or alter boot configuration.
+Hackomon is an ordinary payload under `/root/payloads/user/games`. Starting in
+0.10.3, `stock_ui` lends the framebuffer by suspending only the recognized
+`/pineapple/pineapple` visual process, leaving its service and native backends
+running. The stock 2.0.0 `pineapplepager stop` hook also stops/deletes PineAP;
+the older launcher incorrectly treated it as a UI-only stop.
+
+A separate guard owns the visual PID/starttime and resumes it on app exit,
+start failure, crash or handled termination. It refuses an already suspended
+UI and checks identity before resume. Linux signal numbers come from Python
+on the device, including MIPS. The app runs in its own process group, and the
+guard asks it to clean up on termination. Force-killing the guard itself cannot
+run cleanup. No firmware file, boot setting or GPS configuration is replaced.
 
 The app is split into five small layers:
 

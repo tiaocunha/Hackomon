@@ -27,7 +27,7 @@ def bash_path(path):
 
 @unittest.skipUnless(bash_executable(), "Bash launcher regression tests")
 class LauncherTests(unittest.TestCase):
-    def run_launcher(self, mode="runner", library=True, valid_home=True):
+    def run_launcher(self, mode="runner", library=True, valid_home=True, doctor=True, app_code=0):
         with support.temporary_directory() as directory:
             root = Path(directory)
             installed = root / "installed game with spaces"
@@ -45,9 +45,13 @@ class LauncherTests(unittest.TestCase):
 python3() {
     if [ "$1" = "-c" ]; then return 0; fi
     printf '%s\\n' "$@" > "$HACKOMON_TEST_PY_ARGS"
+    return "$HACKOMON_TEST_APP_CODE"
 }
-export -f python3
-export HACKOMON_CHECK_INSTALL=1
+START_SPINNER() { printf fixture; }
+STOP_SPINNER() { :; }
+WAIT_FOR_INPUT() { :; }
+export -f python3 START_SPINNER STOP_SPINNER WAIT_FOR_INPUT
+export HACKOMON_CHECK_INSTALL="$HACKOMON_TEST_DOCTOR"
 case "$1" in
   runner) export _PAYLOAD_HOME="$3"; bash "$2" ;;
   direct) unset _PAYLOAD_HOME; bash "$2" ;;
@@ -57,6 +61,10 @@ esac
             record = root / "python-args.txt"
             environment = os.environ.copy()
             environment["HACKOMON_TEST_PY_ARGS"] = bash_path(record)
+            environment["HACKOMON_TEST_DOCTOR"] = "1" if doctor else "0"
+            environment["HACKOMON_TEST_APP_CODE"] = str(app_code)
+            environment["HACKOMON_DATA_DIR"] = bash_path(root / "save")
+            environment["HACKOMON_LOG_FILE"] = bash_path(root / "app.log")
             environment.pop("BASH_ENV", None)
             script = temp_script if mode == "runner" else launcher
             home = installed if valid_home else root / "missing"
@@ -92,6 +100,16 @@ esac
         self.assertEqual(result.returncode, 2)
         self.assertFalse(args)
         self.assertIn("pasta instalada nao encontrada", result.stdout)
+
+    def test_normal_launch_uses_guard_and_never_stops_a_native_service(self):
+        result, args, installed = self.run_launcher(doctor=False)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertEqual(["-m", "hackomon.stock_ui", "--", "python3", installed + "/run_hackomon.py"], args[:5])
+        self.assertNotIn("--doctor", args)
+
+    def test_normal_launch_preserves_app_failure_code(self):
+        result, _args, _installed = self.run_launcher(doctor=False, app_code=7)
+        self.assertEqual(7, result.returncode, result.stdout + result.stderr)
 
 
 class InstalledLauncherCheckTests(unittest.TestCase):

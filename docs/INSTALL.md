@@ -1,5 +1,10 @@
 # Install on a WiFi Pineapple Pager
 
+0.10.3 replaces the stock UI service stop with suspension of its visual process.
+The stock stop hook also stopped PineAP. A separate guard restores the screen
+after app exit or failure while keeping native services intact. Physical
+screen/GPS continuity still needs verification. See [GPS](GPS.md).
+
 0.10.2 fixes a screen-only false GPS loss when an accepted fix is slightly ahead
 of the Pager clock. Installation now checks a fix with the app reader instead
 of just opening the GPSd port. Missing GPS remains optional. See [GPS](GPS.md).
@@ -35,7 +40,7 @@ Old saves migrate their previous rewards; close the app before reinstalling.
 
 For a fresh-reset Pager running **2.0.0-stable**, use the complete
 [Portuguese install and test guide](INSTALAR_2_0.md) and
-`hackomon-instalar-0.10.2.zip`: extract everything and double-click `INSTALAR.cmd`
+`hackomon-instalar-0.10.3.zip`: extract everything and double-click `INSTALAR.cmd`
 (app + original stock-theme overlay + Windows setup).
 That installer explicitly provisions missing base dependencies; the app itself
 does not install packages. Its theme validation is a file/layout check, not

@@ -2,7 +2,7 @@
 # Title: Hackomon
 # Description: Virtual creatures, GPS discoveries, WDGWars sync and scoped office lab
 # Author: tiaocunha
-# Version: 0.10.2
+# Version: 0.10.3
 # Category: Games
 # Dependency: Python 3, python3-ctypes and PAGERCTL (MIT)
 
@@ -18,7 +18,7 @@ if [ -z "$PAYLOAD_DIR" ] || [ ! -f "$PAYLOAD_DIR/run_hackomon.py" ]; then
     exit 2
 fi
 DATA_DIR="${HACKOMON_DATA_DIR:-/mmc/root/hackomon}"
-LOG_FILE="/tmp/hackomon.log"
+LOG_FILE="${HACKOMON_LOG_FILE:-/tmp/hackomon.log}"
 
 export PATH="/mmc/usr/bin:/mmc/usr/sbin:$PATH"
 export LD_LIBRARY_PATH="/mmc/usr/lib:/mmc/lib:${LD_LIBRARY_PATH:-}"
@@ -64,33 +64,32 @@ if [ "${HACKOMON_CHECK_INSTALL:-0}" = "1" ]; then
     exit $?
 fi
 
-UI_STOPPED=0
-restore_stock_ui() {
-    if [ "$UI_STOPPED" -eq 1 ]; then
-        /etc/init.d/pineapplepager start >/dev/null 2>&1
-        UI_STOPPED=0
-    fi
-}
-
-trap restore_stock_ui EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM HUP
-
 mkdir -p "$DATA_DIR" 2>/dev/null
 SPINNER_ID="$(START_SPINNER "Abrindo Hackomon...")"
 STOP_SPINNER "$SPINNER_ID" >/dev/null 2>&1
-UI_STOPPED=1
-if ! /etc/init.d/pineapplepager stop >/dev/null 2>&1; then
-    restore_stock_ui
-    LOG "Hackomon: nao foi possivel liberar a tela original."
-    exit 2
-fi
 
-"$PYTHON_BIN" "$PAYLOAD_DIR/run_hackomon.py" \
+# Stopping pineapplepager also stops PineAP on stock 2.0.0. Suspend only its
+# visual process instead; a separate Python guard restores it even if the app dies.
+GUARD_PID=""
+stop_app() {
+    trap '' INT TERM HUP
+    if [ -n "$GUARD_PID" ]; then
+        kill -TERM "$GUARD_PID" 2>/dev/null
+        wait "$GUARD_PID" 2>/dev/null
+    fi
+    exit "$1"
+}
+trap 'stop_app 130' INT
+trap 'stop_app 143' TERM
+trap 'stop_app 129' HUP
+
+"$PYTHON_BIN" -m hackomon.stock_ui -- "$PYTHON_BIN" "$PAYLOAD_DIR/run_hackomon.py" \
     --pagerctl-lib "$PAGERCTL_LIB" \
-    --data-dir "$DATA_DIR" >"$LOG_FILE" 2>&1
+    --data-dir "$DATA_DIR" >"$LOG_FILE" 2>&1 &
+GUARD_PID=$!
+wait "$GUARD_PID"
 EXIT_CODE=$?
-restore_stock_ui
+GUARD_PID=""
 
 if [ "$EXIT_CODE" -ne 0 ] && [ "$EXIT_CODE" -ne 130 ]; then
     LOG "Hackomon encerrou com codigo $EXIT_CODE."

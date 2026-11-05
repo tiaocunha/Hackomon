@@ -1,5 +1,8 @@
 HACKOMON - INSTALACAO FACIL NO WINDOWS
 
+0.10.3: passagem de tela sem parar o servico nativo PineAP/GPSd.
+Feche o app antes de atualizar. Teste tela, botoes, GPS e retorno ao menu Hak5.
+
 0.10.2: corrige falso aviso de GPS na tela com pequeno adiantamento GPS/Pager.
 Instalador confere posicao/motivo real. Estabilidade em movimento ainda pendente.
 

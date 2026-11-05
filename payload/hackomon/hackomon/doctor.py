@@ -44,6 +44,12 @@ def check(library=None):
             except RuntimeError as error:
                 rows.append(("OPCIONAL INDISPONIVEL", str(error)))
     rows.append(gps_check())
+    try:
+        from .stock_ui import StockUI
+        targets = StockUI().targets()
+        rows.append(("INFO", "Interface visual Hak5: %d processo(s) reconhecido(s); servicos preservados" % len(targets)))
+    except OSError:
+        rows.append(("INFO", "Interface visual Hak5: estado nao consultado"))
     rows.append(("INFO", "Nenhuma busca, captura, pareamento ou envio foi executado."))
     rows.append(("INFO", "Presenca dos comandos nao comprova driver, GPS, TLS ou compatibilidade no firmware."))
     return required_ok, rows

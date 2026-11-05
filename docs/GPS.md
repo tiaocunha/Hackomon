@@ -1,4 +1,26 @@
-# GPS no Hackomon — 0.10.2
+# GPS no Hackomon — 0.10.3
+
+## Servicos nativos durante o app — 0.10.3
+
+A leitura de 2026-11-05 confirmou o USB presente, GPSd sem processo/porta e a
+API GPS da Hak5 desconectada naquele instante. Isso nao reproduziu o fix que o
+usuario havia visto na tela. Os arquivos instalados coincidiam com a 0.10.2.
+
+Foi encontrada uma incompatibilidade concreta no iniciador: ele chamava
+`/etc/init.d/pineapplepager stop` para liberar a tela. No firmware instalado,
+o `stop_service()` desse script tambem para PineAP e o remove do supervisor.
+Esse efeito sobre o backend nao havia sido considerado nas versoes anteriores.
+
+A 0.10.3 suspende somente o processo visual reconhecido, usando sinais do
+Linux, e o devolve ao sair. Um processo separado protege a devolucao da tela
+se o app falhar. Nao chama stop/start/restart dos servicos da Hak5 e nao muda
+GPS, baud rate ou configuracao. O GPSd ainda precisa estar funcionando antes
+de abrir o app; esta alteracao nao promete corrigir uma falha independente do
+servico nem implementa um leitor direto da porta serial.
+
+Os 229 testes de bancada passaram, incluindo isolamento de PineAP/GPSd,
+identidade do processo visual, erros e encerramento. A continuidade real do
+GPS, o desenho/botoes e o retorno da interface precisam do teste no Pager.
 
 ## Correcao da tela e verificacao do instalador — 0.10.2
 
@@ -77,7 +99,7 @@ latitude, longitude, altitude e velocidade; o quarto campo nao e precisao.
 
 ## Teste minimo
 
-1. Feche o Hackomon, instale a 0.10.2 e mantenha o modo GPSd em Settings > GPS.
+1. Feche o Hackomon, instale a 0.10.3 e mantenha o modo GPSd em Settings > GPS.
 2. Com fix nativo, abra Expedicao e pressione A. Na pagina de sensores, confira
    a linha GPS durante uma caminhada curta.
 3. Se o nativo mantiver fix e o app recusar, anote a mensagem. `DIAGNOSTICAR.cmd`
@@ -93,5 +115,5 @@ O usuario confirmou em 2026-11-03 que a Hak5 manteve fix enquanto o Hackomon
 perdeu a posicao. Diagnosticos anteriores, feitos sem fix, mostraram GPSd com
 lista vazia de receptores; nao demonstram a causa da falha durante movimento.
 As mudancas de compatibilidade foram verificadas com mensagens simuladas.
-A estabilidade da 0.10.2 em movimento ainda precisa do teste no Pager; nao ha
+A estabilidade da 0.10.3 em movimento ainda precisa do teste no Pager; nao ha
 confirmacao de correcao fisica apenas pelos testes de bancada.

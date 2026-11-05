@@ -1,5 +1,29 @@
 # Hardware validation checklist
 
+## Preserve native backends during screen handover — 0.10.3
+
+On 2026-11-05 a read-only sample found the configured USB node present, no
+GPSd process/listener, and stock GPS API disconnected. This differs from the
+user's earlier working stock screen and does not reproduce that moment.
+Installed modules matched 0.10.2; there were no app traceback records captured.
+
+Reading the actual stock `pineapplepager` init script confirmed its stop hook
+also stops and deletes PineAP. The old launcher called that hook to borrow the
+screen. Version 0.10.3 replaces it with suspension of only the recognized visual
+process, with a separate guard to resume it after app exit/crash. No native
+service, serial configuration, firmware or GPS acceptance limit is modified.
+
+All 229 desktop tests pass, including simulated backend isolation, PID reuse,
+already-owned UI, partial failures, app crash/start failure, handled termination
+and the real Bash launch path. These are not physical screen/GPS validation.
+
+- [ ] Install 0.10.3 with the app closed; recognize the stock visual process.
+- [ ] Open the app; keep native PineAP/GPSd processes and verify GPS reports.
+- [ ] Check physical drawing/buttons and return to the original stock screen.
+- [ ] Verify fresh radio data continues beyond the native cache freshness window.
+- [ ] Test a moving route with native/app GPS and no repeated service restarts.
+- [ ] Check reconnect behavior and long-run memory/battery separately.
+
 ## Display freshness consistency and GPS install check — 0.10.2
 
 The device history contained an accepted 3D fix at GPS/Pager +1.01 seconds with

@@ -1,5 +1,12 @@
 # Expedicoes e modo hibrido — 0.7.0 experimental
 
+## Tela sem parar o backend nativo — 0.10.3
+
+Abrir o app agora suspende somente o processo visual da Hak5. O iniciador
+anterior parava o servico da interface; no firmware instalado, isso tambem
+parava PineAP. A nova passagem preserva os servicos nativos e devolve a tela
+sem reinicia-los ao sair. Veja [GPS](GPS.md). Validacao fisica pendente.
+
 ## GPS com pequeno adiantamento de horario — 0.10.2
 
 A tela agora considera recente o mesmo fix aceito pelo leitor: ate 15 s de
