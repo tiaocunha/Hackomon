@@ -16,7 +16,10 @@ instance isolation, UI replacement, failure cleanup, app crashes and ignored
 signals. Actual input and exit need a new physical test of this version.
 All 230 desktop tests pass for 0.10.4.
 
-- [ ] Install 0.10.4 and open the app with native services already running.
+- [x] Install 0.10.4 on 2026-11-05: installer exited 0 and recognized one
+  visual process, 23 recent Recon APs and 2 Blue5 LE observations. It reported
+  save/config preserved and GPSd without a receiver at that preflight. The
+  install check alone does not validate opening, exiting or a usable fix.
 - [ ] Check buttons and normal exit to a recreated stock interface.
 - [ ] Observe unchanged PineAP/GPSd PIDs and GPS reports through entry/exit.
 - [ ] Confirm valid fixes and mapping during a moving route.
